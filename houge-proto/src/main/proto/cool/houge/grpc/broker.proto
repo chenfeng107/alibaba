@@ -22,16 +22,7 @@ message BrokerMsg {
 }
 
 message BrokerCommand {
-
-  message SubGroup {
-    int32 uid = 1;
-    repeated int32 gids = 2;
-  }
-
-  oneof kind {
-    SubGroup subGroup = 11;
-    SubGroup unsubGroup = 12;
-  }
+  string name = 1;
 }
 
 message AttachBrokerRequest {

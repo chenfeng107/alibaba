@@ -1,10 +1,10 @@
 package cool.houge.ws;
 
-import cool.houge.grpc.AuthRequest;
-import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
 import cool.houge.grpc.ReactorMsgGrpc.ReactorMsgStub;
+import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
 import cool.houge.grpc.SendMsgRequest;
 import cool.houge.grpc.SendMsgResponse;
+import cool.houge.grpc.VerifyTokenRequest;
 import cool.houge.protos.MsgContentType;
 import cool.houge.ws.packet.MsgPacket;
 import cool.houge.ws.packet.PrivateMsgPacket;
@@ -14,11 +14,11 @@ import reactor.core.publisher.Mono;
 /** @author KK (kzou227@qq.com) */
 public class LibService {
 
-  private final ReactorAuthStub authStub;
+  private final ReactorTokenStub tokenStub;
   private final ReactorMsgStub msgStub;
 
-  public LibService(ReactorAuthStub authStub, ReactorMsgStub msgStub) {
-    this.authStub = authStub;
+  public LibService(ReactorTokenStub tokenStub, ReactorMsgStub msgStub) {
+    this.tokenStub = tokenStub;
     this.msgStub = msgStub;
   }
 
@@ -27,8 +27,8 @@ public class LibService {
    * @return
    */
   public Mono<Integer> auth(String token) {
-    var req = AuthRequest.newBuilder().setToken(token).build();
-    return authStub.auth(req).map(resp -> resp.getUid());
+    var req = VerifyTokenRequest.newBuilder().setToken(token).build();
+    return tokenStub.verify(req).map(resp -> resp.getUid());
   }
 
   /**

@@ -1,7 +1,5 @@
 apply plugin: "application"
 apply plugin: "com.bmuschko.docker-remote-api"
-apply plugin: "com.google.protobuf"
-apply from: "${rootDir}/gradle/protobuf.gradle"
 
 mainClassName = "cool.houge.rest.main.RestMain"
 
@@ -45,7 +43,6 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 
 dependencies {
   implementation(project(":houge-infra"))
-
   implementation("io.grpc:grpc-netty")
   implementation("com.salesforce.servicelibs:reactor-grpc-stub")
 

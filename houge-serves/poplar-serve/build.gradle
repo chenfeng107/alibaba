@@ -1,7 +1,5 @@
 apply plugin: "application"
 apply plugin: "com.bmuschko.docker-remote-api"
-apply plugin: "com.google.protobuf"
-apply from: "${rootDir}/gradle/protobuf.gradle"
 
 mainClassName = "cool.houge.logic.main.LogicMain"
 
@@ -44,8 +42,7 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 }
 
 dependencies {
-  protobuf(project(":houge-proto"))
-
+  implementation(project(":houge-proto"))
   implementation(project(":houge-infra"))
   implementation("com.typesafe:config")
   implementation("com.google.guava:guava")

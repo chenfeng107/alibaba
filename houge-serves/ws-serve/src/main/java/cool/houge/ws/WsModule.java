@@ -19,10 +19,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.typesafe.config.Config;
-import cool.houge.grpc.ReactorAuthGrpc;
-import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
 import cool.houge.grpc.ReactorMsgGrpc;
 import cool.houge.grpc.ReactorMsgGrpc.ReactorMsgStub;
+import cool.houge.grpc.ReactorTokenGrpc;
+import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
 import cool.houge.ws.session.DefaultSessionGroupManager;
 import cool.houge.ws.session.DefaultSessionManager;
 import cool.houge.ws.session.SessionGroupManager;
@@ -78,8 +78,8 @@ public class WsModule extends AbstractModule {
 
   @Singleton
   @Provides
-  public ReactorAuthStub authStub(ManagedChannel grpcManagedChannel) {
-    return ReactorAuthGrpc.newReactorStub(grpcManagedChannel);
+  public ReactorTokenStub authStub(ManagedChannel grpcManagedChannel) {
+    return ReactorTokenGrpc.newReactorStub(grpcManagedChannel);
   }
 
   @Singleton
