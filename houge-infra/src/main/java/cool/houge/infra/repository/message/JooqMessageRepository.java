@@ -8,6 +8,8 @@ import cool.houge.domain.model.Message;
 import cool.houge.domain.repository.message.MessageQueryRepository;
 import cool.houge.domain.repository.message.MessageRepository;
 import cool.houge.domain.repository.message.UserMessageQuery;
+import cool.houge.infra.db.tables.records.MessageRecord;
+import cool.houge.infra.db.tables.records.UserMessageRecord;
 import java.util.List;
 import javax.inject.Inject;
 import org.jooq.DSLContext;
@@ -24,29 +26,66 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
   }
 
   @Override
-  public Mono<Message> queryById(String id) {
-    return null;
-  }
-
-  @Override
-  public Flux<Message> queryByUser(UserMessageQuery q, Paging paging) {
-    Flux.from(
-            dsl.select(MESSAGE.fields())
-                .from(USER_MESSAGE)
-                .leftJoin(MESSAGE)
-                .on(USER_MESSAGE.MESSAGE_ID.eq(MESSAGE.ID))
-                .where(USER_MESSAGE.UID.eq(q.getUid())))
-        .map(r -> r.into(MESSAGE));
-    return null;
-  }
-
-  @Override
   public Mono<Void> insert(Message entity, List<Long> uids) {
-    return null;
+    var record =
+        new MessageRecord()
+            .setId(entity.getId())
+            .setKind(entity.getKind().shortValue())
+            .setSenderId(entity.getSender().getId())
+            .setContent(entity.getContent())
+            .setContentType(entity.getContentType().shortValue())
+            .setExtraArgs(entity.getExtraArgs());
+    if (entity.getReceiver() != null) {
+      record.setReceiverId(entity.getReceiver().getId());
+    }
+    if (entity.getGroup() != null) {
+      record.setGroupId(entity.getGroup().getId());
+    }
+
+    // 用户消息关联关系
+    var userMessageRecords = new UserMessageRecord[uids.size()];
+    for (int i = 0; i < uids.size(); i++) {
+      userMessageRecords[i] =
+          new UserMessageRecord().setUid(uids.get(i)).setMessageId(entity.getId());
+    }
+
+    return Mono.from(
+            dsl.insertInto(MESSAGE).set(record)
+            //
+            )
+        .then(
+            Mono.from(dsl.batchInsert(userMessageRecords))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<Void> updateUnreadStatus(long uid, List<String> messageIds, int v) {
+    // FIXME 完善
+    //    dsl.update(MESSAGE).set(MESSAGE.UNREAD, v)
     return null;
+  }
+
+  @Override
+  public Mono<Message> queryById(String id) {
+    return Mono.from(
+            dsl.selectFrom(MESSAGE).where(MESSAGE.ID.eq(id))
+            //
+            )
+        .map(MessageRecordMapper.INSTANCE::map);
+  }
+
+  @Override
+  public Flux<Message> queryByUser(UserMessageQuery q, Paging paging) {
+    return Flux.from(
+            dsl.select(MESSAGE.fields())
+                .from(USER_MESSAGE)
+                .leftJoin(MESSAGE)
+                .on(USER_MESSAGE.MESSAGE_ID.eq(MESSAGE.ID))
+                .where(USER_MESSAGE.UID.eq(q.getUid()))
+            //
+            )
+        .map(r -> MessageRecordMapper.INSTANCE.map(r.into(MESSAGE)));
   }
 }
