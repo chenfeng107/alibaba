@@ -15,6 +15,7 @@
  */
 package cool.houge.ws.session;
 
+import cool.houge.ws.packet.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import java.net.InetAddress;
@@ -40,10 +41,10 @@ public final class DefaultSession implements Session {
 
   final WebsocketInbound inbound;
   final WebsocketOutbound outbound;
-  final long uid;
+  final int uid;
   final String token;
   final long sessionId;
-  final Set<Long> subGroupIds;
+  final Set<Integer> subGroupIds;
 
   // 客户端IP临时变量
   private String clientIp;
@@ -57,7 +58,7 @@ public final class DefaultSession implements Session {
    * @param token 访问令牌
    */
   public DefaultSession(
-      WebsocketInbound inbound, WebsocketOutbound outbound, long uid, String token) {
+      WebsocketInbound inbound, WebsocketOutbound outbound, int uid, String token) {
     this.inbound = inbound;
     this.outbound = outbound;
     this.uid = uid;
@@ -91,6 +92,12 @@ public final class DefaultSession implements Session {
     var closed = new boolean[1];
     outbound.withConnection(connection -> closed[0] = connection.isDisposed());
     return closed[0];
+  }
+
+  @Override
+  public Mono<Void> send(Packet packet) {
+    // FIXME 完善
+    return null;
   }
 
   @Override

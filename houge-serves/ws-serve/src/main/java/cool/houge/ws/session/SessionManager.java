@@ -45,7 +45,7 @@ public interface SessionManager {
    * @param uid 用户认证 ID
    * @return 已经移除的会话
    */
-  Flux<Session> removeByUid(long uid);
+  Flux<Session> removeByUid(int uid);
 
   /**
    * 根据用户认证 ID 查询会话.
@@ -53,7 +53,7 @@ public interface SessionManager {
    * @param uid 用户认证 ID
    * @return 用户认证 ID 会话
    */
-  Flux<Session> findByUid(long uid);
+  Flux<Session> findByUid(int uid);
 
   /**
    * 返回当前所有会话.

@@ -89,7 +89,7 @@ public class DefaultSessionManager implements SessionManager {
   }
 
   @Override
-  public Flux<Session> removeByUid(long uid) {
+  public Flux<Session> removeByUid(int uid) {
     return Mono.defer(
             () -> {
               var f = uidSessionCache.getIfPresent(uid);
@@ -119,7 +119,7 @@ public class DefaultSessionManager implements SessionManager {
   }
 
   @Override
-  public Flux<Session> findByUid(long uid) {
+  public Flux<Session> findByUid(int uid) {
     return Mono.defer(
             () -> {
               var f = uidSessionCache.getIfPresent(uid);

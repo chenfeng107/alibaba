@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.module;
+package cool.houge.ws;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
-import com.google.inject.Singleton;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
-import cool.houge.grpc.ReactorHybridGrpc;
-import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
-import cool.houge.ws.PivotServiceConfig;
-import cool.houge.ws.server.WebSocketHandler;
-import cool.houge.ws.server.WsServer;
-import cool.houge.ws.server.WsServerConfig;
+import cool.houge.grpc.ReactorAuthGrpc;
+import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
+import cool.houge.grpc.ReactorMsgGrpc;
+import cool.houge.grpc.ReactorMsgGrpc.ReactorMsgStub;
 import cool.houge.ws.session.DefaultSessionGroupManager;
 import cool.houge.ws.session.DefaultSessionManager;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Singleton;
 
 /**
  * WS的Guice模块.
@@ -54,34 +52,39 @@ public class WsModule extends AbstractModule {
 
   @Override
   protected void configure() {
+    bind(Config.class).toInstance(config);
+    bind(WsServer.class).in(Scopes.SINGLETON);
+    bind(LibService.class).in(Scopes.SINGLETON);
+
     bind(WebSocketHandler.class).in(Scopes.SINGLETON);
     bind(SessionManager.class).to(DefaultSessionManager.class).in(Scopes.SINGLETON);
     bind(SessionGroupManager.class).to(DefaultSessionGroupManager.class).in(Scopes.SINGLETON);
-
-    this.bindGrpcStub();
   }
 
-  @Provides
   @Singleton
-  public WsServer wsServer(WebSocketHandler webSocketHandler) {
-    var serverConfig =
-        ConfigBeanFactory.create(config.getConfig("ws-server"), WsServerConfig.class);
-    return new WsServer(serverConfig, webSocketHandler);
-  }
-
-  private void bindGrpcStub() {
-    var logicServiceConfig =
-        ConfigBeanFactory.create(config.getConfig("pivot-service"), PivotServiceConfig.class);
-    bind(PivotServiceConfig.class).toInstance(logicServiceConfig);
-
+  @Provides
+  public ManagedChannel grpcManagedChannel() {
+    var target = config.getString("ws.polar.grpc-target");
     var managedChannel =
-        ManagedChannelBuilder.forTarget(logicServiceConfig.getGrpcTarget())
+        ManagedChannelBuilder.forTarget(target)
             .enableRetry()
             .usePlaintext()
+            .maxRetryAttempts(3)
+            .idleTimeout(5, TimeUnit.MINUTES)
+            .keepAliveWithoutCalls(true)
             .build();
-    bind(ManagedChannel.class).toInstance(managedChannel);
+    return managedChannel;
+  }
 
-    // gRPC 存根对象注册
-    bind(ReactorHybridStub.class).toInstance(ReactorHybridGrpc.newReactorStub(managedChannel));
+  @Singleton
+  @Provides
+  public ReactorAuthStub authStub(ManagedChannel grpcManagedChannel) {
+    return ReactorAuthGrpc.newReactorStub(grpcManagedChannel);
+  }
+
+  @Singleton
+  @Provides
+  public ReactorMsgStub msgStub(ManagedChannel grpcManagedChannel) {
+    return ReactorMsgGrpc.newReactorStub(grpcManagedChannel);
   }
 }

@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.server;
+package cool.houge.ws;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.google.common.annotations.VisibleForTesting;
-import cool.houge.grpc.AuthRequest;
-import cool.houge.grpc.ListGidsRequest;
-import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
-import cool.houge.grpc.SendMsgRequest;
-import cool.houge.grpc.SendMsgResponse;
-import cool.houge.protos.MsgContentType;
 import cool.houge.ws.packet.ErrorPacket;
 import cool.houge.ws.packet.MsgPacket;
 import cool.houge.ws.packet.Packet;
-import cool.houge.ws.packet.PrivateMsgPacket;
 import cool.houge.ws.session.DefaultSession;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
@@ -40,7 +33,6 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,22 +57,22 @@ public class WebSocketHandler {
 
   private final SessionManager sessionManager;
   private final SessionGroupManager sessionGroupManager;
-  private final ReactorHybridStub hybridStub;
+  private final LibService libService;
   private final ObjectReader objectReader;
 
   /**
-   * @param hybridStub
    * @param sessionManager
    * @param sessionGroupManager
+   * @param libService
    */
   @Inject
   public WebSocketHandler(
       SessionManager sessionManager,
       SessionGroupManager sessionGroupManager,
-      ReactorHybridStub hybridStub) {
+      LibService libService) {
     this.sessionManager = sessionManager;
     this.sessionGroupManager = sessionGroupManager;
-    this.hybridStub = hybridStub;
+    this.libService = libService;
 
     var objectMapper = initObjectMapper();
     this.objectReader = objectMapper.readerFor(Packet.class);
@@ -95,13 +87,6 @@ public class WebSocketHandler {
     // 1. 会话认证
     // 2. 接收WebSocket消息
     return Mono.defer(() -> authenticate(inbound, outbound))
-        .flatMap(
-            session -> {
-              log.debug("加载用户 {} 的群组信息", session);
-              return loadGids(session.uid())
-                  .flatMap(gids -> sessionGroupManager.subGroups(session, gids))
-                  .thenReturn(session);
-            })
         .doOnSuccess(session -> receiveFrames(inbound, outbound, session))
         .then(outbound.neverComplete());
   }
@@ -151,41 +136,11 @@ public class WebSocketHandler {
 
     log.debug("处理消息包 session={} packet={}", session, packet);
     if (packet instanceof MsgPacket) {
-      return sendMsgPacket(session, (MsgPacket) packet);
+      return libService.processMsgPacket(session, (MsgPacket) packet);
     }
 
     log.warn("未实现的Packet session={} packet={}", session, packet);
     return Mono.empty();
-  }
-
-  Mono<Void> sendMsgPacket(Session session, MsgPacket p) {
-    var contentType = MsgContentType.forNumber(p.getContentType());
-    // FIXME 校验 content-type
-
-    var builder = SendMsgRequest.newBuilder();
-    builder
-        .setFrom(p.getFrom() == null ? session.uid() : p.getFrom())
-        .setTo(p.getTo())
-        .setContent(p.getContent())
-        .setContentType(contentType);
-    if (p.getExtra() != null) {
-      builder.setExtra(p.getExtra());
-    }
-
-    Mono<SendMsgResponse> m;
-    if (p instanceof PrivateMsgPacket) {
-      m = hybridStub.sendToUser(builder.build());
-    } else {
-      m = hybridStub.sendToGroup(builder.build());
-    }
-    // FIXME
-    return m.then();
-  }
-
-  @VisibleForTesting
-  Mono<List<Integer>> loadGids(int uid) {
-    var request = ListGidsRequest.newBuilder().setUid(uid).build();
-    return hybridStub.listGids(request).map(response -> response.getGidsList());
   }
 
   @VisibleForTesting
@@ -199,13 +154,12 @@ public class WebSocketHandler {
       return Mono.empty();
     }
 
-    var request = AuthRequest.newBuilder().setToken(token).build();
-    return hybridStub
-        .auth(request)
+    return libService
+        .auth(token)
         .map(
-            response -> {
-              log.info("认证成功 uid={}", response.getUid());
-              return new DefaultSession(in, out, response.getUid(), token);
+            uid -> {
+              log.info("认证成功 uid={}");
+              return new DefaultSession(in, out, uid, token);
             });
   }
 

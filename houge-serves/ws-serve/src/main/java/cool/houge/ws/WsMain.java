@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.main;
+package cool.houge.ws;
 
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cool.houge.ws.module.WsModule;
-import cool.houge.ws.pivot.PivotStreamServiceManager;
-import cool.houge.ws.server.WsServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,9 +39,6 @@ public class WsMain implements Runnable {
   public void run() {
     var config = this.loadConfig();
     var injector = Guice.createInjector(new WsModule(config));
-    // 启动 Agent 管理器
-    var agentServiceManager = injector.getInstance(PivotStreamServiceManager.class);
-    agentServiceManager.start();
 
     // 启动 WebSocket 服务
     var wsServer = injector.getInstance(WsServer.class);
@@ -60,8 +54,9 @@ public class WsMain implements Runnable {
                   } catch (Exception e) {
                     log.error("停止WebSocket服务异常", e);
                   }
+
                   try {
-                    agentServiceManager.stop();
+                    // FIXME
                   } catch (Exception e) {
                     log.error("停止AgentServiceManager异常", e);
                   }
@@ -71,9 +66,7 @@ public class WsMain implements Runnable {
 
   private Config loadConfig() {
     var config = ConfigFactory.parseResources(CONFIG_FILE).resolve();
-    log.info(
-        "已加载的应用配置 \n=========================================================>>>\n{}<<<=========================================================",
-        config.root().render());
+    log.info("应用配置加载成功 file={}", CONFIG_FILE);
     return config;
   }
 }

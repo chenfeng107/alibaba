@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.server;
+package cool.houge.ws;
 
 import com.google.common.net.HostAndPort;
+import com.typesafe.config.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.netty.DisposableServer;
@@ -33,20 +34,20 @@ import reactor.netty.resources.LoopResources;
 public class WsServer {
 
   private static final Logger log = LogManager.getLogger();
-  private final WsServerConfig serverConfig;
   private final WebSocketHandler webSocketHandler;
+  private final String addr;
 
   private DisposableServer disposableServer;
 
   /**
    * 使用服务配置与消息处理器构造对象.
    *
-   * @param serverConfig 服务配置
+   * @param config 应用配置
    * @param webSocketHandler WebSocket消息处理器
    */
-  public WsServer(WsServerConfig serverConfig, WebSocketHandler webSocketHandler) {
-    this.serverConfig = serverConfig;
+  public WsServer(Config config, WebSocketHandler webSocketHandler) {
     this.webSocketHandler = webSocketHandler;
+    this.addr = config.getString("ws.server.addr");
   }
 
   /**
@@ -55,8 +56,8 @@ public class WsServer {
    * <p>服务启动完成后可使用WebSocket连接.
    */
   public void start() {
-    log.debug("正在启动WS服务 addr={}", serverConfig.getAddr());
-    var hap = HostAndPort.fromString(serverConfig.getAddr());
+    log.debug("正在启动WS服务 addr={}", this.addr);
+    var hap = HostAndPort.fromString(this.addr);
     var routes = HttpServerRoutes.newRoutes();
 
     routes.ws(
