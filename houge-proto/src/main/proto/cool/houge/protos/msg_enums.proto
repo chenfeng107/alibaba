@@ -1,0 +1,16 @@
+syntax = "proto3";
+option java_package = "cool.houge.protos";
+option java_multiple_files = true;
+
+// 消息类型
+enum MsgKind {
+  USER = 0;
+  GROUP = 1;
+  SYSTEM = 9;
+}
+
+// 消息内容
+enum MsgContentType {
+  // 文本消息类型
+  TEXT = 0;
+}
