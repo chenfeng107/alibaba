@@ -19,6 +19,6 @@ public class TxMsgServiceImpl extends MsgServiceImpl {
 
   @Override
   public Mono<Void> insert(UserMsg msg) {
-    return txOps.tx(Mono.defer(() -> super.insert(msg)));
+    return super.insert(msg).as(txOps::tx);
   }
 }

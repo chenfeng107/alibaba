@@ -20,6 +20,6 @@ public class TxUserServiceImpl extends UserServiceImpl {
 
   @Override
   public Mono<Integer> create(User user) {
-    return txOps.tx(Mono.defer(() -> super.create(user)));
+    return super.create(user).as(txOps::tx);
   }
 }
