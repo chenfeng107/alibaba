@@ -16,7 +16,7 @@
 package cool.houge.infra.service.auth;
 
 import com.auth0.jwt.interfaces.Payload;
-import cool.houge.domain.service.auth.AuthContext;
+import cool.houge.domain.auth.AuthContext;
 import javax.annotation.Nonnull;
 
 /**

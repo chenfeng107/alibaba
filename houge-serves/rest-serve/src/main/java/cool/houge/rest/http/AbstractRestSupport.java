@@ -18,7 +18,7 @@ package cool.houge.rest.http;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.net.MediaType;
-import cool.houge.domain.service.auth.AuthContext;
+import cool.houge.domain.auth.AuthContext;
 import cool.houge.util.JsonUtils;
 import cool.houge.util.ReactorHttpServerUtils;
 import io.netty.buffer.ByteBufInputStream;

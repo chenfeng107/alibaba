@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 the original author or authors
+ * Copyright 2019-2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.service.auth;
+package cool.houge.domain.auth;
 
 import reactor.core.publisher.Mono;
 
 /**
- * 令牌服务.
+ * 用户认证服务.
  *
  * @author KK (kzou227@qq.com)
  */
-public interface TokenService {
+public interface AuthService {
 
   /**
-   * 生成访问令牌.
+   * 用户认证.
    *
-   * @param uid 用户 ID
-   * @return 访问令牌
+   * @param token 认证令牌
+   * @return 认证上下文
    */
-  Mono<String> generateToken(long uid);
+  Mono<AuthContext> authenticate(String token);
 }

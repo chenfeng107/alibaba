@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.service.auth;
+package cool.houge.domain.auth;
 
 /**
  * 认证的上下文信息.

@@ -18,7 +18,7 @@ package cool.houge.pivot.module;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
-import cool.houge.domain.service.auth.AuthService;
+import cool.houge.domain.auth.AuthService;
 import cool.houge.grpc.AgentGrpc;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
