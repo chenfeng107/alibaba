@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.agent.internal;
+package cool.houge.ws.broker.internal;
 
-import cool.houge.grpc.agent.AgentPb;
-import cool.houge.ws.agent.PacketProcessor;
+import cool.houge.grpc.broker.BrokerPb;
+import cool.houge.ws.broker.PacketProcessor;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
@@ -44,9 +44,9 @@ public class PacketProcessorImpl implements PacketProcessor {
   }
 
   @Override
-  public void process(AgentPb.PacketMixin packetMixin) {
+  public void process(BrokerPb.PacketMixin packetMixin) {
     switch (packetMixin.getTypeValue()) {
-      case AgentPb.PacketMixinType.USER_VALUE:
+      case BrokerPb.PacketMixinType.USER_VALUE:
         {
           if (packetMixin.getToCount() == 1) {
             invoke(sessionManager.findByUid(packetMixin.getTo(0)), packetMixin);
@@ -57,7 +57,7 @@ public class PacketProcessorImpl implements PacketProcessor {
               packetMixin);
         }
         break;
-      case AgentPb.PacketMixinType.GROUP_VALUE:
+      case BrokerPb.PacketMixinType.GROUP_VALUE:
         {
           if (packetMixin.getToCount() == 1) {
             invoke(sessionGroupManager.findByGroupId(packetMixin.getTo(0)), packetMixin);
@@ -70,7 +70,7 @@ public class PacketProcessorImpl implements PacketProcessor {
               packetMixin);
           break;
         }
-      case AgentPb.PacketMixinType.ALL_VALUE:
+      case BrokerPb.PacketMixinType.ALL_VALUE:
         invoke(sessionManager.all(), packetMixin);
         break;
       default:
@@ -78,7 +78,7 @@ public class PacketProcessorImpl implements PacketProcessor {
     }
   }
 
-  private void invoke(Flux<Session> sessionFlux, AgentPb.PacketMixin packetMixin) {
+  private void invoke(Flux<Session> sessionFlux, BrokerPb.PacketMixin packetMixin) {
     var src = packetMixin.getDataBytes().asReadOnlyByteBuffer();
     var byteBuf = ByteBufAllocator.DEFAULT.buffer(src.capacity());
     byteBuf.writeBytes(src);

@@ -18,8 +18,8 @@ package cool.houge.ws.server;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.UnsafeByteOperations;
-import cool.houge.grpc.agent.PolygonPb;
-import cool.houge.grpc.agent.ReactorPolygonGrpc.ReactorPolygonStub;
+import cool.houge.grpc.broker.PolygonPb;
+import cool.houge.grpc.broker.ReactorPolygonGrpc.ReactorPolygonStub;
 import cool.houge.util.SocketExceptionUtils;
 import cool.houge.ws.session.DefaultSession;
 import cool.houge.ws.session.Session;
@@ -122,7 +122,7 @@ public class WebSocketHandler {
   @VisibleForTesting
   void processPacket(WebSocketFrame frame, Session session) {
     var request =
-        PolygonPb.AgentPacketRequest.newBuilder()
+        PolygonPb.BrokerPacketRequest.newBuilder()
             .setRequestUid(session.uid())
             .setDataBytes(UnsafeByteOperations.unsafeWrap(frame.content().nioBuffer()))
             .build();
@@ -167,7 +167,7 @@ public class WebSocketHandler {
 
   @VisibleForTesting
   Mono<List<Long>> loadGids(long uid) {
-    var request = PolygonPb.AgentListGidsRequest.newBuilder().setUid(uid).build();
+    var request = PolygonPb.BrokerListGidsRequest.newBuilder().setUid(uid).build();
     return polygonStub.listGids(request).map(response -> response.getGidList());
   }
 
@@ -182,7 +182,7 @@ public class WebSocketHandler {
       return Mono.empty();
     }
 
-    var request = PolygonPb.AgentAuthRequest.newBuilder().setToken(token).build();
+    var request = PolygonPb.BrokerAuthRequest.newBuilder().setToken(token).build();
     return polygonStub
         .auth(request)
         .map(

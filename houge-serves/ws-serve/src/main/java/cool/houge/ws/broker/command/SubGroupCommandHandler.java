@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.agent.command;
+package cool.houge.ws.broker.command;
 
-import cool.houge.grpc.agent.AgentPb;
+import cool.houge.grpc.broker.BrokerPb;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
 import javax.inject.Inject;
@@ -48,7 +48,7 @@ public class SubGroupCommandHandler implements CommandHandler {
   }
 
   @Override
-  public Mono<Void> handle(AgentPb.Command command) {
+  public Mono<Void> handle(BrokerPb.Command command) {
     //    if (!command.) {
     //      return Mono.empty();
     //    }

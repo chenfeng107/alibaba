@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.agent;
+package cool.houge.ws.broker;
 
-import cool.houge.grpc.agent.AgentPb;
+import cool.houge.grpc.broker.BrokerPb;
 
 /** @author KK (kzou227@qq.com) */
 public interface CommandProcessor {
 
   /** @param command */
-  void process(AgentPb.Command command);
+  void process(BrokerPb.Command command);
 }

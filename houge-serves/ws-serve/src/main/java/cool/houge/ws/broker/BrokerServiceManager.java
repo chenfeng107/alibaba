@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.agent;
+package cool.houge.ws.broker;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.ConfigException;
-import cool.houge.grpc.agent.AgentGrpc;
-import cool.houge.grpc.agent.AgentGrpc.AgentStub;
-import cool.houge.grpc.agent.AgentPb;
-import cool.houge.grpc.agent.AgentPb.AttachRequest;
+import cool.houge.grpc.broker.BrokerGrpc;
+import cool.houge.grpc.broker.BrokerGrpc.BrokerStub;
+import cool.houge.grpc.broker.BrokerPb;
+import cool.houge.grpc.broker.BrokerPb.AttachRequest;
 import cool.houge.ws.AgentServiceConfig;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -48,7 +48,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class AgentServiceManager {
+public class BrokerServiceManager {
 
   private static final Logger log = LogManager.getLogger();
   /** 跳过重复错误日志的限制. */
@@ -70,7 +70,7 @@ public class AgentServiceManager {
    * @param commandProcessor Command处理器
    */
   @Inject
-  public AgentServiceManager(
+  public BrokerServiceManager(
       AgentServiceConfig agentServiceConfig,
       PacketProcessor packetProcessor,
       CommandProcessor commandProcessor) {
@@ -127,41 +127,41 @@ public class AgentServiceManager {
 
     private final String target;
     private final ManagedChannel channel;
-    private final AgentStub agentStub;
+    private final BrokerStub brokerStub;
     private final AtomicInteger retryCount;
     private final AtomicReference<Status.Code> lastStatusCodeRef;
 
     Helper(String target, ManagedChannel channel) {
       this.target = target;
       this.channel = channel;
-      this.agentStub = AgentGrpc.newStub(channel);
+      this.brokerStub = BrokerGrpc.newStub(channel);
       this.retryCount = new AtomicInteger();
       this.lastStatusCodeRef = new AtomicReference<>();
     }
 
     void run() {
-      var request = AgentPb.AttachRequest.newBuilder().setId(name).build();
+      var request = BrokerPb.AttachRequest.newBuilder().setId(name).build();
       if (retryCount.get() > 0) {
         log.info("请求连接Agent name={} target={} retryCount={}", name, target, retryCount.get());
       } else {
         log.info("请求连接Agent name={} target={}", name, target);
       }
 
-      this.agentStub.attach(request, response());
+      this.brokerStub.attach(request, response());
     }
 
-    private ClientResponseObserver<AgentPb.AttachRequest, AgentPb.AttachResponse> response() {
+    private ClientResponseObserver<BrokerPb.AttachRequest, BrokerPb.AttachResponse> response() {
       return new ClientResponseObserver<>() {
 
         ClientCallStreamObserver<AttachRequest> requestStream;
 
         @Override
-        public void beforeStart(ClientCallStreamObserver<AgentPb.AttachRequest> requestStream) {
+        public void beforeStart(ClientCallStreamObserver<BrokerPb.AttachRequest> requestStream) {
           this.requestStream = requestStream;
         }
 
         @Override
-        public void onNext(AgentPb.AttachResponse response) {
+        public void onNext(BrokerPb.AttachResponse response) {
           if (retryCount.get() > 0) {
             retryCount.set(0);
             lastStatusCodeRef.set(Code.OK);

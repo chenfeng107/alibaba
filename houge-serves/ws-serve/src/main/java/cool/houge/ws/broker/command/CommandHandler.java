@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.agent;
+package cool.houge.ws.broker.command;
 
-import cool.houge.grpc.agent.AgentPb;
+import cool.houge.grpc.broker.BrokerPb;
+import reactor.core.publisher.Mono;
 
-/** @author KK (kzou227@qq.com) */
-public interface PacketProcessor {
+/**
+ * 命令处理器接口.
+ *
+ * @author KK (kzou227@qq.com)
+ */
+public interface CommandHandler {
 
-  /** @param packetMixin */
-  void process(AgentPb.PacketMixin packetMixin);
+  /**
+   * 命令处理函数.
+   *
+   * @param command 命令
+   */
+  Mono<Void> handle(BrokerPb.Command command);
 }

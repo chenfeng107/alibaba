@@ -106,7 +106,6 @@ allprojects {
   dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-
     // mapstruct
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.0.Beta1")
     implementation("org.mapstruct:mapstruct:1.5.0.Beta1")

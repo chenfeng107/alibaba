@@ -1,26 +1,26 @@
 syntax = "proto3";
-option java_package = "cool.houge.grpc.agent";
+option java_package = "cool.houge.grpc.broker";
 option java_outer_classname = "PolygonPb";
 
-message AgentAuthRequest {
+message BrokerAuthRequest {
   // 访问令牌
   string token = 1;
 }
 
-message AgentAuthResponse {
+message BrokerAuthResponse {
   // 用户ID
   int64 uid = 1;
 }
 
-message AgentListGidsRequest {
+message BrokerListGidsRequest {
   int64 uid = 1;
 }
 
-message AgentListGidsResponse {
+message BrokerListGidsResponse {
   repeated int64 gid = 1;
 }
 
-message AgentPacketRequest {
+message BrokerPacketRequest {
   // 发起请求的用户ID
   int64 request_uid = 1;
   // Packet数据
@@ -29,7 +29,7 @@ message AgentPacketRequest {
   string filter = 9;
 }
 
-message AgentPacketResponse {
+message BrokerPacketResponse {
   // 响应结果数据
   bytes data_bytes = 1;
 }
@@ -37,11 +37,11 @@ message AgentPacketResponse {
 service Polygon {
 
   // JWT 用户认证
-  rpc Auth(AgentAuthRequest) returns(AgentAuthResponse) {}
+  rpc Auth(BrokerAuthRequest) returns(BrokerAuthResponse) {}
 
   // 查询用户的群组ID列表
-  rpc ListGids(AgentListGidsRequest) returns(AgentListGidsResponse) {}
+  rpc ListGids(BrokerListGidsRequest) returns(BrokerListGidsResponse) {}
 
   // 处理 Packet
-  rpc ProcessPacket(AgentPacketRequest) returns(AgentPacketResponse) {}
+  rpc ProcessPacket(BrokerPacketRequest) returns(BrokerPacketResponse) {}
 }

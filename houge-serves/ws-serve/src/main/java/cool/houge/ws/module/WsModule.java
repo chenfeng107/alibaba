@@ -22,17 +22,17 @@ import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
-import cool.houge.grpc.agent.ReactorPolygonGrpc;
-import cool.houge.grpc.agent.ReactorPolygonGrpc.ReactorPolygonStub;
+import cool.houge.grpc.broker.ReactorPolygonGrpc;
+import cool.houge.grpc.broker.ReactorPolygonGrpc.ReactorPolygonStub;
 import cool.houge.ws.AgentServiceConfig;
 import cool.houge.ws.LogicServiceConfig;
-import cool.houge.ws.agent.AgentServiceManager;
-import cool.houge.ws.agent.CommandProcessor;
-import cool.houge.ws.agent.PacketProcessor;
-import cool.houge.ws.agent.command.CommandHandler;
-import cool.houge.ws.agent.command.SubGroupCommandHandler;
-import cool.houge.ws.agent.internal.CommandProcessorImpl;
-import cool.houge.ws.agent.internal.PacketProcessorImpl;
+import cool.houge.ws.broker.BrokerServiceManager;
+import cool.houge.ws.broker.CommandProcessor;
+import cool.houge.ws.broker.PacketProcessor;
+import cool.houge.ws.broker.command.CommandHandler;
+import cool.houge.ws.broker.command.SubGroupCommandHandler;
+import cool.houge.ws.broker.internal.CommandProcessorImpl;
+import cool.houge.ws.broker.internal.PacketProcessorImpl;
 import cool.houge.ws.server.WebSocketHandler;
 import cool.houge.ws.server.WsServer;
 import cool.houge.ws.server.WsServerConfig;
@@ -84,11 +84,11 @@ public class WsModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public AgentServiceManager clientAgentManager(
+  public BrokerServiceManager clientAgentManager(
       PacketProcessor packetProcessor, CommandProcessor commandProcessor) {
     var agentConfig =
         ConfigBeanFactory.create(config.getConfig("agent-service"), AgentServiceConfig.class);
-    return new AgentServiceManager(agentConfig, packetProcessor, commandProcessor);
+    return new BrokerServiceManager(agentConfig, packetProcessor, commandProcessor);
   }
 
   private void bindGrpcStub() {

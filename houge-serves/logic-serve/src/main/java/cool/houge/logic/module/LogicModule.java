@@ -19,32 +19,20 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import cool.houge.domain.service.auth.AuthService;
-import cool.houge.infra.service.auth.JwsAuthService;
 import cool.houge.grpc.AgentGrpc;
-import cool.houge.grpc.AuthGrpc;
-import cool.houge.grpc.GroupGrpc;
-import cool.houge.grpc.MessageGrpc;
-import cool.houge.grpc.PacketGrpc;
-import cool.houge.grpc.UserGroupGrpc;
-import cool.houge.grpc.UserGrpc;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
+import cool.houge.infra.service.auth.JwsAuthService;
+import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.logic.agent.PacketSender;
 import cool.houge.logic.agent.ServerAgentManager;
 import cool.houge.logic.agent.TediousServerAgentManager;
-import cool.houge.logic.grpc.AgentGrpcImpl;
-import cool.houge.logic.grpc.AuthGrpcImpl;
-import cool.houge.logic.grpc.GroupGrpcImpl;
-import cool.houge.logic.grpc.MessageGrpcImpl;
-import cool.houge.logic.grpc.PacketGrpcImpl;
-import cool.houge.logic.grpc.UserGroupGrpcImpl;
-import cool.houge.logic.grpc.UserGrpcImpl;
+import cool.houge.logic.grpc.ReactorAgentGrpcImpl;
 import cool.houge.logic.handler.GroupMessageHandler;
 import cool.houge.logic.handler.PacketHandler;
 import cool.houge.logic.handler.PrivateMessageHandler;
 import cool.houge.logic.packet.Packet;
 import cool.houge.logic.support.LogicApplicationIdentifier;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import io.grpc.BindableService;
 
 /**
@@ -56,9 +44,6 @@ public class LogicModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bindGrpcServices();
-    bindPacketHandler();
-
     // 消息分发器
     bind(TediousServerAgentManager.class).in(Scopes.SINGLETON);
     bind(PacketSender.class).to(TediousServerAgentManager.class);
@@ -70,20 +55,8 @@ public class LogicModule extends AbstractModule {
     // 认证服务
     bind(JwsAuthService.class).in(Scopes.SINGLETON);
     bind(AuthService.class).to(JwsAuthService.class);
-  }
 
-  private void bindGrpcServices() {
-    bindGrpcImpl(AgentGrpcImpl.class, AgentGrpc.SERVICE_NAME);
-    bindGrpcImpl(AuthGrpcImpl.class, AuthGrpc.SERVICE_NAME);
-    bindGrpcImpl(PacketGrpcImpl.class, PacketGrpc.SERVICE_NAME);
-    bindGrpcImpl(UserGrpcImpl.class, UserGrpc.SERVICE_NAME);
-    bindGrpcImpl(GroupGrpcImpl.class, GroupGrpc.SERVICE_NAME);
-    bindGrpcImpl(UserGroupGrpcImpl.class, UserGroupGrpc.SERVICE_NAME);
-    bindGrpcImpl(MessageGrpcImpl.class, MessageGrpc.SERVICE_NAME);
-  }
-
-  private void bindPacketHandler() {
-    // PacketHandlers =========================================>>>
+    // 绑定 PacketHandler
     bind(PacketHandler.class)
         .annotatedWith(Names.named(Packet.NS_PRIVATE_MESSAGE))
         .to(PrivateMessageHandler.class)
@@ -92,13 +65,11 @@ public class LogicModule extends AbstractModule {
         .annotatedWith(Names.named(Packet.NS_GROUP_MESSAGE))
         .to(GroupMessageHandler.class)
         .in(Scopes.SINGLETON);
-    // PacketHandlers =========================================<<<
-  }
 
-  private void bindGrpcImpl(Class<? extends BindableService> clazz, String serviceName) {
+    // 绑定 gRPC
     bind(BindableService.class)
-        .annotatedWith(Names.named(serviceName))
-        .to(clazz)
+        .annotatedWith(Names.named(AgentGrpc.SERVICE_NAME))
+        .to(ReactorAgentGrpcImpl.class)
         .in(Scopes.SINGLETON);
   }
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
-option java_package = "cool.houge.grpc.agent";
-option java_outer_classname = "AgentPb";
+option java_package = "cool.houge.grpc.broker";
+option java_outer_classname = "BrokerPb";
 
 // =========================
 message AttachRequest {
@@ -46,7 +46,7 @@ message PacketMixin {
   string filter = 9;
 }
 
-service Agent {
+service Broker {
   //
   rpc Attach(AttachRequest) returns(stream AttachResponse) {}
 }

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.agent.internal;
+package cool.houge.ws.broker.internal;
 
-import cool.houge.grpc.agent.AgentPb;
-import cool.houge.ws.agent.CommandProcessor;
-import cool.houge.ws.agent.command.CommandHandler;
+import cool.houge.grpc.broker.BrokerPb;
+import cool.houge.ws.broker.CommandProcessor;
+import cool.houge.ws.broker.command.CommandHandler;
 import java.util.Objects;
 import java.util.Set;
 import javax.inject.Inject;
@@ -47,7 +47,7 @@ public class CommandProcessorImpl implements CommandProcessor {
   }
 
   @Override
-  public void process(AgentPb.Command command) {
+  public void process(BrokerPb.Command command) {
     log.debug("处理Agent命令 command={}", command);
     Flux.fromIterable(commandHandlers)
         .flatMap(handler -> handler.handle(command))

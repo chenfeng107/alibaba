@@ -18,7 +18,7 @@ package cool.houge.ws.main;
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cool.houge.ws.agent.AgentServiceManager;
+import cool.houge.ws.broker.BrokerServiceManager;
 import cool.houge.ws.module.WsModule;
 import cool.houge.ws.server.WsServer;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +43,7 @@ public class WsMain implements Runnable {
     var config = this.loadConfig();
     var injector = Guice.createInjector(new WsModule(config));
     // 启动 Agent 管理器
-    var agentServiceManager = injector.getInstance(AgentServiceManager.class);
+    var agentServiceManager = injector.getInstance(BrokerServiceManager.class);
     agentServiceManager.start();
 
     // 启动 WebSocket 服务
