@@ -6,17 +6,17 @@ configurations {
 }
 
 flyway {
-  driver = "com.mysql.cj.jdbc.Driver"
-  url = "jdbc:mysql://${rootProject.ext.hougeDbHost}:${rootProject.ext.hougeDbPort}/${rootProject.ext.hougeDbName}"
+  url = "jdbc:postgresql://${rootProject.ext.hougeDbHost}:${rootProject.ext.hougeDbPort}/${rootProject.ext.hougeDbName}"
   user = rootProject.ext.hougeDbUser
   password = rootProject.ext.hougeDbPassword
-  locations = ["filesystem:mysql/*.sql"]
+  locations = ["filesystem:postgresql/*.sql"]
   configurations = ["compileClasspath", "flywayMigration"]
 }
 
 dependencies {
   // flywaydb 需要使用的依赖 https://flywaydb.org/
-  flywayMigration("mysql:mysql-connector-java:8.0.28")
+  // flywayMigration("mysql:mysql-connector-java:8.0.28")
+  flywayMigration("org.postgresql:postgresql:42.3.1")
 }
 
 task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
