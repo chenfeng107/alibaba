@@ -106,11 +106,7 @@ class AppInstDaoImplTest extends AbstractTestDao {
 
   @Test
   void findByIdNonexistentData() {
-    txOps
-        .tx(appInstDao.findById(Integer.MIN_VALUE))
-        .as(StepVerifier::create)
-        .expectComplete()
-        .verify();
+    appInstDao.findById(Integer.MIN_VALUE).as(StepVerifier::create).expectComplete().verify();
   }
 
   AppInst newModel() {

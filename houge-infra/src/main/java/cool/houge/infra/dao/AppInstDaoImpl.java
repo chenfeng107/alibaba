@@ -18,12 +18,12 @@ public class AppInstDaoImpl implements AppInstDao {
 
   @Override
   public Mono<Integer> insert(AppInst m) {
-    return rc.sql(
-            "INSERT INTO app_insts(id,app_name,host_name,host_address,os_name,os_version,os_user,java_vm_name,java_vm_version,java_vm_vendor,work_dir,pid)"
-                + "values(?id,?app_name,?host_name,?host_address,?os_name,?os_version,?os_user,?java_vm_name,?java_vm_version,?java_vm_vendor,?work_dir,?pid)")
-        .flatMap(
+    return rc.use(
             spec ->
-                spec.bind("id", m.getId())
+                spec.sql(
+                        "INSERT INTO app_insts(id,app_name,host_name,host_address,os_name,os_version,os_user,java_vm_name,java_vm_version,java_vm_vendor,work_dir,pid)"
+                            + "values(?id,?app_name,?host_name,?host_address,?os_name,?os_version,?os_user,?java_vm_name,?java_vm_version,?java_vm_vendor,?work_dir,?pid)")
+                    .bind("id", m.getId())
                     .bind("app_name", m.getAppName())
                     .bind("host_name", m.getHostName())
                     .bind("host_address", m.getHostAddress())
@@ -35,25 +35,36 @@ public class AppInstDaoImpl implements AppInstDao {
                     .bind("java_vm_vendor", m.getJavaVmVendor())
                     .bind("work_dir", m.getWorkDir())
                     .bind("pid", m.getPid())
-                    .rowsUpdated());
+                    .rowsUpdated())
+        .single();
   }
 
   @Override
   public Mono<Integer> delete(int id) {
-    return rc.sql("delete from app_insts where id=?id")
-        .flatMap(spec -> spec.bind("id", id).rowsUpdated());
+    return rc.use(
+            spec -> spec.sql("delete from app_insts where id=?id").bind("id", id).rowsUpdated())
+        .single();
   }
 
   @Override
   public Mono<Integer> updateCheckTime(int id) {
-    return rc.sql("update app_insts set check_time=now() where id=?id")
-        .flatMap(spec -> spec.bind("id", id).rowsUpdated());
+    return rc.use(
+            spec ->
+                spec.sql("update app_insts set check_time=now() where id=?id")
+                    .bind("id", id)
+                    .rowsUpdated())
+        .singleOrEmpty();
   }
 
   @Override
   public Mono<AppInst> findById(int id) {
-    return rc.sql("select * from app_insts where id=?id")
-        .flatMap(spec -> spec.bind("id", id).map(this::mapEntity).one());
+    return rc.use(
+            spec ->
+                spec.sql("select * from app_insts where id=?id")
+                    .bind("id", id)
+                    .map(this::mapEntity)
+                    .one())
+        .singleOrEmpty();
   }
 
   private AppInst mapEntity(Row row) {

@@ -16,14 +16,13 @@ public class UserDaoImpl implements UserDao {
 
   @Override
   public Mono<Integer> insert(User m) {
-    return rc.sql("INSERT INTO t_user(origin_uid) values(?origin_id)")
-        .flatMap(
+    return rc.use(
             spec ->
-                spec.bind("origin_id", m.getOriginUid(), String.class)
+                spec.sql("INSERT INTO users(origin_uid) values(?origin_id)")
+                    .bind("origin_id", m.getOriginUid(), String.class)
                     .returnGeneratedValues("id")
                     .map(row -> row.get("id", Integer.class))
-                    .one()
-            //
-            );
+                    .one())
+        .single();
   }
 }
