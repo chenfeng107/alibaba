@@ -1,0 +1,68 @@
+//
+// Copyright 2019-2021 the original author or authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option java_package = "cool.houge.grpc";
+option java_outer_classname = "GroupPb";
+
+message CreateGroupRequest {
+  // 群组ID.
+  int64 gid = 1;
+  // 创建者用户ID.
+  int64 creator_id = 2;
+  // 群组名称.
+  string name = 3;
+}
+
+message CreateGroupResponse {
+  // 群组ID.
+  int64 gid = 1;
+}
+
+message DeleteGroupRequest {
+  // 群组ID.
+  int64 gid = 1;
+}
+
+message JoinMemberGroupRequest {
+  // 群组ID
+  int64 gid = 1;
+  // 用户ID
+  int64 uid = 2;
+}
+
+message DeleteMemberGroupRequest {
+  // 群组ID
+  int64 gid = 1;
+  // 用户ID
+  int64 uid = 2;
+}
+
+service Group {
+
+  // 创建群组.
+  rpc Create(CreateGroupRequest) returns(CreateGroupResponse) {}
+
+  // 删除群组.
+  rpc Delete(DeleteGroupRequest) returns(google.protobuf.Empty) {}
+
+  // 将用户加入到指定的群组
+  rpc JoinMember(JoinMemberGroupRequest) returns(google.protobuf.Empty) {}
+
+  // 将用户从指定的群组中删除
+  rpc DeleteMember(DeleteMemberGroupRequest) returns(google.protobuf.Empty) {}
+}

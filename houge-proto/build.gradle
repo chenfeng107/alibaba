@@ -1,0 +1,12 @@
+sourceSets {
+  main {
+    resources {
+      srcDir "src/main/proto"
+    }
+  }
+}
+
+dependencies {
+  api("io.grpc:grpc-protobuf")
+  api("io.projectreactor:reactor-core")
+}

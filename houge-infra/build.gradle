@@ -1,3 +1,35 @@
+apply plugin: "com.google.protobuf"
+
+sourceSets {
+  main {
+    java {
+      srcDir "${buildDir}/generated/source/proto/main/grpc"
+      srcDir "${buildDir}/generated/source/proto/main/java"
+    }
+  }
+}
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:3.17.3"
+  }
+  plugins {
+    grpc {
+      artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
+    }
+    reactor {
+      artifact = "com.salesforce.servicelibs:reactor-grpc:1.1.0"
+    }
+  }
+
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {}
+      reactor {}
+    }
+  }
+}
+
 dependencies {
   api(project(":houge-domain"))
   api(project(":houge-r2dbc"))
@@ -7,6 +39,7 @@ dependencies {
   api("io.r2dbc:r2dbc-pool")
   api("com.github.ben-manes.caffeine:caffeine")
   api("org.roaringbitmap:RoaringBitmap")
+  api("io.grpc:grpc-netty")
 
   testImplementation(project(":houge-core"))
   testImplementation("com.typesafe:config")

@@ -1,6 +1,8 @@
 rootProject.name = "houge"
 
 include ":db"
+include ":houge-proto"
+
 include ":houge-core"
 include ":houge-r2dbc"
 include ":houge-auth"

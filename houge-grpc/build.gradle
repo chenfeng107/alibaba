@@ -12,17 +12,21 @@ sourceSets {
 
 protobuf {
   protoc {
-    artifact = "com.google.protobuf:protoc:3.12.0"
+    artifact = "com.google.protobuf:protoc:3.17.3"
   }
   plugins {
     grpc {
-      artifact = "io.grpc:protoc-gen-grpc-java:1.36.1"
+      artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
+    }
+    reactor {
+      artifact = "com.salesforce.servicelibs:reactor-grpc:1.1.0"
     }
   }
 
   generateProtoTasks {
     all()*.plugins {
       grpc {}
+      reactor {}
     }
   }
 }

@@ -1,0 +1,78 @@
+//
+// Copyright 2019-2021 the original author or authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+option java_package = "cool.houge.grpc";
+option java_outer_classname = "AgentPb";
+
+message LinkRequest {
+  // 终端的标识名
+  string name = 1;
+  // 终端的主机名
+  string host_name = 2;
+}
+
+message LinkResponse {
+  oneof kind {
+    Command command = 1;
+    PacketMixin packet_mixin = 2;
+  }
+}
+
+// Packet混合转发类型
+enum PacketMixinType {
+  // 将Packet发送给指定的用户
+  USER = 0;
+  // 将Packet发送给指定的群组
+  GROUP = 1;
+  // 将Packet发送给所有在线用户
+  ALL = 9;
+}
+
+// Packet
+message PacketMixin {
+  // 转发的类型
+  PacketMixinType type = 1;
+  // 接收者
+  repeated int64 to = 2;
+  // 转发的数据
+  bytes data_bytes = 3;
+  // 过滤终端的标识
+  string filter = 9;
+}
+
+message Command {
+
+  message SubGroup {
+    int64 uid = 1;
+    repeated int64 gids = 2;
+  }
+
+  message UnsubGroup {
+    int64 uid = 1;
+    repeated int64 gids = 2;
+  }
+
+  oneof kind {
+    SubGroup sub_group = 6;
+    UnsubGroup unsub_group = 7;
+  }
+}
+
+service Agent {
+
+  rpc Link(LinkRequest) returns(stream LinkResponse) {}
+}
