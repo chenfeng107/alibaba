@@ -18,10 +18,19 @@ package cool.houge.rest.http;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.net.MediaType;
+import cool.houge.domain.service.auth.AuthContext;
+import cool.houge.util.JsonUtils;
+import cool.houge.util.ReactorHttpServerUtils;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import lombok.extern.log4j.Log4j2;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.server.HttpServerRequest;
+import reactor.netty.http.server.HttpServerResponse;
+import top.yein.chaos.biz.BizCode;
+import top.yein.chaos.biz.BizCodeException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,16 +40,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import lombok.extern.log4j.Log4j2;
-import reactor.core.publisher.Mono;
-import reactor.netty.http.server.HttpServerRequest;
-import reactor.netty.http.server.HttpServerResponse;
-import top.yein.chaos.biz.BizCode;
-import top.yein.chaos.biz.BizCodeException;
-import cool.houge.domain.service.auth.AuthContext;
-import cool.houge.util.JsonUtils;
-import cool.houge.util.ReactorHttpServerUtils;
 
 /**
  * REST 抽象支撑类.
@@ -297,17 +296,16 @@ public abstract class AbstractRestSupport {
     }
 
     return request
-        .receiveContent()
-        .map(
-            httpContent -> {
-              InputStream in = new ByteBufInputStream(httpContent.content());
-              try {
-                return getObjectMapper().readValue(in, clazz);
-              } catch (IOException e) {
-                throw new BizCodeException(BizCode.C400, "解析JSON异常", e);
-              }
-            })
-        .next();
+        .receive()
+        .aggregate()
+        .map(buf -> {
+          InputStream in = new ByteBufInputStream(buf);
+          try {
+            return getObjectMapper().readValue(in, clazz);
+          } catch (IOException e) {
+            throw new BizCodeException(BizCode.C400, "解析JSON异常", e);
+          }
+        });
   }
 
   /**
