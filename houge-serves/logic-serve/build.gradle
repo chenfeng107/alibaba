@@ -43,7 +43,6 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 
 dependencies {
   implementation(project(":houge-auth"))
-  implementation(project(":houge-service"))
   implementation("com.typesafe:config")
   implementation("com.google.guava:guava")
   implementation("com.google.inject:guice")

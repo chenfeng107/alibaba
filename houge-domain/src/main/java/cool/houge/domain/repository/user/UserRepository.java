@@ -14,5 +14,5 @@ public interface UserRepository {
    * @param entity
    * @return
    */
-  Mono<Void> insert(User entity);
+  Mono<Long> insert(User entity);
 }
