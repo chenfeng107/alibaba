@@ -40,9 +40,13 @@ public final class ReactorMsgGrpc {
             return new ReactorMsgStub(channel, callOptions);
         }
 
+        public reactor.core.publisher.Mono<cool.houge.grpc.CreateMsgIdResponse> createId(reactor.core.publisher.Mono<cool.houge.grpc.CreateMsgIdRequest> reactorRequest) {
+            return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactorRequest, delegateStub::createId, getCallOptions());
+        }
+
         /**
          * <pre>
-         *  消息ID
+         *  消息发送者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> reactorRequest) {
@@ -51,16 +55,20 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息发送者
+         *  消息接收者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToGroup(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> reactorRequest) {
             return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactorRequest, delegateStub::sendToGroup, getCallOptions());
         }
 
+        public reactor.core.publisher.Mono<cool.houge.grpc.CreateMsgIdResponse> createId(cool.houge.grpc.CreateMsgIdRequest reactorRequest) {
+           return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactor.core.publisher.Mono.just(reactorRequest), delegateStub::createId, getCallOptions());
+        }
+
         /**
          * <pre>
-         *  消息ID
+         *  消息发送者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(cool.houge.grpc.SendMsgRequest reactorRequest) {
@@ -69,7 +77,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息发送者
+         *  消息接收者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToGroup(cool.houge.grpc.SendMsgRequest reactorRequest) {
@@ -85,12 +93,7 @@ public final class ReactorMsgGrpc {
      */
     public static abstract class MsgImplBase implements io.grpc.BindableService {
 
-        /**
-         * <pre>
-         *  消息ID
-         * </pre>
-         */
-        public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> request) {
+        public reactor.core.publisher.Mono<cool.houge.grpc.CreateMsgIdResponse> createId(reactor.core.publisher.Mono<cool.houge.grpc.CreateMsgIdRequest> request) {
             throw new io.grpc.StatusRuntimeException(io.grpc.Status.UNIMPLEMENTED);
         }
 
@@ -99,12 +102,28 @@ public final class ReactorMsgGrpc {
          *  消息发送者
          * </pre>
          */
+        public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> request) {
+            throw new io.grpc.StatusRuntimeException(io.grpc.Status.UNIMPLEMENTED);
+        }
+
+        /**
+         * <pre>
+         *  消息接收者
+         * </pre>
+         */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToGroup(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> request) {
             throw new io.grpc.StatusRuntimeException(io.grpc.Status.UNIMPLEMENTED);
         }
 
         @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
             return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+                    .addMethod(
+                            cool.houge.grpc.MsgGrpc.getCreateIdMethod(),
+                            asyncUnaryCall(
+                                    new MethodHandlers<
+                                            cool.houge.grpc.CreateMsgIdRequest,
+                                            cool.houge.grpc.CreateMsgIdResponse>(
+                                            this, METHODID_CREATE_ID)))
                     .addMethod(
                             cool.houge.grpc.MsgGrpc.getSendToUserMethod(),
                             asyncUnaryCall(
@@ -128,8 +147,9 @@ public final class ReactorMsgGrpc {
 
     }
 
-    public static final int METHODID_SEND_TO_USER = 0;
-    public static final int METHODID_SEND_TO_GROUP = 1;
+    public static final int METHODID_CREATE_ID = 0;
+    public static final int METHODID_SEND_TO_USER = 1;
+    public static final int METHODID_SEND_TO_GROUP = 2;
 
     private static final class MethodHandlers<Req, Resp> implements
             io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -148,6 +168,11 @@ public final class ReactorMsgGrpc {
         @java.lang.SuppressWarnings("unchecked")
         public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
             switch (methodId) {
+                case METHODID_CREATE_ID:
+                    com.salesforce.reactorgrpc.stub.ServerCalls.oneToOne((cool.houge.grpc.CreateMsgIdRequest) request,
+                            (io.grpc.stub.StreamObserver<cool.houge.grpc.CreateMsgIdResponse>) responseObserver,
+                            serviceImpl::createId);
+                    break;
                 case METHODID_SEND_TO_USER:
                     com.salesforce.reactorgrpc.stub.ServerCalls.oneToOne((cool.houge.grpc.SendMsgRequest) request,
                             (io.grpc.stub.StreamObserver<cool.houge.grpc.SendMsgResponse>) responseObserver,

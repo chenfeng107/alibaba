@@ -5,9 +5,12 @@ import cool.houge.domain.model.Msg;
 import cool.houge.domain.model.User;
 import cool.houge.domain.msg.MsgService;
 import cool.houge.grpc.BrokerMsg;
+import cool.houge.grpc.CreateMsgIdRequest;
+import cool.houge.grpc.CreateMsgIdResponse;
 import cool.houge.grpc.ReactorMsgGrpc;
 import cool.houge.grpc.SendMsgRequest;
 import cool.houge.grpc.SendMsgResponse;
+import cool.houge.infra.id.MsgIdGenerator;
 import cool.houge.poplar.broker.MsgRouter;
 import cool.houge.protos.MsgKind;
 import javax.inject.Inject;
@@ -18,14 +21,28 @@ public class MsgGrpcImpl extends ReactorMsgGrpc.MsgImplBase {
 
   private final MsgRouter msgRouter;
   private final MsgService msgService;
+  private final MsgIdGenerator msgIdGenerator;
 
   /**
    * @param msgRouter
    * @param msgService
+   * @param msgIdGenerator
    */
-  public @Inject MsgGrpcImpl(MsgRouter msgRouter, MsgService msgService) {
+  public @Inject MsgGrpcImpl(
+      MsgRouter msgRouter, MsgService msgService, MsgIdGenerator msgIdGenerator) {
     this.msgRouter = msgRouter;
     this.msgService = msgService;
+    this.msgIdGenerator = msgIdGenerator;
+  }
+
+  @Override
+  public Mono<CreateMsgIdResponse> createId(Mono<CreateMsgIdRequest> request) {
+    return request.map(
+        req -> {
+          var msgId = msgIdGenerator.nextId();
+          // FIXME 记录日志
+          return CreateMsgIdResponse.newBuilder().setMsgId(msgId).build();
+        });
   }
 
   @Override

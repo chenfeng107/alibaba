@@ -20,6 +20,13 @@ option java_multiple_files = true;
 
 import "cool/houge/protos/msg_enums.proto";
 
+message CreateMsgIdRequest {
+}
+
+message CreateMsgIdResponse {
+  string msg_id = 1;
+}
+
 message SendMsgRequest {
   // 消息ID
   string msg_id = 1;
@@ -42,6 +49,8 @@ message SendMsgResponse {
 
 // 消息服务
 service Msg {
+
+  rpc CreateId(CreateMsgIdRequest) returns(CreateMsgIdResponse) {}
 
   rpc SendToUser(SendMsgRequest) returns(SendMsgResponse) {}
 

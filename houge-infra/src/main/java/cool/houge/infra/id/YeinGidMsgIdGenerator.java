@@ -25,7 +25,7 @@ import reactor.core.publisher.Flux;
  *
  * @author KK (kzou227@qq.com)
  */
-public class YeinGidMessageIdGenerator implements MessageIdGenerator {
+public class YeinGidMsgIdGenerator implements MsgIdGenerator {
 
   private final AppIdentifier appIdentifier;
 
@@ -35,7 +35,7 @@ public class YeinGidMessageIdGenerator implements MessageIdGenerator {
    * @param appIdentifier 应用标志对象
    */
   @Inject
-  public YeinGidMessageIdGenerator(AppIdentifier appIdentifier) {
+  public YeinGidMsgIdGenerator(AppIdentifier appIdentifier) {
     this.appIdentifier = appIdentifier;
   }
 

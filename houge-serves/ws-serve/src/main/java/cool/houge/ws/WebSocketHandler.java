@@ -155,7 +155,7 @@ public class WebSocketHandler {
 
     log.debug("处理消息包 session={} packet={}", session, packet);
     if (packet instanceof MsgPacket) {
-      return libService.processMsgPacket(session, (MsgPacket) packet);
+      return libService.perform(session, (MsgPacket) packet);
     }
 
     log.warn("未实现的Packet session={} packet={}", session, packet);

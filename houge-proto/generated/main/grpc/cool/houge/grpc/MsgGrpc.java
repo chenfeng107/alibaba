@@ -18,6 +18,37 @@ public final class MsgGrpc {
   public static final String SERVICE_NAME = "Msg";
 
   // Static method descriptors that strictly reflect the proto.
+  private static volatile io.grpc.MethodDescriptor<cool.houge.grpc.CreateMsgIdRequest,
+      cool.houge.grpc.CreateMsgIdResponse> getCreateIdMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "CreateId",
+      requestType = cool.houge.grpc.CreateMsgIdRequest.class,
+      responseType = cool.houge.grpc.CreateMsgIdResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<cool.houge.grpc.CreateMsgIdRequest,
+      cool.houge.grpc.CreateMsgIdResponse> getCreateIdMethod() {
+    io.grpc.MethodDescriptor<cool.houge.grpc.CreateMsgIdRequest, cool.houge.grpc.CreateMsgIdResponse> getCreateIdMethod;
+    if ((getCreateIdMethod = MsgGrpc.getCreateIdMethod) == null) {
+      synchronized (MsgGrpc.class) {
+        if ((getCreateIdMethod = MsgGrpc.getCreateIdMethod) == null) {
+          MsgGrpc.getCreateIdMethod = getCreateIdMethod =
+              io.grpc.MethodDescriptor.<cool.houge.grpc.CreateMsgIdRequest, cool.houge.grpc.CreateMsgIdResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "CreateId"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  cool.houge.grpc.CreateMsgIdRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  cool.houge.grpc.CreateMsgIdResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new MsgMethodDescriptorSupplier("CreateId"))
+              .build();
+        }
+      }
+    }
+    return getCreateIdMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<cool.houge.grpc.SendMsgRequest,
       cool.houge.grpc.SendMsgResponse> getSendToUserMethod;
 
@@ -133,6 +164,13 @@ public final class MsgGrpc {
 
     /**
      */
+    public void createId(cool.houge.grpc.CreateMsgIdRequest request,
+        io.grpc.stub.StreamObserver<cool.houge.grpc.CreateMsgIdResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateIdMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void sendToUser(cool.houge.grpc.SendMsgRequest request,
         io.grpc.stub.StreamObserver<cool.houge.grpc.SendMsgResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSendToUserMethod(), responseObserver);
@@ -147,6 +185,13 @@ public final class MsgGrpc {
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            getCreateIdMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                cool.houge.grpc.CreateMsgIdRequest,
+                cool.houge.grpc.CreateMsgIdResponse>(
+                  this, METHODID_CREATE_ID)))
           .addMethod(
             getSendToUserMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -180,6 +225,14 @@ public final class MsgGrpc {
     protected MsgStub build(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new MsgStub(channel, callOptions);
+    }
+
+    /**
+     */
+    public void createId(cool.houge.grpc.CreateMsgIdRequest request,
+        io.grpc.stub.StreamObserver<cool.houge.grpc.CreateMsgIdResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getCreateIdMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -218,6 +271,13 @@ public final class MsgGrpc {
 
     /**
      */
+    public cool.houge.grpc.CreateMsgIdResponse createId(cool.houge.grpc.CreateMsgIdRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateIdMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
     public cool.houge.grpc.SendMsgResponse sendToUser(cool.houge.grpc.SendMsgRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getSendToUserMethod(), getCallOptions(), request);
@@ -250,6 +310,14 @@ public final class MsgGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<cool.houge.grpc.CreateMsgIdResponse> createId(
+        cool.houge.grpc.CreateMsgIdRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getCreateIdMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<cool.houge.grpc.SendMsgResponse> sendToUser(
         cool.houge.grpc.SendMsgRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
@@ -265,8 +333,9 @@ public final class MsgGrpc {
     }
   }
 
-  private static final int METHODID_SEND_TO_USER = 0;
-  private static final int METHODID_SEND_TO_GROUP = 1;
+  private static final int METHODID_CREATE_ID = 0;
+  private static final int METHODID_SEND_TO_USER = 1;
+  private static final int METHODID_SEND_TO_GROUP = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -285,6 +354,10 @@ public final class MsgGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_CREATE_ID:
+          serviceImpl.createId((cool.houge.grpc.CreateMsgIdRequest) request,
+              (io.grpc.stub.StreamObserver<cool.houge.grpc.CreateMsgIdResponse>) responseObserver);
+          break;
         case METHODID_SEND_TO_USER:
           serviceImpl.sendToUser((cool.houge.grpc.SendMsgRequest) request,
               (io.grpc.stub.StreamObserver<cool.houge.grpc.SendMsgResponse>) responseObserver);
@@ -354,6 +427,7 @@ public final class MsgGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new MsgFileDescriptorSupplier())
+              .addMethod(getCreateIdMethod())
               .addMethod(getSendToUserMethod())
               .addMethod(getSendToGroupMethod())
               .build();

@@ -21,8 +21,8 @@ import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import cool.houge.infra.guice.DaoModule;
 import cool.houge.infra.guice.ServiceModule;
-import cool.houge.infra.id.MessageIdGenerator;
-import cool.houge.infra.id.YeinGidMessageIdGenerator;
+import cool.houge.infra.id.MsgIdGenerator;
+import cool.houge.infra.id.YeinGidMsgIdGenerator;
 import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.poplar.broker.BrokerManager;
 import cool.houge.poplar.broker.MsgRouter;
@@ -55,7 +55,7 @@ public class PoplarModule extends AbstractModule {
     bind(PoplarServer.class);
 
     bind(AppIdentifier.class).to(PoplarAppIdentifier.class).in(Scopes.SINGLETON);
-    bind(MessageIdGenerator.class).to(YeinGidMessageIdGenerator.class).in(Scopes.SINGLETON);
+    bind(MsgIdGenerator.class).to(YeinGidMsgIdGenerator.class).in(Scopes.SINGLETON);
 
     bind(BrokerManager.class).in(Scopes.SINGLETON);
     bind(MsgRouter.class).to(SimpleMsgRouter.class).in(Scopes.SINGLETON);
