@@ -32,7 +32,7 @@ public interface UserQueryRepository {
    * @param id 用户 ID
    * @return 用户信息
    */
-  Mono<User> queryById(long id);
+  Mono<User> findById(long id);
 
   /**
    * 使用用户 ID 查询用户是否存在.

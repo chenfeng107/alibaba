@@ -34,7 +34,7 @@ public class JooqUserRepository implements UserRepository, UserQueryRepository {
   }
 
   @Override
-  public Mono<User> queryById(long id) {
+  public Mono<User> findById(long id) {
     return Mono.from(dsl.selectFrom(USER).where(USER.ID.eq(id)))
         .map(UserRecordMapper.INSTANCE::toModel);
   }
