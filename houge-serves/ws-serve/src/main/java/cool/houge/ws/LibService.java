@@ -52,18 +52,19 @@ public class LibService {
       return session.send(ep);
     }
 
+    // 请求中不包含消息ID时自动从逻辑服务中生成
+    var createMsgIdMono =
+        Mono.defer(
+            () -> {
+              var req = CreateMsgIdRequest.newBuilder().build();
+              return msgStub
+                  .createId(req)
+                  .map(resp -> resp.getMsgId())
+                  .doOnNext(msgId -> log.debug("自动创建消息ID {}", msgId));
+            });
     var requestMono =
         Mono.justOrEmpty(p.getMsgId())
-            // 请求中不包含消息ID时自动从逻辑服务中生成
-            .switchIfEmpty(
-                Mono.defer(
-                    () -> {
-                      var req = CreateMsgIdRequest.newBuilder().build();
-                      return msgStub
-                          .createId(req)
-                          .map(resp -> resp.getMsgId())
-                          .doOnNext(msgId -> log.debug("自动创建消息ID {}", msgId));
-                    }))
+            .switchIfEmpty(createMsgIdMono)
             .map(
                 msgId -> {
                   var builder = SendMsgRequest.newBuilder();
