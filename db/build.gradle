@@ -1,16 +1,22 @@
 apply plugin: "org.flywaydb.flyway"
 apply plugin: "com.bmuschko.docker-remote-api"
 
+configurations {
+  flywayMigration
+}
+
 flyway {
+  driver = "com.mysql.cj.jdbc.Driver"
   url = rootProject.ext.hougeJdbcUrl
   user = rootProject.ext.hougeJdbcUser
   password = rootProject.ext.hougeJdbcPassword
-  locations = ["filesystem:migrations/*.sql"]
+  locations = ["filesystem:mysql/*.sql"]
+  configurations = ["compileClasspath", "flywayMigration"]
 }
 
 dependencies {
   // flywaydb 需要使用的依赖 https://flywaydb.org/
-  implementation("mysql:mysql-connector-java:8.0.28")
+  flywayMigration("mysql:mysql-connector-java:8.0.28")
 }
 
 task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {

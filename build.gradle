@@ -2,7 +2,7 @@ plugins {
   id "net.saliman.properties" version "1.5.1"
   id "io.spring.dependency-management" version "1.0.11.RELEASE"
   id "com.github.hierynomus.license" version "0.16.1"
-  id "org.flywaydb.flyway" version "8.4.2"
+  id "org.flywaydb.flyway" version "8.2.0"
   id "org.hidetake.ssh" version "2.10.1"
   id "com.github.johnrengelman.shadow" version "7.1.2"
   id "com.bmuschko.docker-remote-api" version "7.2.0"
@@ -181,25 +181,26 @@ allprojects {
 
 ext {
   // 数据库名称
-  def databaseName = "houge"
-  // PostgreSQL 配置
-  def postgresHost = requireProperty("hougePostgresHost")
-  def postgresPort = properties["hougePostgresPort"] ?: 5432
-  def postgresUser = requireProperty("hougePostgresUser")
-  def postgresPassword = requireProperty("hougePostgresPassword")
+  def dbName = "houge"
+  // MySQL 配置
+  def dbHost = requireProperty("houge.mysql.host")
+  def dbPort = properties["houge.mysql.port"] ?: 3306
+  def dbUser = requireProperty("houge.mysql.user")
+  def dbPassword = requireProperty("houge.mysql.password")
 
   // ============================================================================== //
   // ~~~ 初始化环境配置
   // ============================================================================== //
-  hougeJdbcUrl = "jdbc:postgresql://${postgresHost}:${postgresPort}/${databaseName}"
-  hougeJdbcUser = postgresUser
-  hougeJdbcPassword = postgresPassword
+  hougeDbName = dbName
+  hougeJdbcUrl = "jdbc:mysql://${dbHost}:${dbPort}/${dbName}"
+  hougeJdbcUser = dbUser
+  hougeJdbcPassword = dbPassword
 }
 
 def requireProperty(name) {
   def v = rootProject.findProperty(name)
   if (v == null || v.isEmpty()) {
-//    throw new IllegalArgumentException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
+    throw new IllegalArgumentException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
   }
   return v
 }
