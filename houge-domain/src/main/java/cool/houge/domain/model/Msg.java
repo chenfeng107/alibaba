@@ -15,7 +15,7 @@
  */
 package cool.houge.domain.model;
 
-import cool.houge.domain.constants.EnumLite;
+import cool.houge.domain.EnumLite;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;

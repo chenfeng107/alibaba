@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.auth;
+package cool.houge.domain;
 
 /**
- * 认证的上下文信息.
+ * 在字段集中使用的枚举值或数值值描述符的接口.
  *
  * @author KK (kzou227@qq.com)
  */
-public interface AuthContext {
+public interface EnumLite {
 
   /**
-   * 返回用户 ID.
+   * 返回枚举数值.
    *
-   * <p>匿名访问用户 ID 为 0.
-   *
-   * @return 用户 ID
+   * @return 数值
    */
-  int uid();
-
-  /**
-   * 返回认证令牌.
-   *
-   * @return 认证令牌
-   */
-  String token();
+  int getCode();
 }
