@@ -15,7 +15,6 @@
  */
 package cool.houge.domain.model;
 
-import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -32,7 +31,7 @@ public class JwtSecret {
   /** 签名算法名称. */
   private String algorithm;
   /** HMAC 密钥. */
-  private ByteBuffer secretKey;
+  private byte[] secretKey;
   /**
    * 删除数据的时间戳.
    *

@@ -157,9 +157,9 @@ public class JwsAuthService implements AuthService, TokenService {
     var name = e.getAlgorithm();
     Algorithm algorithm;
     if ("HS256".equals(name)) {
-      algorithm = Algorithm.HMAC256(e.getSecretKey().array());
+      algorithm = Algorithm.HMAC256(e.getSecretKey());
     } else if ("HS512".equals(name)) {
-      algorithm = Algorithm.HMAC512(e.getSecretKey().array());
+      algorithm = Algorithm.HMAC512(e.getSecretKey());
     } else {
       throw new BizCodeException(BizCode.C404).addContextValue("algorithm", name);
     }

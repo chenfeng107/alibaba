@@ -29,10 +29,10 @@ public interface JwtSecretRepository {
   /**
    * 保存数据并返回受影响行记录数.
    *
-   * @param entity 实体
+   * @param model 实体
    * @return 受影响行记录数
    */
-  Mono<Void> insert(JwtSecret entity);
+  Mono<Void> insert(JwtSecret model);
 
   /**
    * 软删除 JWT 密钥.

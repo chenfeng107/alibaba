@@ -15,9 +15,12 @@
  */
 package cool.houge.infra.repository.jwt;
 
+import static cool.houge.infra.db.Tables.JWT_SECRET;
+
 import cool.houge.domain.model.JwtSecret;
 import cool.houge.domain.repository.jwt.JwtSecretRepository;
-import lombok.extern.log4j.Log4j2;
+import javax.inject.Inject;
+import org.jooq.DSLContext;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -26,26 +29,48 @@ import reactor.core.publisher.Mono;
  *
  * @author KK (kzou227@qq.com)
  */
-@Log4j2
 public class JooqJwtSecretRepository implements JwtSecretRepository {
 
+  private final DSLContext dsl;
+
+  @Inject
+  public JooqJwtSecretRepository(DSLContext dsl) {
+    this.dsl = dsl;
+  }
+
   @Override
-  public Mono<Void> insert(JwtSecret entity) {
-    return null;
+  public Mono<Void> insert(JwtSecret model) {
+    return Mono.from(
+            dsl.insertInto(JWT_SECRET).set(JwtSecretMapper.INSTANCE.map(model))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<Void> delete(String id) {
-    return null;
+    return Mono.from(
+            dsl.delete(JWT_SECRET).where(JWT_SECRET.ID.eq(id))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<JwtSecret> findById(String id) {
-    return null;
+    return Mono.from(
+            dsl.selectFrom(JWT_SECRET).where(JWT_SECRET.ID.eq(id))
+            //
+            )
+        .map(JwtSecretMapper.INSTANCE::map);
   }
 
   @Override
   public Flux<JwtSecret> findAll() {
-    return null;
+    return Flux.from(
+            dsl.selectFrom(JWT_SECRET)
+            //
+            )
+        .map(JwtSecretMapper.INSTANCE::map);
   }
 }
