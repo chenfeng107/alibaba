@@ -11,6 +11,8 @@
 
 [We Are Reactive](https://www.reactivemanifesto.org/zh-CN)
 
+**Houge的目标：用最少的资源，做好1000K服务**。
+
 Houge 是一款开源免费的**实时消息推送服务**，采用 [Spring Reactor](https://projectreactor.io/) 作为基础技术研发，完全采用反应式（Reactive Programming）编程模式实现。
 
 服务端采用模块化设计，内置简洁通讯协议，扩展性强，可配置化，部署简单，集群等特点。
