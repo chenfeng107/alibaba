@@ -79,7 +79,7 @@ jooq {
             matchers {
               tables {
                 table {
-                  expression = "[tT]_(.*)"
+                  expression = "T_(.*)"
                   tableIdentifier {
                     transform = "UPPER"
                     expression = '$1'
