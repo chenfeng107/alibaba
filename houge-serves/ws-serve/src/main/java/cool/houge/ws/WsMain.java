@@ -64,12 +64,6 @@ public class WsMain implements Runnable {
                   } catch (Exception e) {
                     log.error("停止WebSocket服务异常", e);
                   }
-
-                  try {
-                    // FIXME
-                  } catch (Exception e) {
-                    log.error("停止AgentServiceManager异常", e);
-                  }
                 },
                 "shutdown"));
   }
