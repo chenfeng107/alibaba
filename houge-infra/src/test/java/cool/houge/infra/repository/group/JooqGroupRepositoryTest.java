@@ -1,5 +1,9 @@
 package cool.houge.infra.repository.group;
 
+import static cool.houge.infra.db.Tables.GROUP;
+import static cool.houge.infra.db.Tables.GROUP_MEMBER;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cool.houge.domain.model.Group;
 import cool.houge.domain.model.User;
 import cool.houge.infra.repository.JooqTestBase;
@@ -34,6 +38,26 @@ class JooqGroupRepositoryTest extends JooqTestBase {
     StepVerifier.create(p)
         .expectNext(model.getId())
         //
+        .expectComplete()
+        .verify();
+
+    // 清理数据
+    clean(model.getId());
+  }
+
+  void clean(long gid) {
+    StepVerifier.create(
+            dsl.delete(GROUP).where(GROUP.ID.eq(gid))
+            //
+            )
+        .expectNext(1)
+        .expectComplete()
+        .verify();
+    StepVerifier.create(
+            dsl.delete(GROUP_MEMBER).where(GROUP_MEMBER.GID.eq(gid))
+            //
+            )
+        .assertNext(n -> assertThat(n).isPositive())
         .expectComplete()
         .verify();
   }

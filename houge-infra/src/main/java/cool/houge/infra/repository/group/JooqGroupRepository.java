@@ -49,7 +49,15 @@ public class JooqGroupRepository implements GroupRepository, GroupQueryRepositor
 
   @Override
   public Mono<Void> delete(long gid) {
-    return null;
+    return Mono.from(
+            dsl.delete(GROUP).where(GROUP.ID.eq(gid))
+            //
+            )
+        .thenMany(
+            dsl.delete(GROUP_MEMBER).where(GROUP_MEMBER.GID.eq(gid))
+            //
+            )
+        .then();
   }
 
   @Override
