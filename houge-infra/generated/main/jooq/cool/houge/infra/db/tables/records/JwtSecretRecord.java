@@ -33,8 +33,9 @@ public class JwtSecretRecord extends TableRecordImpl<JwtSecretRecord> implements
     /**
      * Setter for <code>public.t_jwt_secret.id</code>. kid 标识仅支持2个字符
      */
-    public void setId(@Nonnull String value) {
+    public JwtSecretRecord setId(@Nonnull String value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -49,8 +50,9 @@ public class JwtSecretRecord extends TableRecordImpl<JwtSecretRecord> implements
      * Setter for <code>public.t_jwt_secret.algorithm</code>. JWT 签名算法名称
      * 当前支持 HMAC 家族的加密算法
      */
-    public void setAlgorithm(@Nonnull String value) {
+    public JwtSecretRecord setAlgorithm(@Nonnull String value) {
         set(1, value);
+        return this;
     }
 
     /**
@@ -65,8 +67,9 @@ public class JwtSecretRecord extends TableRecordImpl<JwtSecretRecord> implements
     /**
      * Setter for <code>public.t_jwt_secret.secret_key</code>. 密钥
      */
-    public void setSecretKey(@Nonnull byte[] value) {
+    public JwtSecretRecord setSecretKey(@Nonnull byte[] value) {
         set(2, value);
+        return this;
     }
 
     /**
@@ -81,8 +84,9 @@ public class JwtSecretRecord extends TableRecordImpl<JwtSecretRecord> implements
      * Setter for <code>public.t_jwt_secret.deleted</code>. 删除数据的时间戳（秒），值不为 0
      * 时，表示该行数据已被软删除
      */
-    public void setDeleted(@Nonnull Integer value) {
+    public JwtSecretRecord setDeleted(@Nonnull Integer value) {
         set(3, value);
+        return this;
     }
 
     /**
@@ -97,8 +101,9 @@ public class JwtSecretRecord extends TableRecordImpl<JwtSecretRecord> implements
     /**
      * Setter for <code>public.t_jwt_secret.create_time</code>. 创建时间
      */
-    public void setCreateTime(@Nonnull LocalDateTime value) {
+    public JwtSecretRecord setCreateTime(@Nonnull LocalDateTime value) {
         set(4, value);
+        return this;
     }
 
     /**
@@ -112,8 +117,9 @@ public class JwtSecretRecord extends TableRecordImpl<JwtSecretRecord> implements
     /**
      * Setter for <code>public.t_jwt_secret.update_time</code>. 修改时间
      */
-    public void setUpdateTime(@Nonnull LocalDateTime value) {
+    public JwtSecretRecord setUpdateTime(@Nonnull LocalDateTime value) {
         set(5, value);
+        return this;
     }
 
     /**

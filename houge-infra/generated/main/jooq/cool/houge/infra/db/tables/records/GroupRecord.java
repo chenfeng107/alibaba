@@ -34,8 +34,9 @@ public class GroupRecord extends TableRecordImpl<GroupRecord> implements Record6
     /**
      * Setter for <code>public.t_group.id</code>. 群 ID
      */
-    public void setId(@Nonnull Long value) {
+    public GroupRecord setId(@Nonnull Long value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -49,8 +50,9 @@ public class GroupRecord extends TableRecordImpl<GroupRecord> implements Record6
     /**
      * Setter for <code>public.t_group.creator_id</code>. 创建者用户 ID
      */
-    public void setCreatorId(@Nonnull Long value) {
+    public GroupRecord setCreatorId(@Nonnull Long value) {
         set(1, value);
+        return this;
     }
 
     /**
@@ -64,8 +66,9 @@ public class GroupRecord extends TableRecordImpl<GroupRecord> implements Record6
     /**
      * Setter for <code>public.t_group.owner_id</code>. 拥有者用户 ID
      */
-    public void setOwnerId(@Nullable Long value) {
+    public GroupRecord setOwnerId(@Nullable Long value) {
         set(2, value);
+        return this;
     }
 
     /**
@@ -79,8 +82,9 @@ public class GroupRecord extends TableRecordImpl<GroupRecord> implements Record6
     /**
      * Setter for <code>public.t_group.member_size</code>. 群成员数量
      */
-    public void setMemberSize(@Nonnull Integer value) {
+    public GroupRecord setMemberSize(@Nonnull Integer value) {
         set(3, value);
+        return this;
     }
 
     /**
@@ -94,8 +98,9 @@ public class GroupRecord extends TableRecordImpl<GroupRecord> implements Record6
     /**
      * Setter for <code>public.t_group.create_time</code>. 创建时间
      */
-    public void setCreateTime(@Nonnull LocalDateTime value) {
+    public GroupRecord setCreateTime(@Nonnull LocalDateTime value) {
         set(4, value);
+        return this;
     }
 
     /**
@@ -109,8 +114,9 @@ public class GroupRecord extends TableRecordImpl<GroupRecord> implements Record6
     /**
      * Setter for <code>public.t_group.update_time</code>. 更新时间
      */
-    public void setUpdateTime(@Nonnull LocalDateTime value) {
+    public GroupRecord setUpdateTime(@Nonnull LocalDateTime value) {
         set(5, value);
+        return this;
     }
 
     /**

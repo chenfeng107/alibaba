@@ -31,8 +31,9 @@ public class UserMessageRecord extends TableRecordImpl<UserMessageRecord> implem
     /**
      * Setter for <code>public.t_user_message.uid</code>. 用户 ID
      */
-    public void setUid(@Nonnull Long value) {
+    public UserMessageRecord setUid(@Nonnull Long value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -46,8 +47,9 @@ public class UserMessageRecord extends TableRecordImpl<UserMessageRecord> implem
     /**
      * Setter for <code>public.t_user_message.message_id</code>. 消息 ID
      */
-    public void setMessageId(@Nonnull String value) {
+    public UserMessageRecord setMessageId(@Nonnull String value) {
         set(1, value);
+        return this;
     }
 
     /**

@@ -34,8 +34,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.id</code>. 主键
      */
-    public void setId(@Nonnull Integer value) {
+    public ServerInstanceRecord setId(@Nonnull Integer value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -49,8 +50,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.app_name</code>. 应用名称
      */
-    public void setAppName(@Nonnull String value) {
+    public ServerInstanceRecord setAppName(@Nonnull String value) {
         set(1, value);
+        return this;
     }
 
     /**
@@ -64,8 +66,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.host_name</code>. 主机名称
      */
-    public void setHostName(@Nonnull String value) {
+    public ServerInstanceRecord setHostName(@Nonnull String value) {
         set(2, value);
+        return this;
     }
 
     /**
@@ -79,8 +82,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.host_address</code>. 主机 IP 地址
      */
-    public void setHostAddress(@Nonnull String value) {
+    public ServerInstanceRecord setHostAddress(@Nonnull String value) {
         set(3, value);
+        return this;
     }
 
     /**
@@ -94,8 +98,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.os_name</code>. 系统名称
      */
-    public void setOsName(@Nullable String value) {
+    public ServerInstanceRecord setOsName(@Nullable String value) {
         set(4, value);
+        return this;
     }
 
     /**
@@ -109,8 +114,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.os_version</code>. 系统版本
      */
-    public void setOsVersion(@Nonnull String value) {
+    public ServerInstanceRecord setOsVersion(@Nonnull String value) {
         set(5, value);
+        return this;
     }
 
     /**
@@ -124,8 +130,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.os_arch</code>. OS Arch
      */
-    public void setOsArch(@Nonnull String value) {
+    public ServerInstanceRecord setOsArch(@Nonnull String value) {
         set(6, value);
+        return this;
     }
 
     /**
@@ -139,8 +146,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.os_user</code>. 系统的用户名
      */
-    public void setOsUser(@Nullable String value) {
+    public ServerInstanceRecord setOsUser(@Nullable String value) {
         set(7, value);
+        return this;
     }
 
     /**
@@ -154,8 +162,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.java_vm_name</code>. Java 虚拟机名称
      */
-    public void setJavaVmName(@Nonnull String value) {
+    public ServerInstanceRecord setJavaVmName(@Nonnull String value) {
         set(8, value);
+        return this;
     }
 
     /**
@@ -170,8 +179,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
      * Setter for <code>public.t_server_instance.java_vm_version</code>. Java
      * 虚拟机版本
      */
-    public void setJavaVmVersion(@Nonnull String value) {
+    public ServerInstanceRecord setJavaVmVersion(@Nonnull String value) {
         set(9, value);
+        return this;
     }
 
     /**
@@ -187,8 +197,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
      * Setter for <code>public.t_server_instance.java_vm_vendor</code>. Java
      * 虚拟机供应商
      */
-    public void setJavaVmVendor(@Nonnull String value) {
+    public ServerInstanceRecord setJavaVmVendor(@Nonnull String value) {
         set(10, value);
+        return this;
     }
 
     /**
@@ -203,8 +214,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.work_dir</code>. 服务的工作目录
      */
-    public void setWorkDir(@Nonnull String value) {
+    public ServerInstanceRecord setWorkDir(@Nonnull String value) {
         set(11, value);
+        return this;
     }
 
     /**
@@ -218,8 +230,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.pid</code>. 进程 ID
      */
-    public void setPid(@Nonnull Long value) {
+    public ServerInstanceRecord setPid(@Nonnull Long value) {
         set(12, value);
+        return this;
     }
 
     /**
@@ -233,8 +246,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.ver</code>. 数据版本
      */
-    public void setVer(@Nonnull Integer value) {
+    public ServerInstanceRecord setVer(@Nonnull Integer value) {
         set(13, value);
+        return this;
     }
 
     /**
@@ -248,8 +262,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
     /**
      * Setter for <code>public.t_server_instance.create_time</code>. 创建时间
      */
-    public void setCreateTime(@Nonnull LocalDateTime value) {
+    public ServerInstanceRecord setCreateTime(@Nonnull LocalDateTime value) {
         set(14, value);
+        return this;
     }
 
     /**
@@ -264,8 +279,9 @@ public class ServerInstanceRecord extends TableRecordImpl<ServerInstanceRecord> 
      * Setter for <code>public.t_server_instance.check_time</code>.
      * 最后检查时间，与当前时间相差超过1小时则默认服务已销毁
      */
-    public void setCheckTime(@Nonnull LocalDateTime value) {
+    public ServerInstanceRecord setCheckTime(@Nonnull LocalDateTime value) {
         set(15, value);
+        return this;
     }
 
     /**

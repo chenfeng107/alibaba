@@ -25,7 +25,7 @@ class JooqUserRepositoryTest {
             "r2dbc:pool:postgresql://postgres:hellohuixin@192.168.1.106:5432/houge?validationQuery=SELECT%201");
     var dsl = DSL.using(connectionFactory, SQLDialect.POSTGRES);
     var repos = new JooqUserRepository(dsl);
-    var model = User.builder().id(10L).originUid("HELLO").build();
+    var model = new User().setId(10L).setOriginUid("HELLO");
     var p = repos.insert(model);
     StepVerifier.create(p)
         .assertNext(

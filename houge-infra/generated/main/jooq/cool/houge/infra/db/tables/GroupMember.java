@@ -66,7 +66,7 @@ public class GroupMember extends TableImpl<GroupMemberRecord> {
     /**
      * The column <code>public.t_group_member.create_time</code>. 创建时间
      */
-    public final TableField<GroupMemberRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("create_time"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "创建时间");
+    public final TableField<GroupMemberRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("create_time"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.LOCALDATETIME)), this, "创建时间");
 
     private GroupMember(Name alias, Table<GroupMemberRecord> aliased) {
         this(alias, aliased, null);

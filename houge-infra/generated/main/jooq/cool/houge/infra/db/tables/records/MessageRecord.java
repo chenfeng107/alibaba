@@ -34,8 +34,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.id</code>. 全局消息 ID
      */
-    public void setId(@Nonnull String value) {
+    public MessageRecord setId(@Nonnull String value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -49,8 +50,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.sender_id</code>. 发送人 ID
      */
-    public void setSenderId(@Nullable Long value) {
+    public MessageRecord setSenderId(@Nullable Long value) {
         set(1, value);
+        return this;
     }
 
     /**
@@ -64,8 +66,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.receiver_id</code>. 接收人 ID
      */
-    public void setReceiverId(@Nullable Long value) {
+    public MessageRecord setReceiverId(@Nullable Long value) {
         set(2, value);
+        return this;
     }
 
     /**
@@ -79,8 +82,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.group_id</code>. 群 ID
      */
-    public void setGroupId(@Nullable Long value) {
+    public MessageRecord setGroupId(@Nullable Long value) {
         set(3, value);
+        return this;
     }
 
     /**
@@ -98,8 +102,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
      * 8: 系统消息-单人
      * 9: 系统消息-群组
      */
-    public void setKind(@Nonnull Short value) {
+    public MessageRecord setKind(@Nonnull Short value) {
         set(4, value);
+        return this;
     }
 
     /**
@@ -117,8 +122,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.content</code>. 消息内容
      */
-    public void setContent(@Nullable String value) {
+    public MessageRecord setContent(@Nullable String value) {
         set(5, value);
+        return this;
     }
 
     /**
@@ -136,8 +142,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
      * 2: 音频消息
      * 3: 视频消息
      */
-    public void setContentType(@Nonnull Short value) {
+    public MessageRecord setContentType(@Nonnull Short value) {
         set(6, value);
+        return this;
     }
 
     /**
@@ -155,8 +162,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.extra_args</code>. 扩展参数
      */
-    public void setExtraArgs(@Nullable String value) {
+    public MessageRecord setExtraArgs(@Nullable String value) {
         set(7, value);
+        return this;
     }
 
     /**
@@ -172,8 +180,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
      * 0: 已读
      * 1: 未读
      */
-    public void setUnread(@Nullable Short value) {
+    public MessageRecord setUnread(@Nullable Short value) {
         set(8, value);
+        return this;
     }
 
     /**
@@ -189,8 +198,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.create_time</code>. 创建时间
      */
-    public void setCreateTime(@Nonnull LocalDateTime value) {
+    public MessageRecord setCreateTime(@Nonnull LocalDateTime value) {
         set(9, value);
+        return this;
     }
 
     /**
@@ -204,8 +214,9 @@ public class MessageRecord extends TableRecordImpl<MessageRecord> implements Rec
     /**
      * Setter for <code>public.t_message.update_time</code>. 更新时间
      */
-    public void setUpdateTime(@Nonnull LocalDateTime value) {
+    public MessageRecord setUpdateTime(@Nonnull LocalDateTime value) {
         set(10, value);
+        return this;
     }
 
     /**

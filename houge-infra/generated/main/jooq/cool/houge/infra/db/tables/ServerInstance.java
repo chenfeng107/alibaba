@@ -128,13 +128,13 @@ public class ServerInstance extends TableImpl<ServerInstanceRecord> {
     /**
      * The column <code>public.t_server_instance.create_time</code>. 创建时间
      */
-    public final TableField<ServerInstanceRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("create_time"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "创建时间");
+    public final TableField<ServerInstanceRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("create_time"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.LOCALDATETIME)), this, "创建时间");
 
     /**
      * The column <code>public.t_server_instance.check_time</code>.
      * 最后检查时间，与当前时间相差超过1小时则默认服务已销毁
      */
-    public final TableField<ServerInstanceRecord, LocalDateTime> CHECK_TIME = createField(DSL.name("check_time"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "最后检查时间，与当前时间相差超过1小时则默认服务已销毁");
+    public final TableField<ServerInstanceRecord, LocalDateTime> CHECK_TIME = createField(DSL.name("check_time"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("CURRENT_TIMESTAMP", SQLDataType.LOCALDATETIME)), this, "最后检查时间，与当前时间相差超过1小时则默认服务已销毁");
 
     private ServerInstance(Name alias, Table<ServerInstanceRecord> aliased) {
         this(alias, aliased, null);

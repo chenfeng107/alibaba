@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Mono<CreateUserResult> create(CreateUserInput in) {
     return userRepository
-        .insert(User.builder().id(in.getUid()).originUid(in.getOriginUid()).build())
+        .insert(new User().setId(in.getUid()).setOriginUid(in.getOriginUid()))
         .doOnSuccess(id -> updateUidBits(id, true))
         .map(id -> CreateUserResult.builder().uid(id).build());
   }

@@ -33,8 +33,9 @@ public class GroupMemberRecord extends TableRecordImpl<GroupMemberRecord> implem
     /**
      * Setter for <code>public.t_group_member.gid</code>. 群 ID
      */
-    public void setGid(@Nonnull Long value) {
+    public GroupMemberRecord setGid(@Nonnull Long value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -48,8 +49,9 @@ public class GroupMemberRecord extends TableRecordImpl<GroupMemberRecord> implem
     /**
      * Setter for <code>public.t_group_member.uid</code>. 用户 ID
      */
-    public void setUid(@Nonnull Long value) {
+    public GroupMemberRecord setUid(@Nonnull Long value) {
         set(1, value);
+        return this;
     }
 
     /**
@@ -63,8 +65,9 @@ public class GroupMemberRecord extends TableRecordImpl<GroupMemberRecord> implem
     /**
      * Setter for <code>public.t_group_member.create_time</code>. 创建时间
      */
-    public void setCreateTime(@Nonnull LocalDateTime value) {
+    public GroupMemberRecord setCreateTime(@Nonnull LocalDateTime value) {
         set(2, value);
+        return this;
     }
 
     /**

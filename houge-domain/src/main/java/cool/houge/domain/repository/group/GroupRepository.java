@@ -9,10 +9,10 @@ public interface GroupRepository {
   /**
    * 保存群组信息.
    *
-   * @param entity 群实体
+   * @param model 群实体
    * @return 群组 ID
    */
-  Mono<Long> insert(Group entity);
+  Mono<Long> insert(Group model);
 
   /**
    * 删除群组.

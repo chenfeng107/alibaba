@@ -59,13 +59,12 @@ public class GroupServiceImpl implements GroupService {
   @Override
   public Mono<CreateGroupResult> create(CreateGroupInput in) {
     var entity =
-        Group.builder()
-            .id(in.getGid())
+        new Group()
+            .setId(in.getGid())
             // FIXME
             //            .creatorId(in.getCreatorId())
             //            .ownerId(in.getCreatorId())
-            .memberSize(1)
-            .build();
+            .setMemberSize(1);
     return groupRepository
         .insert(entity)
         .doOnSuccess(id -> this.updateGidBits(id, true))

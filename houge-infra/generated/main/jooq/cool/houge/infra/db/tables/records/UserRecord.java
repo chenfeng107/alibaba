@@ -34,8 +34,9 @@ public class UserRecord extends TableRecordImpl<UserRecord> implements Record4<L
     /**
      * Setter for <code>public.t_user.id</code>.
      */
-    public void setId(@Nonnull Long value) {
+    public UserRecord setId(@Nonnull Long value) {
         set(0, value);
+        return this;
     }
 
     /**
@@ -49,8 +50,9 @@ public class UserRecord extends TableRecordImpl<UserRecord> implements Record4<L
     /**
      * Setter for <code>public.t_user.origin_uid</code>. 原用户 ID
      */
-    public void setOriginUid(@Nullable String value) {
+    public UserRecord setOriginUid(@Nullable String value) {
         set(1, value);
+        return this;
     }
 
     /**
@@ -64,8 +66,9 @@ public class UserRecord extends TableRecordImpl<UserRecord> implements Record4<L
     /**
      * Setter for <code>public.t_user.create_time</code>. 创建时间
      */
-    public void setCreateTime(@Nonnull LocalDateTime value) {
+    public UserRecord setCreateTime(@Nonnull LocalDateTime value) {
         set(2, value);
+        return this;
     }
 
     /**
@@ -79,8 +82,9 @@ public class UserRecord extends TableRecordImpl<UserRecord> implements Record4<L
     /**
      * Setter for <code>public.t_user.update_time</code>. 更新时间
      */
-    public void setUpdateTime(@Nonnull LocalDateTime value) {
+    public UserRecord setUpdateTime(@Nonnull LocalDateTime value) {
         set(3, value);
+        return this;
     }
 
     /**
