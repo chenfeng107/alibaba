@@ -82,18 +82,18 @@ public interface R2dbcClient {
     /**
      * 返回获取数据规范并绑定数据结果映射函数.
      *
-     * @param mappingFunction 数据映射函数
      * @param <R> 映射的数据类型
+     * @param mappingFunction 数据映射函数
      * @return 获取数据规范
      */
-    <R> FetchSpec<R> map(Function<Row, R> mappingFunction);
+    <R> Publisher<R> fetch(Function<Row, R> mappingFunction);
 
     /**
      * 返回获取数据规范并将数据映射为 {@code Map} 类型.
      *
      * @return 获取数据规范
      */
-    FetchSpec<Map<String, Object>> fetch();
+    Publisher<Map<String, Object>> fetch();
 
     /**
      * 返回更新数据库受影响的行数.
@@ -112,30 +112,5 @@ public interface R2dbcClient {
      * @return 受影响的行数
      */
     Mono<Integer> rowsUpdated();
-  }
-
-  /**
-   * 获取数据规范.
-   *
-   * @param <T> 映射的数据类型
-   */
-  interface FetchSpec<T> {
-
-    /**
-     * 只返回一条数据.
-     *
-     * <p>如果没有数据则返回 {@code Mono.empty()}, 如果数据行数超过 1 则会抛出异常 {@link IncorrectResultSizeException} 异常.
-     *
-     * @return 数据
-     * @see IncorrectResultSizeException
-     */
-    Mono<T> one();
-
-    /**
-     * 返回所有的查询数据.
-     *
-     * @return 数据
-     */
-    Flux<T> all();
   }
 }

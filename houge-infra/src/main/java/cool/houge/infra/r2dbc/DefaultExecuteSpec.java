@@ -1,7 +1,6 @@
 package cool.houge.infra.r2dbc;
 
 import cool.houge.infra.r2dbc.R2dbcClient.ExecuteSpec;
-import cool.houge.infra.r2dbc.R2dbcClient.FetchSpec;
 import io.r2dbc.spi.ColumnMetadata;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.Row;
@@ -10,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,36 +55,14 @@ class DefaultExecuteSpec implements ExecuteSpec {
   }
 
   @Override
-  public <R> FetchSpec<R> map(Function<Row, R> mappingFunction) {
-    return new FetchSpec<>() {
-
-      @Override
-      public Mono<R> one() {
-        return all()
-            .buffer(2)
-            .singleOrEmpty()
-            .flatMap(
-                list -> {
-                  if (list.size() > 1) {
-                    return Mono.error(
-                        new IncorrectResultSizeException(
-                            String.format("查询[%s]返回的结果数量与预期不符", sql), 1));
-                  }
-                  return Mono.just(list.get(0));
-                });
-      }
-
-      @Override
-      public Flux<R> all() {
-        return Flux.from(statement.execute())
-            .flatMap(rs -> Flux.from(rs.map((row, rowMetadata) -> mappingFunction.apply(row))));
-      }
-    };
+  public <R> Publisher<R> fetch(Function<Row, R> mappingFunction) {
+    return Flux.defer(statement::execute)
+        .flatMap(rs -> rs.map((row, rowMetadata) -> mappingFunction.apply(row)));
   }
 
   @Override
-  public FetchSpec<Map<String, Object>> fetch() {
-    return this.map(
+  public Publisher<Map<String, Object>> fetch() {
+    return this.fetch(
         (row) -> {
           var map = new LinkedHashMap<String, Object>();
           for (ColumnMetadata columnMeta : row.getMetadata().getColumnMetadatas()) {
