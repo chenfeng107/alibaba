@@ -10,7 +10,7 @@ flyway {
 
 dependencies {
   // flywaydb 需要使用的依赖 https://flywaydb.org/
-  implementation("org.postgresql:postgresql")
+  implementation("mysql:mysql-connector-java:8.0.28")
 }
 
 task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
