@@ -147,12 +147,13 @@ allprojects {
   repositories {
     mavenLocal()
 
-    def aliyunEnabled = System.getenv("GITHUB_ACTIONS") == null
-    if (aliyunEnabled) {
-      maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
-    }
-    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
+//    def aliyunEnabled = System.getenv("GITHUB_ACTIONS") == null
+//    if (aliyunEnabled) {
+//      maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
+//    }
+
     mavenCentral()
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 
   jar {
