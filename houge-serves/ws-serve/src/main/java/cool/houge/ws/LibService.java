@@ -8,24 +8,33 @@ import cool.houge.grpc.SendMsgRequest;
 import cool.houge.grpc.VerifyTokenRequest;
 import cool.houge.protos.MsgContentType;
 import cool.houge.ws.packet.ErrorPacket;
+import cool.houge.ws.packet.GroupSubPacket;
 import cool.houge.ws.packet.MsgPacket;
 import cool.houge.ws.packet.PrivateMsgPacket;
 import cool.houge.ws.session.Session;
+import cool.houge.ws.session.SessionGroupManager;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
 
-/** @author KK (kzou227@qq.com) */
+/**
+ * 工具包.
+ *
+ * @author KK (kzou227@qq.com)
+ */
 public class LibService {
 
   private static final Logger log = LogManager.getLogger();
   private final ReactorTokenStub tokenStub;
   private final ReactorMsgStub msgStub;
+  private final SessionGroupManager sessionGroupManager;
 
-  public @Inject LibService(ReactorTokenStub tokenStub, ReactorMsgStub msgStub) {
+  public @Inject LibService(
+      ReactorTokenStub tokenStub, ReactorMsgStub msgStub, SessionGroupManager sessionGroupManager) {
     this.tokenStub = tokenStub;
     this.msgStub = msgStub;
+    this.sessionGroupManager = sessionGroupManager;
   }
 
   /**
@@ -47,8 +56,7 @@ public class LibService {
     if (contentType == MsgContentType.UNRECOGNIZED) {
       var msg = Strings.lenientFormat("消息包中包含不认识的内容类型 content_type=%s", p.getContentType());
       log.warn(msg);
-      // FIXME 定义错误码
-      var ep = ErrorPacket.builder().code(-1).message(msg).build();
+      var ep = ErrorPacket.builder().code(ErrorCodes.PACKET).message(msg).build();
       return session.send(ep);
     }
 
@@ -98,5 +106,35 @@ public class LibService {
               })
           .then();
     }
+  }
+
+  /**
+   * @param session
+   * @param p
+   * @return
+   */
+  public Mono<Void> subGroups(Session session, GroupSubPacket p) {
+    if (p.getGroupIds() == null || p.getGroupIds().isEmpty()) {
+      log.warn("订阅群组消息的ID为空 session={}", session);
+      return Mono.empty();
+    }
+
+    log.debug("订阅群组消息 session={} groupIds={}", session, p.getGroupIds());
+    return sessionGroupManager.subGroups(session, p.getGroupIds());
+  }
+
+  /**
+   * @param session
+   * @param p
+   * @return
+   */
+  public Mono<Void> unsubGroups(Session session, GroupSubPacket p) {
+    if (p.getGroupIds() == null || p.getGroupIds().isEmpty()) {
+      log.warn("取消订阅群组消息的ID为空 session={}", session);
+      return Mono.empty();
+    }
+
+    log.debug("取消订阅群组消息 session={} groupIds={}", session, p.getGroupIds());
+    return sessionGroupManager.unsubGroups(session, p.getGroupIds());
   }
 }

@@ -25,6 +25,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import cool.houge.protos.ErrorInfo;
 import cool.houge.ws.packet.ErrorPacket;
 import cool.houge.ws.packet.ErrorPacket.ErrorPacketBuilder;
+import cool.houge.ws.packet.GroupSubPacket;
 import cool.houge.ws.packet.MsgPacket;
 import cool.houge.ws.packet.Packet;
 import cool.houge.ws.session.DefaultSession;
@@ -148,15 +149,24 @@ public class WebSocketHandler {
     try {
       packet = objectReader.readValue(in);
     } catch (IOException e) {
-      log.warn("非法的JSON请求数据", e);
-      var ep = ErrorPacket.builder().build();
+      log.warn("非法的请求包 session={}", session, e);
+      var ep =
+          ErrorPacket.builder()
+              .code(ErrorCodes.PACKET)
+              .message("非法的请求包")
+              .details(e.getMessage())
+              .build();
       return session.send(ep);
     }
-
     log.debug("处理消息包 session={} packet={}", session, packet);
-    if (Packet.NS_PRIVATE_MSG.equals(packet.getNs())
-        || Packet.NS_GROUP_MSG.equals(packet.getNs())) {
+
+    var ns = packet.getNs();
+    if (Packet.NS_PRIVATE_MSG.equals(ns) || Packet.NS_GROUP_MSG.equals(ns)) {
       return libService.perform(session, (MsgPacket) packet);
+    } else if (Packet.NS_GROUP_SUB.equals(ns)) {
+      return libService.subGroups(session, (GroupSubPacket) packet);
+    } else if (Packet.NS_GROUP_UNSUB.equals(ns)) {
+      return libService.unsubGroups(session, (GroupSubPacket) packet);
     }
 
     log.warn("未实现的Packet session={} packet={}", session, packet);
@@ -208,12 +218,12 @@ public class WebSocketHandler {
     if (t instanceof StatusException) {
       var ex = (StatusException) t;
       if (!fromMetadata(ex.getTrailers(), builder)) {
-        builder.code(-1).message(t.getMessage());
+        builder.code(ErrorCodes.GRPC).message(t.getMessage());
       }
     } else if (t instanceof StatusRuntimeException) {
       var ex = (StatusRuntimeException) t;
       if (!fromMetadata(ex.getTrailers(), builder)) {
-        builder.code(-1).message(t.getMessage());
+        builder.code(ErrorCodes.GRPC).message(t.getMessage());
       }
     }
 
