@@ -154,7 +154,8 @@ public class WebSocketHandler {
     }
 
     log.debug("处理消息包 session={} packet={}", session, packet);
-    if (packet instanceof MsgPacket) {
+    if (Packet.NS_PRIVATE_MSG.equals(packet.getNs())
+        || Packet.NS_GROUP_MSG.equals(packet.getNs())) {
       return libService.perform(session, (MsgPacket) packet);
     }
 

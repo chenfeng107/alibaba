@@ -24,6 +24,6 @@ public class PrivateMsgPacket extends BaseMsgPacket {
 
   @Override
   public String getNs() {
-    return NS_PRIVATE_MESSAGE;
+    return NS_PRIVATE_MSG;
   }
 }

@@ -24,6 +24,6 @@ public class GroupMsgPacket extends BaseMsgPacket {
 
   @Override
   public String getNs() {
-    return NS_GROUP_MESSAGE;
+    return NS_GROUP_MSG;
   }
 }
