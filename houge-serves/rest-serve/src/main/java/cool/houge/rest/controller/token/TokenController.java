@@ -1,7 +1,7 @@
 package cool.houge.rest.controller.token;
 
-import cool.houge.grpc.CreateTokenRequest;
-import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
+import cool.houge.rest.facade.token.TokenFacade;
+import cool.houge.rest.facade.token.TokenInput;
 import cool.houge.rest.interceptor.Interceptors;
 import cool.houge.rest.web.AbstractRestSupport;
 import cool.houge.rest.web.RoutingService;
@@ -14,10 +14,10 @@ import reactor.netty.http.server.HttpServerRoutes;
 /** @author KK (kzou227@qq.com) */
 public class TokenController extends AbstractRestSupport implements RoutingService {
 
-  private final ReactorTokenStub tokenStub;
+  private final TokenFacade tokenFacade;
 
-  public @Inject TokenController(ReactorTokenStub tokenStub) {
-    this.tokenStub = tokenStub;
+  public @Inject TokenController(TokenFacade tokenFacade) {
+    this.tokenFacade = tokenFacade;
   }
 
   @Override
@@ -26,12 +26,8 @@ public class TokenController extends AbstractRestSupport implements RoutingServi
   }
 
   Mono<Void> create(HttpServerRequest request, HttpServerResponse response) {
-    return json(request, TokenForm.class)
-        .flatMap(
-            form -> {
-              var builder = CreateTokenRequest.newBuilder().setUid(form.getUid());
-              return tokenStub.create(builder.build());
-            })
+    return json(request, TokenInput.class)
+        .flatMap(input -> tokenFacade.create(input))
         .flatMap(o -> json(response, o));
   }
 }
