@@ -13,7 +13,7 @@ import java.util.Locale;
 public class TestBase {
 
   /** 中文假数据生成器. */
-  protected static final Faker FAKER_CN = new Faker(new Locale("zh", "cn"));
+  protected static final Faker FAKER_CN = new Faker(Locale.SIMPLIFIED_CHINESE);
 
   /**
    * 返回测试配置对象.
