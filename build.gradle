@@ -120,7 +120,6 @@ allprojects {
         entry "mapstruct-processor"
         entry "mapstruct"
       }
-      dependency("org.yaml:snakeyaml:1.27")
       dependency("com.typesafe:config:1.4.1")
       dependency("com.github.ben-manes.caffeine:caffeine:3.0.3")
       dependency("org.postgresql:postgresql:42.2.14")
@@ -161,20 +160,19 @@ allprojects {
     testImplementation("org.assertj:assertj-core")
 
     testImplementation("org.mockito:mockito-junit-jupiter")
-    testImplementation("com.github.javafaker:javafaker")
-
+    testImplementation("com.github.javafaker:javafaker") {
+      exclude module: "snakeyaml"
+    }
     jmh("org.openjdk.jmh:jmh-core")
     jmh("org.openjdk.jmh:jmh-generator-annprocess")
   }
 
   repositories {
     mavenLocal()
-
-//    def aliyunEnabled = System.getenv("GITHUB_ACTIONS") == null
-//    if (aliyunEnabled) {
-//      maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
-//    }
-
+    def aliyunEnabled = System.getenv("GITHUB_ACTIONS") == null
+    if (aliyunEnabled) {
+      maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
+    }
     mavenCentral()
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
   }
@@ -211,7 +209,7 @@ ext {
 def requireProperty(name) {
   def v = rootProject.findProperty(name)
   if (v == null || v.isEmpty()) {
-    throw new IllegalArgumentException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
+//    throw new IllegalArgumentException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
   }
   return v
 }
