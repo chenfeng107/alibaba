@@ -36,7 +36,7 @@ import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 import top.yein.chaos.biz.BizCode;
 import top.yein.chaos.biz.BizCodeException;
-import cool.houge.auth.AuthContext;
+import cool.houge.domain.service.auth.AuthContext;
 import cool.houge.util.JsonUtils;
 import cool.houge.util.ReactorHttpServerUtils;
 

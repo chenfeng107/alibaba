@@ -42,7 +42,7 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 }
 
 dependencies {
-  implementation(project(":houge-auth"))
+  implementation(project(":houge-infra"))
   implementation("com.typesafe:config")
   implementation("com.google.guava:guava")
   implementation("com.google.inject:guice")
@@ -51,7 +51,7 @@ dependencies {
   implementation("com.fasterxml.jackson.core:jackson-databind")
 
   // gRPC
-  implementation(project(":houge-grpc"))
+//  implementation(project(":houge-pr"))
   implementation("io.grpc:grpc-netty")
   implementation("io.grpc:grpc-protobuf")
   implementation("io.grpc:grpc-stub")

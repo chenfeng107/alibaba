@@ -33,13 +33,13 @@ protobuf {
 dependencies {
   api(project(":houge-domain"))
   api(project(":houge-r2dbc"))
-  api(project(":houge-grpc"))
   api("top.yein.chaos:chaos-core")
   api("io.r2dbc:r2dbc-postgresql")
   api("io.r2dbc:r2dbc-pool")
   api("com.github.ben-manes.caffeine:caffeine")
   api("org.roaringbitmap:RoaringBitmap")
   api("io.grpc:grpc-netty")
+  api("com.auth0:java-jwt")
 
   testImplementation(project(":houge-core"))
   testImplementation("com.typesafe:config")

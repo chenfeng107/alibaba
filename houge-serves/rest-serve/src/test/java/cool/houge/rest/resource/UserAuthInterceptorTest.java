@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServerResponse;
 import reactor.test.StepVerifier;
 import top.yein.chaos.biz.BizCode;
-import cool.houge.auth.AuthService;
+import cool.houge.domain.service.auth.AuthService;
 import cool.houge.rest.TestUtils;
 import cool.houge.rest.http.AbstractRestSupport;
 

@@ -25,7 +25,7 @@ import reactor.netty.http.server.HttpServerResponse;
 import reactor.util.context.Context;
 import top.yein.chaos.biz.BizCode;
 import top.yein.chaos.biz.BizCodeException;
-import cool.houge.auth.AuthService;
+import cool.houge.domain.service.auth.AuthService;
 import cool.houge.rest.http.AbstractRestSupport;
 
 /**

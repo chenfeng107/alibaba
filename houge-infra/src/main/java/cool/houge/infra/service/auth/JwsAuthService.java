@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.auth.impl;
+package cool.houge.infra.service.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -27,12 +27,12 @@ import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.annotations.VisibleForTesting;
 import cool.houge.BizCodes;
-import cool.houge.auth.AuthContext;
-import cool.houge.auth.AuthService;
-import cool.houge.auth.TokenService;
+import cool.houge.domain.service.auth.AuthContext;
+import cool.houge.domain.service.auth.AuthService;
+import cool.houge.domain.service.auth.TokenService;
+import cool.houge.domain.repository.jwt.JwtSecretRepository;
+import cool.houge.domain.repository.user.UserQueryRepository;
 import cool.houge.model.JwtSecret;
-import cool.houge.storage.JwtSecretDao;
-import cool.houge.storage.query.UserQueryDao;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -58,20 +58,21 @@ public class JwsAuthService implements AuthService, TokenService {
   /** 缓存默认刷新周期. */
   private static final Duration REFRESH_CACHE_DURATION = Duration.ofMinutes(5);
 
-  private final JwtSecretDao jwtSecretDao;
-  private final UserQueryDao userQueryDao;
+  private final JwtSecretRepository jwtSecretRepository;
+  private final UserQueryRepository userQueryRepository;
   private final AsyncCache<String, CachedJwtAlgorithm> jwtAlgorithmCache;
 
   /**
    * 可以被 IoC 容器使用的构造函数.
    *
-   * @param jwtSecretDao JWT 密钥存储对象
-   * @param userQueryDao 用户查询数据访问对象
+   * @param jwtSecretRepository JWT 密钥存储对象
+   * @param userQueryRepository 用户查询数据访问对象
    */
   @Inject
-  public JwsAuthService(JwtSecretDao jwtSecretDao, UserQueryDao userQueryDao) {
-    this.jwtSecretDao = jwtSecretDao;
-    this.userQueryDao = userQueryDao;
+  public JwsAuthService(
+      JwtSecretRepository jwtSecretRepository, UserQueryRepository userQueryRepository) {
+    this.jwtSecretRepository = jwtSecretRepository;
+    this.userQueryRepository = userQueryRepository;
     this.jwtAlgorithmCache =
         Caffeine.newBuilder()
             .recordStats()
@@ -124,7 +125,7 @@ public class JwsAuthService implements AuthService, TokenService {
 
   @Override
   public Mono<String> generateToken(long uid) {
-    return userQueryDao
+    return userQueryRepository
         .existsById(uid)
         .switchIfEmpty(Mono.error(() -> new BizCodeException(BizCode.C404, "用户不存在")))
         .flatMap(unused -> this.generateToken0(uid));
@@ -142,7 +143,7 @@ public class JwsAuthService implements AuthService, TokenService {
       ContextView context) {
     return (s, executor) -> {
       log.debug("加载 jwt secret [kid={}]", s);
-      return jwtSecretDao
+      return jwtSecretRepository
           .findById(s)
           .map(this::toCachedJwtAlgorithm)
           // context 用于事务传递
@@ -171,7 +172,7 @@ public class JwsAuthService implements AuthService, TokenService {
 
   private BiFunction<String, Executor, CompletableFuture<CachedJwtAlgorithm>> cacheLoadFunc() {
     return (s, executor) ->
-        this.jwtSecretDao
+        this.jwtSecretRepository
             .findById(s)
             .map(this::toCachedJwtAlgorithm)
             .subscribeOn(Schedulers.fromExecutor(executor))
@@ -198,7 +199,7 @@ public class JwsAuthService implements AuthService, TokenService {
   private Flux<CachedJwtAlgorithm> loadAll() {
     return Flux.defer(
         () ->
-            this.jwtSecretDao
+            this.jwtSecretRepository
                 .findAll()
                 .map(this::toCachedJwtAlgorithm)
                 .switchIfEmpty(Flux.error(() -> new BizCodeException(BizCodes.C3310)))

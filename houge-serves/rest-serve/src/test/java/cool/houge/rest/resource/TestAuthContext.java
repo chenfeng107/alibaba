@@ -16,7 +16,7 @@
 package cool.houge.rest.resource;
 
 import java.security.SecureRandom;
-import cool.houge.auth.AuthContext;
+import cool.houge.domain.service.auth.AuthContext;
 
 /**
  * 测试专用的 AuthContext.

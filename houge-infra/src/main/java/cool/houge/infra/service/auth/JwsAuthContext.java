@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.auth.impl;
+package cool.houge.infra.service.auth;
 
 import com.auth0.jwt.interfaces.Payload;
-import cool.houge.auth.AuthContext;
+import cool.houge.domain.service.auth.AuthContext;
 import javax.annotation.Nonnull;
 
 /**

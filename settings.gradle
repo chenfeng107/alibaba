@@ -5,12 +5,6 @@ include ":houge-proto"
 
 include ":houge-core"
 include ":houge-r2dbc"
-include ":houge-auth"
-include ":houge-grpc"
-
-//include ":houge-storage"
-//include ":houge-service"
-
 include ":houge-domain"
 include ":houge-infra"
 

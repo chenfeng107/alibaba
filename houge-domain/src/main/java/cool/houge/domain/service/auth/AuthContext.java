@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 the original author or authors
+ * Copyright 2019-2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.auth.impl;
-
-import com.auth0.jwt.algorithms.Algorithm;
-import lombok.Builder;
-import lombok.Value;
+package cool.houge.domain.service.auth;
 
 /**
- * 缓存的 JWT 算法.
- *
- * <p>当前实现已支持的算法:
- *
- * <ul>
- *   <li>HS256
- *   <li>HS512
- * </ul>
+ * 认证的上下文信息.
  *
  * @author KK (kzou227@qq.com)
  */
-@Value
-@Builder
-public class CachedJwtAlgorithm {
+public interface AuthContext {
 
-  /** kid 标识仅支持2个字符. */
-  private String id;
-  /** JWT 签名算法. */
-  private Algorithm algorithm;
   /**
-   * 删除数据的时间戳.
+   * 返回用户 ID.
    *
-   * <p>值不为 0 值表示行数据已被软删除.
+   * <p>匿名访问用户 ID 为 0.
+   *
+   * @return 用户 ID
    */
-  private int deleted;
+  long uid();
+
+  /**
+   * 返回认证令牌.
+   *
+   * @return 认证令牌
+   */
+  String token();
 }

@@ -15,7 +15,7 @@
  */
 package cool.houge.logic.grpc;
 
-import cool.houge.auth.AuthService;
+import cool.houge.domain.service.auth.AuthService;
 import cool.houge.grpc.AuthGrpc;
 import cool.houge.grpc.AuthPb.AuthRequest;
 import cool.houge.grpc.AuthPb.AuthResponse;

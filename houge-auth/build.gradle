@@ -1,5 +1,0 @@
-dependencies {
-  api(project(":houge-infra"))
-  api("com.auth0:java-jwt")
-  api("io.projectreactor:reactor-core")
-}
