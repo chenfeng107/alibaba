@@ -31,10 +31,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * 抽象应用 ID 实现.
@@ -67,7 +67,7 @@ public abstract class AbstractAppIdentifier implements AppIdentifier {
    */
   protected AbstractAppIdentifier(AppInstDao appInstDao) {
     this.appInstDao = appInstDao;
-    this.fid = initFid();
+    this.fid = getFid();
     this.checkHealth();
   }
 
@@ -96,22 +96,24 @@ public abstract class AbstractAppIdentifier implements AppIdentifier {
   }
 
   // 初始化 Fid
-  private int initFid() {
+  int getFid() {
     var ran = new SecureRandom();
     var fidFuture = new CompletableFuture<Integer>();
     var isRun = new AtomicBoolean(true);
     var tempFid = new AtomicReference<Integer>();
 
-    Supplier<Mono<Void>> makeFidFunc =
-        () -> {
-          tempFid.set(ran.nextInt(MAX_FID) + MIN_FID);
-
-          // fid 是否存在
-          var fidExists = new AtomicBoolean(false);
-          return Mono.empty();
-        };
-
-    Mono.defer(makeFidFunc)
+    Mono.defer(
+            () -> {
+              var id = ran.nextInt(MAX_FID) + MIN_FID;
+              return insertFid(id)
+                  .doOnNext(
+                      n -> {
+                        if (n == 1) {
+                          fidFuture.complete(id);
+                          isRun.set(false);
+                        }
+                      });
+            })
         .repeat(isRun::get)
         .onErrorContinue(
             ex -> {
@@ -132,6 +134,8 @@ public abstract class AbstractAppIdentifier implements AppIdentifier {
               return false;
             },
             (ex, o) -> {})
+        .timeout(Duration.ofSeconds(MAKE_FID_TIMEOUT))
+        .subscribeOn(Schedulers.single())
         .subscribe();
 
     try {
@@ -145,7 +149,16 @@ public abstract class AbstractAppIdentifier implements AppIdentifier {
     }
   }
 
-  private AppInst newServerInstance(int id) {
+  Mono<Integer> insertFid(int id) {
+    return Mono.defer(
+        () -> {
+          var m = newInst(id);
+          log.info("新增应用实例: {}", m);
+          return appInstDao.insert(m);
+        });
+  }
+
+  AppInst newInst(int id) {
     InetAddress inetAddress;
     try {
       inetAddress = HostNameUtils.getLocalHostLANAddress();

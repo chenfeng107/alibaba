@@ -20,7 +20,6 @@ import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cool.houge.ConfigKeys;
-import cool.houge.infra.guice.BasisModule;
 import cool.houge.infra.guice.DaoModule;
 import cool.houge.infra.guice.ServiceModule;
 import cool.houge.infra.system.identifier.AppIdentifier;
@@ -59,8 +58,7 @@ public class RestMain implements Runnable {
     final var config = loadConfig();
     // 初始化 Guice
     final var injector =
-        Guice.createInjector(
-            new BasisModule(config), new DaoModule(), new ServiceModule(), new RestModule(config));
+        Guice.createInjector(new DaoModule(), new ServiceModule(), new RestModule(config));
 
     // 启动 IM 服务
     var applicationIdentifier = injector.getInstance(AppIdentifier.class);
@@ -73,8 +71,7 @@ public class RestMain implements Runnable {
                 .collect(Collectors.toList()));
 
     restServer.start();
-    log.info(
-        "{} 服务启动成功 fid={}", applicationIdentifier.appName(), applicationIdentifier.fid());
+    log.info("{} 服务启动成功 fid={}", applicationIdentifier.appName(), applicationIdentifier.fid());
 
     shutdownHelper
         .addCallback(restServer::stop)

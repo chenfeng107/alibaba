@@ -20,10 +20,12 @@ import com.google.inject.Scopes;
 import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import cool.houge.infra.guice.DaoModule;
+import cool.houge.infra.guice.ServiceModule;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
 import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.poplar.grpc.ReactorHybridGrpcImpl;
+import cool.houge.poplar.grpc.TokenGrpcImpl;
 import io.grpc.BindableService;
 
 /**
@@ -42,6 +44,7 @@ public class PoplarModule extends AbstractModule {
   @Override
   protected void configure() {
     install(new DaoModule());
+    install(new ServiceModule());
 
     bind(Config.class).toInstance(config);
     bind(PoplarServer.class);
@@ -56,5 +59,6 @@ public class PoplarModule extends AbstractModule {
     // 绑定 gRPC
     var grpcBinder = Multibinder.newSetBinder(binder(), BindableService.class);
     grpcBinder.addBinding().to(ReactorHybridGrpcImpl.class).in(Scopes.SINGLETON);
+    grpcBinder.addBinding().to(TokenGrpcImpl.class).in(Scopes.SINGLETON);
   }
 }
