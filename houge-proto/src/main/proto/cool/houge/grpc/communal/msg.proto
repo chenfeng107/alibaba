@@ -15,10 +15,10 @@
 //
 
 syntax = "proto3";
-option java_package = "cool.houge.grpc.communal";
-option java_outer_classname = "MessagePb";
+option java_package = "cool.houge.grpc";
+option java_outer_classname = "MsgPb";
 
-message SendMessageRequest {
+message SendMsgRequest {
   // 消息发送者
   fixed64 from = 2;
   // 消息接收者
@@ -37,15 +37,15 @@ message SendMessageRequest {
   }
 }
 
-message SendMessageResponse {
+message SendMsgResponse {
   // 消息 ID
-  string message_id = 1;
+  string msg_id = 1;
 }
 
 // 消息服务
-service Message {
+service Msg {
 
-  rpc SendToUser(SendMessageRequest) returns(SendMessageResponse) {}
+  rpc SendToUser(SendMsgRequest) returns(SendMsgResponse) {}
 
-  rpc SendToGroup(SendMessageRequest) returns(SendMessageResponse) {}
+  rpc SendToGroup(SendMsgRequest) returns(SendMsgResponse) {}
 }
