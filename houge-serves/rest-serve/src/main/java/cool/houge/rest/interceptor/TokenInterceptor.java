@@ -26,7 +26,6 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
-import reactor.util.context.Context;
 import top.yein.chaos.biz.BizCode;
 import top.yein.chaos.biz.BizCodeException;
 
@@ -87,9 +86,14 @@ public class TokenInterceptor extends AbstractRestSupport {
                               }
                             };
 
-                        return Flux.defer(() -> next.apply(request, response))
-                            .contextWrite(Context.of(AUTH_CONTEXT_KEY, ac));
+                        // 设置用户认证上下文
+                        this.setAuthContext(request, ac);
+                        return next.apply(request, response);
                       });
             });
+  }
+
+  void setAuthContext(HttpServerRequest request, AuthContext ac) {
+    request.withConnection(conn -> conn.channel().attr(AUTH_CONTEXT_ATTR).set(ac));
   }
 }

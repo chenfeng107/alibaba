@@ -25,6 +25,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.util.AttributeKey;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -49,7 +50,8 @@ import top.yein.chaos.biz.BizCodeException;
 public abstract class AbstractRestSupport {
 
   /** 认证上下文存储的键值. */
-  public static final Class<AuthContext> AUTH_CONTEXT_KEY = AuthContext.class;
+  public static final AttributeKey<AuthContext> AUTH_CONTEXT_ATTR =
+      AttributeKey.newInstance("auth_ctx");
 
   /**
    * 获取 {@link HttpServerRequest} 路径参数值.
@@ -340,14 +342,17 @@ public abstract class AbstractRestSupport {
    * @return 认证上下文
    * @see BizCodeException
    */
-  protected Mono<AuthContext> authContext() {
-    return Mono.deferContextual(
-        context -> {
-          if (!context.hasKey(AUTH_CONTEXT_KEY)) {
-            return Mono.error(new BizCodeException(BizCode.C401, "未找到 AuthContext"));
+  protected AuthContext authContext(HttpServerRequest request) {
+    AuthContext[] value = new AuthContext[1];
+    request.withConnection(
+        conn -> {
+          var attr = conn.channel().attr(AUTH_CONTEXT_ATTR);
+          if (attr.get() == null) {
+            throw new BizCodeException(BizCode.C401, "未找到认证上下文对象");
           }
-          return Mono.just(context.get(AUTH_CONTEXT_KEY));
+          value[0] = attr.get();
         });
+    return value[0];
   }
 
   private ObjectMapper getObjectMapper() {
