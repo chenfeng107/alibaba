@@ -16,8 +16,8 @@ create table t_server_instance
     work_dir        varchar(512)      not null,
     pid             bigint            not null,
     ver             integer default 1 not null,
-    create_time     timestamp         not null,
-    check_time      timestamp         not null
+    create_time timestamp default CURRENT_TIMESTAMP not null,
+    update_time timestamp default CURRENT_TIMESTAMP not null
 );
 
 comment on table t_server_instance is '服务实例信息';

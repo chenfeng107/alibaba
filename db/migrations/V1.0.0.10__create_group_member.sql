@@ -2,7 +2,7 @@ create table t_group_member
 (
     gid         bigint    not null,
     uid         bigint    not null,
-    create_time timestamp not null
+    create_time timestamp default CURRENT_TIMESTAMP not null
 );
 
 comment on table t_group_member is '群成员';

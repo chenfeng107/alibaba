@@ -6,8 +6,8 @@ create table t_jwt_secret
     algorithm   varchar(16)             not null,
     secret_key  bytea                   not null,
     deleted     integer   default 0     not null,
-    create_time timestamp default now() not null,
-    update_time timestamp default now() not null
+    create_time timestamp default CURRENT_TIMESTAMP not null,
+    update_time timestamp default CURRENT_TIMESTAMP not null
 );
 
 comment on table t_jwt_secret is 'JWT 密钥';

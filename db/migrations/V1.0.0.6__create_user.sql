@@ -8,8 +8,8 @@ create table t_user
         constraint t_user_pk
             primary key,
     origin_uid  varchar(128),
-    create_time timestamp not null,
-    update_time timestamp not null
+    create_time timestamp default CURRENT_TIMESTAMP not null,
+    update_time timestamp default CURRENT_TIMESTAMP not null
 );
 
 comment on column t_user.origin_uid is '原用户 ID';

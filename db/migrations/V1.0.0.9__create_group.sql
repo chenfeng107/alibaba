@@ -10,8 +10,8 @@ create table t_group
     creator_id  bigint    not null,
     owner_id    bigint,
     member_size integer   not null,
-    create_time timestamp not null,
-    update_time timestamp not null
+    create_time timestamp default CURRENT_TIMESTAMP not null,
+    update_time timestamp default CURRENT_TIMESTAMP not null
 );
 
 comment on table t_group is '群信息';

@@ -9,8 +9,8 @@ create table t_message
     content_type smallint  default 0     not null,
     extra_args   varchar(2048),
     unread       smallint  default 0,
-    create_time  timestamp default now() not null,
-    update_time  timestamp default now() not null
+    create_time timestamp default CURRENT_TIMESTAMP not null,
+    update_time timestamp default CURRENT_TIMESTAMP not null
 );
 
 comment on table t_message is '消息表';
