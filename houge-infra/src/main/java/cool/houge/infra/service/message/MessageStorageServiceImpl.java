@@ -43,7 +43,7 @@ public class MessageStorageServiceImpl implements MessageStorageService {
   }
 
   @Override
-  public Mono<Void> store(Message entity, List<Long> uids) {
-    return messageDao.insert(entity, uids);
+  public Mono<Void> store(Message model, List<Long> uids) {
+    return messageDao.insert(model, uids);
   }
 }

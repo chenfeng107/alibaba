@@ -17,11 +17,11 @@ package cool.houge.pivot.handler;
 
 import com.google.common.base.CharMatcher;
 import cool.houge.domain.BizCodes;
+import cool.houge.domain.repository.group.GroupQueryRepository;
+import cool.houge.domain.service.message.MessageStorageService;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.pivot.agent.PacketSender;
 import cool.houge.pivot.packet.MessagePacketBase;
-import cool.houge.service.message.MessageStorageService;
-import cool.houge.storage.query.GroupQueryDao;
 import cool.houge.util.YeinGid;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
@@ -41,24 +41,24 @@ public class GroupMessageHandler implements PacketHandler<MessagePacketBase> {
   private final MessageIdGenerator messageIdGenerator;
   private final MessageStorageService messageStorageService;
   private final PacketSender packetSender;
-  private final GroupQueryDao groupQueryDao;
+  private final GroupQueryRepository groupQueryRepository;
 
   /**
    * @param messageIdGenerator
    * @param messageStorageService
    * @param packetSender
-   * @param groupQueryDao
+   * @param groupQueryRepository
    */
   @Inject
   public GroupMessageHandler(
       MessageIdGenerator messageIdGenerator,
       MessageStorageService messageStorageService,
       PacketSender packetSender,
-      GroupQueryDao groupQueryDao) {
+      GroupQueryRepository groupQueryRepository) {
     this.messageIdGenerator = messageIdGenerator;
     this.messageStorageService = messageStorageService;
     this.packetSender = packetSender;
-    this.groupQueryDao = groupQueryDao;
+    this.groupQueryRepository = groupQueryRepository;
   }
 
   @Override

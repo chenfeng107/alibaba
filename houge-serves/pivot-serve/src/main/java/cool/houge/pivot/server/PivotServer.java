@@ -30,11 +30,11 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class LogicServer {
+public class PivotServer {
 
   private static final Logger log = LogManager.getLogger();
 
-  private final LogicServerConfig serverConfig;
+  private final PivotServerConfig serverConfig;
   private final List<BindableService> bindableServices;
   private Server server;
 
@@ -44,7 +44,7 @@ public class LogicServer {
    * @param serverConfig 服务配置
    * @param bindableServices 绑定的 gRPC 服务
    */
-  public LogicServer(LogicServerConfig serverConfig, List<BindableService> bindableServices) {
+  public PivotServer(PivotServerConfig serverConfig, List<BindableService> bindableServices) {
     this.serverConfig = serverConfig;
     this.bindableServices = bindableServices;
   }

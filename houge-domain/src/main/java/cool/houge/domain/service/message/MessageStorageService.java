@@ -29,9 +29,9 @@ public interface MessageStorageService {
   /**
    * 存储消息包.
    *
-   * @param entity 消息实体
+   * @param model 消息实体
    * @param uids 用户ID列表
    * @return RS
    */
-  Mono<Void> store(Message entity, List<Long> uids);
+  Mono<Void> store(Message model, List<Long> uids);
 }

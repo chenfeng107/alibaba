@@ -27,7 +27,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LogicServerConfig {
+public class PivotServerConfig {
+
+  /** */
+  public static final String ROOT_CONFIG_NAME = "pivot-server";
 
   /** gRPC服务地址. */
   private String addr;

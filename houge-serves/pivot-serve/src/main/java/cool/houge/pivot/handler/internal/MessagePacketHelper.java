@@ -16,8 +16,10 @@
 package cool.houge.pivot.handler.internal;
 
 import cool.houge.domain.constants.MessageKind;
+import cool.houge.domain.model.Group;
+import cool.houge.domain.model.Message;
+import cool.houge.domain.model.User;
 import cool.houge.pivot.packet.MessagePacket;
-import cool.houge.model.Message;
 
 /** @author KK (kzou227@qq.com) */
 public class MessagePacketHelper {
@@ -28,17 +30,19 @@ public class MessagePacketHelper {
    */
   public static Message toMessageEntity(MessagePacket packet) {
     var entity = new Message();
-    entity.setId(packet.getMessageId());
-    entity.setSenderId(packet.getFrom());
     if (MessageKind.forCode(packet.getKind()).isGroup()) {
-      entity.setGroupId(packet.getTo());
+      entity.setGroup(new Group().setId(packet.getTo()));
     } else {
-      entity.setReceiverId(packet.getTo());
+      entity.setReceiver(new User().setId(packet.getTo()));
     }
-    entity.setKind(packet.getKind());
-    entity.setContent(packet.getContent());
-    entity.setContentType(packet.getContentType());
-    entity.setExtraArgs(packet.getExtraArgs());
+
+    entity
+        .setId(packet.getMessageId())
+        .setSender(new User().setId(packet.getFrom()))
+        .setKind(packet.getKind())
+        .setContent(packet.getContent())
+        .setContentType(packet.getContentType())
+        .setExtraArgs(packet.getExtraArgs());
     return entity;
   }
 }

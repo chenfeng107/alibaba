@@ -32,7 +32,7 @@ import cool.houge.pivot.handler.GroupMessageHandler;
 import cool.houge.pivot.handler.PacketHandler;
 import cool.houge.pivot.handler.PrivateMessageHandler;
 import cool.houge.pivot.packet.Packet;
-import cool.houge.pivot.support.LogicApplicationIdentifier;
+import cool.houge.pivot.support.PivotApplicationIdentifier;
 import io.grpc.BindableService;
 
 /**
@@ -40,7 +40,7 @@ import io.grpc.BindableService;
  *
  * @author KK (kzou227@qq.com)
  */
-public class LogicModule extends AbstractModule {
+public class PivotModule extends AbstractModule {
 
   @Override
   protected void configure() {
@@ -49,7 +49,7 @@ public class LogicModule extends AbstractModule {
     bind(PacketSender.class).to(TediousServerAgentManager.class);
     bind(ServerAgentManager.class).to(TediousServerAgentManager.class);
 
-    bind(ApplicationIdentifier.class).to(LogicApplicationIdentifier.class).in(Scopes.SINGLETON);
+    bind(ApplicationIdentifier.class).to(PivotApplicationIdentifier.class).in(Scopes.SINGLETON);
     bind(MessageIdGenerator.class).to(YeinGidMessageIdGenerator.class).in(Scopes.SINGLETON);
 
     // 认证服务

@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
  * @author KK (kzou227@qq.com)
  */
 @Log4j2
-public class LogicApplicationIdentifier extends AbstractApplicationIdentifier {
+public class PivotApplicationIdentifier extends AbstractApplicationIdentifier {
 
   /**
    * 构造函数.
@@ -34,12 +34,12 @@ public class LogicApplicationIdentifier extends AbstractApplicationIdentifier {
    * @param serverInstanceRepository 应用实例数据访问对象
    */
   @Inject
-  public LogicApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
+  public PivotApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
     super(serverInstanceRepository);
   }
 
   @Override
   public String applicationName() {
-    return "houge-logic";
+    return "houge-pivot";
   }
 }

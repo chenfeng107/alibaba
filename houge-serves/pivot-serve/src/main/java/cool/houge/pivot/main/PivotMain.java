@@ -23,52 +23,49 @@ import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
-import cool.houge.pivot.module.LogicModule;
-import cool.houge.pivot.server.LogicServer;
-import cool.houge.pivot.server.LogicServerConfig;
+import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.pivot.module.PivotModule;
+import cool.houge.pivot.server.PivotServer;
+import cool.houge.pivot.server.PivotServerConfig;
+import cool.houge.util.AppShutdownHelper;
 import io.grpc.BindableService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import cool.houge.service.module.ServiceModule;
-import cool.houge.storage.module.StorageModule;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
-import cool.houge.util.AppShutdownHelper;
 
 /**
  * 程序入口.
  *
  * @author KK (kzou227@qq.com)
  */
-public class LogicMain implements Runnable {
+public class PivotMain implements Runnable {
 
   private static final Logger log = LogManager.getLogger();
   private static final String CONFIG_FILE = "houge-pivot.conf";
   private final AppShutdownHelper shutdownHelper = new AppShutdownHelper();
 
   public static void main(String[] args) {
-    new LogicMain().run();
+    new PivotMain().run();
   }
 
   @Override
   public void run() {
     var config = loadConfig();
-    var injector =
-        Guice.createInjector(
-            new LogicModule(), new ServiceModule(config), new StorageModule(config));
+    var injector = Guice.createInjector(new PivotModule());
     var applicationIdentifier = injector.getInstance(ApplicationIdentifier.class);
 
     // 启动服务
-    var logicServer =
-        new LogicServer(
-            ConfigBeanFactory.create(config.getConfig("logic-server"), LogicServerConfig.class),
+    var pivotServer =
+        new PivotServer(
+            ConfigBeanFactory.create(
+                config.getConfig(PivotServerConfig.ROOT_CONFIG_NAME), PivotServerConfig.class),
             findBindableServices(injector));
-    logicServer.start();
+    pivotServer.start();
 
     // 清理应用的钩子
     shutdownHelper
-        .addCallback(logicServer::stop)
+        .addCallback(pivotServer::stop)
         // 清理应用程序标识
         .addCallback(applicationIdentifier::clean)
         .run();

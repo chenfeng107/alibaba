@@ -19,9 +19,11 @@ import com.google.common.net.HostAndPort;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.netty.DisposableServer;
+import reactor.netty.http.HttpResources;
 import reactor.netty.http.server.HttpServer;
 import reactor.netty.http.server.HttpServerRoutes;
 import reactor.netty.http.server.WebsocketServerSpec;
+import reactor.netty.resources.LoopResources;
 
 /**
  * WebSocket服务.
@@ -60,6 +62,12 @@ public class WsServer {
     routes.ws(
         "/ws", webSocketHandler::handle, WebsocketServerSpec.builder().handlePing(false).build());
 
+    HttpResources.set(
+        LoopResources.create(
+            "houge-ws",
+            Math.max(LoopResources.DEFAULT_IO_SELECT_COUNT, 2),
+            LoopResources.DEFAULT_IO_WORKER_COUNT,
+            false));
     this.disposableServer =
         HttpServer.create()
             .host(hap.getHost())
