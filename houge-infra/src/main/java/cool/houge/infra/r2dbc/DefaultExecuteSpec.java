@@ -8,7 +8,6 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Function;
 import reactor.core.publisher.Flux;
@@ -62,11 +61,17 @@ class DefaultExecuteSpec implements ExecuteSpec {
       @Override
       public Mono<R> one() {
         return all()
-            .single()
-            .onErrorMap(
-                t -> t instanceof NoSuchElementException || t instanceof IndexOutOfBoundsException,
-                unused ->
-                    new IncorrectResultSizeException(String.format("查询[%s]返回的结果数量与预期不符", sql), 1));
+            .buffer(2)
+            .singleOrEmpty()
+            .flatMap(
+                list -> {
+                  if (list.size() > 1) {
+                    return Mono.error(
+                        new IncorrectResultSizeException(
+                            String.format("查询[%s]返回的结果数量与预期不符", sql), 1));
+                  }
+                  return Mono.just(list.get(0));
+                });
       }
 
       @Override
