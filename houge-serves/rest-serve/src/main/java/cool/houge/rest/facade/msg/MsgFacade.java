@@ -1,12 +1,13 @@
 package cool.houge.rest.facade.msg;
 
-import am.ik.yavi.core.Validator;
 import cool.houge.grpc.CreateMsgIdRequest;
+import cool.houge.grpc.CreateMsgIdsRequest;
 import cool.houge.grpc.ReactorMsgGrpc.ReactorMsgStub;
 import cool.houge.grpc.SendMsgRequest;
 import cool.houge.protos.MsgContentType;
 import cool.houge.protos.MsgKind;
 import cool.houge.rest.auth.AuthContext;
+import java.util.List;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
@@ -21,6 +22,34 @@ public class MsgFacade {
 
   public @Inject MsgFacade(ReactorMsgStub msgStub) {
     this.msgStub = msgStub;
+  }
+
+  /**
+   * 得到消息ID.
+   *
+   * @return 消息ID
+   */
+  public Mono<String> fetchMsgId() {
+    return msgStub
+        .createId(CreateMsgIdRequest.getDefaultInstance())
+        .map(
+            resp -> {
+              var id = resp.getMsgId();
+              if (id.isEmpty()) {
+                // FIXME 优化异常
+                throw new RuntimeException("未成功获取到消息ID");
+              }
+              return id;
+            });
+  }
+
+  /**
+   * @param count
+   * @return
+   */
+  public Mono<List<String>> fetchMsgIds(int count) {
+    var req = CreateMsgIdsRequest.newBuilder().setCount(count).build();
+    return msgStub.createIds(req).map(resp -> resp.getMsgIdList());
   }
 
   /**
@@ -41,7 +70,7 @@ public class MsgFacade {
       builder.setExtra(input.getExtra());
     }
 
-    return obtainMsgId()
+    return fetchMsgId()
         .flatMap(
             msgId -> {
               builder.setMsgId(msgId);
@@ -51,25 +80,6 @@ public class MsgFacade {
                 return msgStub.sendToUser(builder.build()).thenReturn(rv);
               }
               return msgStub.sendToGroup(builder.build()).thenReturn(rv);
-            });
-  }
-
-  /**
-   * 得到消息ID.
-   *
-   * @return 消息ID
-   */
-  public Mono<String> obtainMsgId() {
-    return msgStub
-        .createId(CreateMsgIdRequest.getDefaultInstance())
-        .map(
-            resp -> {
-              var id = resp.getMsgId();
-              if (id.isEmpty()) {
-                // FIXME 优化异常
-                throw new RuntimeException("未成功获取到消息ID");
-              }
-              return id;
             });
   }
 }

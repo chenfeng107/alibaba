@@ -27,6 +27,14 @@ message CreateMsgIdResponse {
   string msg_id = 1;
 }
 
+message CreateMsgIdsRequest {
+  int32 count = 1;
+}
+
+message CreateMsgIdsResponse {
+  repeated string msg_id = 1;
+}
+
 message SendMsgRequest {
   // 消息ID
   string msg_id = 1;
@@ -51,6 +59,8 @@ message SendMsgResponse {
 service Msg {
 
   rpc CreateId(CreateMsgIdRequest) returns(CreateMsgIdResponse) {}
+
+  rpc CreateIds(CreateMsgIdsRequest) returns(CreateMsgIdsResponse) {}
 
   rpc SendToUser(SendMsgRequest) returns(SendMsgResponse) {}
 

@@ -8,6 +8,8 @@ import cool.houge.domain.msg.MsgService;
 import cool.houge.grpc.BrokerMsg;
 import cool.houge.grpc.CreateMsgIdRequest;
 import cool.houge.grpc.CreateMsgIdResponse;
+import cool.houge.grpc.CreateMsgIdsRequest;
+import cool.houge.grpc.CreateMsgIdsResponse;
 import cool.houge.grpc.ReactorMsgGrpc;
 import cool.houge.grpc.SendMsgRequest;
 import cool.houge.grpc.SendMsgResponse;
@@ -44,6 +46,16 @@ public class MsgGrpcImpl extends ReactorMsgGrpc.MsgImplBase {
           // FIXME 记录日志
           return CreateMsgIdResponse.newBuilder().setMsgId(msgId).build();
         });
+  }
+
+  @Override
+  public Mono<CreateMsgIdsResponse> createIds(Mono<CreateMsgIdsRequest> request) {
+    return request
+        .flatMap(
+            req -> {
+              return idGenerator.nextIds().take(req.getCount()).collectList();
+            })
+        .map(ids -> CreateMsgIdsResponse.newBuilder().addAllMsgId(ids).build());
   }
 
   @Override

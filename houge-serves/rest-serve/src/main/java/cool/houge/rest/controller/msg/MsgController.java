@@ -26,10 +26,19 @@ public class MsgController extends AbstractRestSupport implements RoutingService
 
   private final Validator<SendMsgInput> sendMsgValidator =
       ValidatorBuilder.<SendMsgInput>of()
-          .constraint(SendMsgInput::getKind, "kind", c -> c.oneOf(List.of(MsgKind.USER_VALUE, MsgKind.GROUP_VALUE)))
+          .constraint(
+              SendMsgInput::getKind,
+              "kind",
+              c -> c.oneOf(List.of(MsgKind.USER_VALUE, MsgKind.GROUP_VALUE)))
           .constraint(SendMsgInput::getTo, "to", c -> c.positive())
-          .constraint(SendMsgInput::getContent, "content", c -> c.notNull().notEmpty().lessThanOrEqual(2048))
-          .constraint(SendMsgInput::getContentType, "content_type", c -> c.oneOf(List.of(MsgContentType.TEXT_VALUE)))
+          .constraint(
+              SendMsgInput::getContent,
+              "content",
+              c -> c.notNull().notEmpty().lessThanOrEqual(2048))
+          .constraint(
+              SendMsgInput::getContentType,
+              "content_type",
+              c -> c.oneOf(List.of(MsgContentType.TEXT_VALUE)))
           .constraint(SendMsgInput::getExtra, "extra", c -> c.lessThanOrEqual(2048))
           .build();
 
@@ -41,7 +50,7 @@ public class MsgController extends AbstractRestSupport implements RoutingService
 
   @Override
   public void update(HttpServerRoutes routes, Interceptors interceptors) {
-    routes.post("/msgs/ids", interceptors.token(this::obtainIds));
+    routes.post("/msgs/ids", interceptors.token(this::fetchIds));
     routes.post("/msgs/send", interceptors.token(this::send));
   }
 
@@ -50,8 +59,9 @@ public class MsgController extends AbstractRestSupport implements RoutingService
    * @param response
    * @return
    */
-  Mono<Void> obtainIds(HttpServerRequest request, HttpServerResponse response) {
-    return Mono.empty();
+  Mono<Void> fetchIds(HttpServerRequest request, HttpServerResponse response) {
+    var count = queryInt(request, "count", 50);
+    return msgFacade.fetchMsgIds(count).flatMap(ids -> json(response, ids));
   }
 
   /**
