@@ -20,7 +20,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * t_jwt_secret JWT 密钥配置.
+ * JWT 密钥配置.
  *
  * @author KK (kzou227@qq.com)
  */
@@ -39,7 +39,9 @@ public class JwtSecret {
    *
    * <p>值不为 0 值表示行数据已被软删除.
    */
-  private int deleted;
+  private long deleted;
+  /** 数据版本. */
+  private int ver;
   /** 创建时间. */
   private LocalDateTime createTime;
   /** 更新时间. */

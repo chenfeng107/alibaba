@@ -33,10 +33,10 @@ class JwtSecretDaoImplTest extends AbstractTestDao {
   }
 
   @Test
-  void delete() {
+  void remove() {
     var m = newModel();
     txOps
-        .tx(dao.insert(m).then(dao.delete(m.getId())))
+        .tx(dao.insert(m).then(dao.remove(m.getId())))
         .as(StepVerifier::create)
         .expectNext(1)
         .expectComplete()
@@ -44,9 +44,9 @@ class JwtSecretDaoImplTest extends AbstractTestDao {
   }
 
   @Test
-  void deleteNonexistentData() {
+  void removeNonexistentData() {
     txOps
-        .tx(dao.delete(UUID.randomUUID().toString()))
+        .tx(dao.remove(UUID.randomUUID().toString()))
         .as(StepVerifier::create)
         .expectNext(0)
         .expectComplete()
@@ -54,10 +54,10 @@ class JwtSecretDaoImplTest extends AbstractTestDao {
   }
 
   @Test
-  void findById() {
+  void get() {
     var m = newModel();
     txOps
-        .tx(dao.insert(m).then(dao.findById(m.getId())))
+        .tx(dao.insert(m).then(dao.get(m.getId())))
         .as(StepVerifier::create)
         .assertNext(
             o ->
@@ -74,9 +74,9 @@ class JwtSecretDaoImplTest extends AbstractTestDao {
   }
 
   @Test
-  void findByIdNonexistentData() {
+  void getNonexistentData() {
     txOps
-        .tx(dao.findById(UUID.randomUUID().toString()))
+        .tx(dao.get(UUID.randomUUID().toString()))
         .as(StepVerifier::create)
         .expectComplete()
         .verify();

@@ -17,14 +17,18 @@ public interface JwtSecretDao {
    * @param id
    * @return
    */
-  Mono<Integer> delete(String id);
+  Mono<Integer> remove(String id);
 
   /**
    * @param id
    * @return
    */
-  Mono<JwtSecret> findById(String id);
+  Mono<JwtSecret> get(String id);
 
-  /** @return */
-  Flux<JwtSecret> findAll();
+  /**
+   * 返回所有配置的密钥.
+   *
+   * @return
+   */
+  Flux<JwtSecret> getAll();
 }
