@@ -28,7 +28,7 @@
       <PatternLayout pattern="${pattern}"/>
     </Console>
 
-    <RollingRandomAccessFile name="Info" fileName="${logDir}/info.log"
+    <RollingRandomAccessFile name="InfoFile" fileName="${logDir}/info.log"
       filePattern="${logDir}/info-%d{yyyyMMdd}-%i.gz">
       <PatternLayout pattern="${pattern}"/>
       <Policies>
@@ -48,7 +48,7 @@
       </DefaultRolloverStrategy>
     </RollingRandomAccessFile>
 
-    <RollingRandomAccessFile name="Error" fileName="${logDir}/error.log"
+    <RollingRandomAccessFile name="ErrorFile" fileName="${logDir}/error.log"
       filePattern="${logDir}/error-%d{yyyyMMdd}-%i.gz">
       <PatternLayout pattern="${pattern}"/>
       <Policies>
@@ -72,8 +72,8 @@
     <Logger name="io.netty.buffer.PooledByteBufAllocator" level="DEBUG"/>
     <Root level="INFO">
       <AppenderRef ref="Console"/>
-      <AppenderRef ref="Info"/>
-      <AppenderRef ref="Error"/>
+      <AppenderRef ref="InfoFile"/>
+      <AppenderRef ref="ErrorFile"/>
     </Root>
   </Loggers>
 </Configuration>
