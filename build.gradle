@@ -183,7 +183,7 @@ ext {
 }
 
 def requireProperty(name) {
-  def v = rootProject.property(name)
+  def v = rootProject.findProperty(name)
   if (v == null || v.isEmpty()) {
     throw new GradleException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
   }

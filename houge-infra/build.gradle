@@ -2,7 +2,6 @@ apply plugin: "com.google.protobuf"
 apply plugin: "nu.studer.jooq"
 
 def grpcGeneratedFilesBaseDir = "${projectDir}/generated"
-
 sourceSets {
   main {
     java {
