@@ -1,12 +1,15 @@
 package cool.houge.infra.repository.jwt;
 
 import static cool.houge.infra.db.Tables.JWT_SECRET;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cool.houge.domain.model.JwtSecret;
 import cool.houge.infra.db.tables.records.JwtSecretRecord;
 import cool.houge.infra.repository.JooqTestBase;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -105,7 +108,35 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
 
   @Test
   void findAll() {
-    // FIXME 完善
+    var records = new ArrayList<JwtSecretRecord>();
+    for (int i = 0; i < faker.random().nextInt(5) + 1; i++) {
+      var record = new JwtSecretRecord();
+      record.setId("TEST-" + faker.random().hex(3));
+      record.setAlgorithm("HS512");
+      record.setSecretKey(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
+      records.add(record);
+    }
+    // 插入数据
+    for (JwtSecretRecord record : records) {
+      StepVerifier.create(dsl.insertInto(JWT_SECRET).set(record))
+          .expectNext(1)
+          .expectComplete()
+          .verify();
+    }
+
+    // 查询所有数据
+    var p = repos.findAll().collectList();
+    StepVerifier.create(p)
+        .assertNext(
+            list -> {
+              var dbIds = list.stream().map(JwtSecret::getId).collect(Collectors.toList());
+              assertThat(dbIds)
+                  .containsAll(
+                      records.stream().map(JwtSecretRecord::getId).collect(Collectors.toList()));
+            });
+
+    // 清理数据
+    records.forEach(record -> clean(record.getId()));
   }
 
   void clean(String id) {
