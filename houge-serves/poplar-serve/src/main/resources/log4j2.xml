@@ -73,7 +73,7 @@
     <Logger name="io.netty.buffer.PooledByteBufAllocator" level="DEBUG"/>
     <Logger name="io.r2dbc" level="INFO"/>
     <Logger name="io.lettuce" level="INFO"/>
-    <Root level="INFO">
+    <Root level="DEBUG">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="Info"/>
       <AppenderRef ref="Error"/>

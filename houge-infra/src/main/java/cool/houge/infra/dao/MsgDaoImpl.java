@@ -21,7 +21,9 @@ public class MsgDaoImpl implements MsgDao {
 
   @Override
   public Mono<Void> insert(Msg msg, Set<Integer> uids) {
-    return Mono.when(insert(msg), insertUserMsg(msg.getId(), uids));
+    // TIPS: 使用 Mono.when 存在BUG https://github.com/mirromutth/r2dbc-mysql/issues/226
+    // return Mono.when(insert(msg), insertUserMsg(msg.getId(), uids));
+    return insert(msg).then(insertUserMsg(msg.getId(), uids)).then();
   }
 
   @Override

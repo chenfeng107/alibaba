@@ -26,19 +26,10 @@ public class MsgController extends AbstractRestSupport implements RoutingService
 
   private final Validator<SendMsgInput> sendMsgValidator =
       ValidatorBuilder.<SendMsgInput>of()
-          .constraint(
-              SendMsgInput::getKind,
-              "kind",
-              c -> c.oneOf(List.of(MsgKind.USER_VALUE, MsgKind.GROUP_VALUE)))
+          .constraint(SendMsgInput::getKind, "kind", c -> c.oneOf(List.of(MsgKind.USER_VALUE, MsgKind.GROUP_VALUE)))
           .constraint(SendMsgInput::getTo, "to", c -> c.positive())
-          .constraint(
-              SendMsgInput::getContent,
-              "content",
-              c -> c.notNull().notEmpty().lessThanOrEqual(2048))
-          .constraint(
-              SendMsgInput::getContentType,
-              "content_type",
-              c -> c.oneOf(List.of(MsgContentType.TEXT_VALUE)))
+          .constraint(SendMsgInput::getContent, "content", c -> c.notNull().notEmpty().lessThanOrEqual(2048))
+          .constraint(SendMsgInput::getContentType, "content_type", c -> c.oneOf(List.of(MsgContentType.TEXT_VALUE)))
           .constraint(SendMsgInput::getExtra, "extra", c -> c.lessThanOrEqual(2048))
           .build();
 
@@ -50,8 +41,8 @@ public class MsgController extends AbstractRestSupport implements RoutingService
 
   @Override
   public void update(HttpServerRoutes routes, Interceptors interceptors) {
-    routes.post("/messages/ids", interceptors.token(this::obtainIds));
-    routes.post("/messages/send", interceptors.token(this::send));
+    routes.post("/msgs/ids", interceptors.token(this::obtainIds));
+    routes.post("/msgs/send", interceptors.token(this::send));
   }
 
   /**
@@ -72,8 +63,10 @@ public class MsgController extends AbstractRestSupport implements RoutingService
     var ac = super.authContext(request);
     return json(request, SendMsgInput.class)
         .doOnNext(
-            input ->
-                sendMsgValidator.validate(input).throwIfInvalid(ConstraintViolationsException::new))
+            input -> {
+              // 参数校验
+              sendMsgValidator.validate(input).throwIfInvalid(ConstraintViolationsException::new);
+            })
         .flatMap(input -> msgFacade.send(ac, input))
         .flatMap(o -> json(response, o));
   }

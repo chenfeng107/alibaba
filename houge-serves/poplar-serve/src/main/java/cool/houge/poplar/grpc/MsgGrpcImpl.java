@@ -61,8 +61,9 @@ public class MsgGrpcImpl extends ReactorMsgGrpc.MsgImplBase {
         .flatMap(
             msg -> {
               // 保存消息
-              return saveMsg(msg, kind).thenReturn(SendMsgResponse.getDefaultInstance());
-            });
+              return saveMsg(msg, kind);
+            })
+        .thenReturn(SendMsgResponse.getDefaultInstance());
   }
 
   Mono<Void> saveMsg(SendMsgRequest req, MsgKind kind) {

@@ -15,6 +15,9 @@
  */
 package cool.houge.rest.web;
 
+import am.ik.yavi.core.ConstraintViolation;
+import am.ik.yavi.core.ConstraintViolationsException;
+import com.google.common.base.Strings;
 import com.google.protobuf.InvalidProtocolBufferException;
 import cool.houge.Env;
 import cool.houge.protos.ErrorInfo;
@@ -93,15 +96,31 @@ public class HttpExceptionHandler extends AbstractRestSupport {
     } else if (t instanceof StatusException) { // gRPC
       var ex = (StatusException) t;
       if (!perform(ex.getTrailers(), builder)) {
-        builder.code(500).status(500).message("gRPC错误").developerMessage(ex.getMessage());
+        builder
+            .code(500)
+            .status(500)
+            .message(Strings.lenientFormat("gRPC错误[%s]", ex.getStatus().getCode()))
+            .developerMessage(ex.getMessage());
         errorLog = true;
       }
     } else if (t instanceof StatusRuntimeException) { // gRPC
       var ex = (StatusRuntimeException) t;
       if (!perform(ex.getTrailers(), builder)) {
-        builder.code(500).status(500).message("gRPC错误").developerMessage(ex.getMessage());
+        builder
+            .code(500)
+            .status(500)
+            .message(Strings.lenientFormat("gRPC错误[%s]", ex.getStatus().getCode()))
+            .developerMessage(ex.getMessage());
         errorLog = true;
       }
+    } else if (t instanceof ConstraintViolationsException) { // 参数校验异常
+      var ex = (ConstraintViolationsException) t;
+      builder
+          .code(400)
+          .status(400)
+          .message("请求参数错误")
+          .developerMessage(ex.getMessage())
+          .details(ex.violations().stream().map(ConstraintViolation::detail));
     } else {
       builder.status(500).code(500).message("服务器错误").developerMessage(t.getMessage());
       errorLog = true;
