@@ -15,9 +15,8 @@
  */
 package cool.houge.rest.interceptor;
 
-import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
-import cool.houge.grpc.VerifyTokenRequest;
 import cool.houge.rest.auth.AuthContext;
+import cool.houge.rest.facade.token.TokenFacade;
 import cool.houge.rest.web.AbstractRestSupport;
 import java.util.function.BiFunction;
 import javax.inject.Inject;
@@ -39,15 +38,15 @@ public class TokenInterceptor extends AbstractRestSupport {
 
   private static final String ACCESS_TOKEN_QUERY_NAME = "access_token";
 
-  private final ReactorTokenStub tokenStub;
+  private final TokenFacade tokenFacade;
 
   /**
    * 构造函数.
    *
-   * @param tokenStub
+   * @param tokenFacade
    */
-  public @Inject TokenInterceptor(ReactorTokenStub tokenStub) {
-    this.tokenStub = tokenStub;
+  public @Inject TokenInterceptor(TokenFacade tokenFacade) {
+    this.tokenFacade = tokenFacade;
   }
 
   /**
@@ -67,12 +66,10 @@ public class TokenInterceptor extends AbstractRestSupport {
                 throw new BizCodeException(BizCode.C401, "缺少 access_token");
               }
 
-              var req = VerifyTokenRequest.newBuilder().setToken(token).build();
-              return tokenStub
-                  .verify(req)
+              return tokenFacade
+                  .verify(token)
                   .flatMapMany(
-                      resp -> {
-                        var uid = resp.getUid();
+                      uid -> {
                         var ac =
                             new AuthContext() {
                               @Override
