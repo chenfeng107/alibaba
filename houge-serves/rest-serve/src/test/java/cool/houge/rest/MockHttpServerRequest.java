@@ -22,8 +22,10 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.multipart.HttpData;
 import java.net.InetSocketAddress;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -33,6 +35,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.ByteBufFlux;
 import reactor.netty.Connection;
+import reactor.netty.http.server.HttpServerFormDecoderProvider;
+import reactor.netty.http.server.HttpServerFormDecoderProvider.Builder;
 import reactor.netty.http.server.HttpServerRequest;
 
 /** @author KK (kzou227@qq.com) */
@@ -115,6 +119,26 @@ public class MockHttpServerRequest implements HttpServerRequest {
   }
 
   @Override
+  public boolean isFormUrlencoded() {
+    return false;
+  }
+
+  @Override
+  public boolean isMultipart() {
+    return false;
+  }
+
+  @Override
+  public Flux<HttpData> receiveForm() {
+    return null;
+  }
+
+  @Override
+  public Flux<HttpData> receiveForm(Consumer<HttpServerFormDecoderProvider.Builder> formDecoderBuilder) {
+    return null;
+  }
+
+  @Override
   public InetSocketAddress hostAddress() {
     return hostAddress;
   }
@@ -181,6 +205,11 @@ public class MockHttpServerRequest implements HttpServerRequest {
    */
   public static Builder builder() {
     return new Builder();
+  }
+
+  @Override
+  public Map<CharSequence, List<Cookie>> allCookies() {
+    return null;
   }
 
   /** 构建器. */
