@@ -41,36 +41,32 @@ public class JooqJwtSecretRepository implements JwtSecretRepository {
   @Override
   public Mono<Void> insert(JwtSecret model) {
     return Mono.from(
-            dsl.insertInto(JWT_SECRET).set(JwtSecretMapper.INSTANCE.map(model))
-            //
-            )
-        .then();
+        dsl.insertInto(JWT_SECRET).set(JwtSecretMapper.INSTANCE.map(model))
+      )
+      .then();
   }
 
   @Override
   public Mono<Void> delete(String id) {
     return Mono.from(
-            dsl.delete(JWT_SECRET).where(JWT_SECRET.ID.eq(id))
-            //
-            )
-        .then();
+        dsl.delete(JWT_SECRET).where(JWT_SECRET.ID.eq(id))
+      )
+      .then();
   }
 
   @Override
   public Mono<JwtSecret> findById(String id) {
     return Mono.from(
-            dsl.selectFrom(JWT_SECRET).where(JWT_SECRET.ID.eq(id))
-            //
-            )
-        .map(JwtSecretMapper.INSTANCE::map);
+        dsl.selectFrom(JWT_SECRET).where(JWT_SECRET.ID.eq(id))
+      )
+      .map(JwtSecretMapper.INSTANCE::map);
   }
 
   @Override
   public Flux<JwtSecret> findAll() {
     return Flux.from(
-            dsl.selectFrom(JWT_SECRET)
-            //
-            )
-        .map(JwtSecretMapper.INSTANCE::map);
+        dsl.selectFrom(JWT_SECRET)
+      )
+      .map(JwtSecretMapper.INSTANCE::map);
   }
 }

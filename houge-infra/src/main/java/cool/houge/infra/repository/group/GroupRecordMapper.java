@@ -6,7 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-/** @author KK (kzou227@qq.com) */
+/**
+ * @author KK (kzou227@qq.com)
+ */
 @Mapper
 public interface GroupRecordMapper {
 
