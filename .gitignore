@@ -10,7 +10,9 @@ build
 out
 
 # 忽略日志
-logs
+logs/
+# 忽略测试目录
+tests/
 
 # Houge 开发配置
 gradle-local.properties
