@@ -69,11 +69,12 @@ jooq {
                 includeTypes = "INET"
               }
             }
+            excludes = """
+              public.flyway_schema_history
+            """
           }
           generate {
-            deprecated = false
             records = true
-            immutablePojos = true
             fluentSetters = true
           }
           target {
