@@ -1,11 +1,44 @@
 apply plugin: "application"
 apply plugin: "com.bmuschko.docker-remote-api"
+apply plugin: "com.google.protobuf"
 
 mainClassName = "cool.houge.ws.main.WsMain"
 
 jar {
   manifest {
     attributes "Multi-Release": "true"
+  }
+}
+
+def grpcGeneratedFilesBaseDir = "${projectDir}/generated"
+sourceSets {
+  main {
+    java {
+      srcDir "${grpcGeneratedFilesBaseDir}/main/java"
+      srcDir "${grpcGeneratedFilesBaseDir}/main/grpc"
+      srcDir "${grpcGeneratedFilesBaseDir}/main/reactor"
+    }
+  }
+}
+
+protobuf {
+  generatedFilesBaseDir = grpcGeneratedFilesBaseDir
+  protoc {
+    artifact = "com.google.protobuf:protoc:3.17.3"
+  }
+  plugins {
+    grpc {
+      artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
+    }
+    reactor {
+      artifact = "com.salesforce.servicelibs:reactor-grpc:1.1.0"
+    }
+  }
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {}
+      reactor {}
+    }
   }
 }
 
@@ -42,6 +75,8 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 }
 
 dependencies {
+  protobuf(project(":houge-proto"))
+
   implementation(project(":houge-core"))
   implementation("com.typesafe:config")
   implementation("com.google.guava:guava")
@@ -54,9 +89,10 @@ dependencies {
 
   // gRPC
 //  implementation(project(":houge-grpc"))
-  implementation("io.grpc:grpc-netty")
   implementation("io.grpc:grpc-protobuf")
+  implementation("io.grpc:grpc-netty")
   implementation("io.grpc:grpc-stub")
+  implementation("com.salesforce.servicelibs:reactor-grpc-stub:1.1.0")
 
   // 日志
   implementation("org.apache.logging.log4j:log4j-core")

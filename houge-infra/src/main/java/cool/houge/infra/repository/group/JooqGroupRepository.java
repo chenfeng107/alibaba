@@ -13,6 +13,7 @@ import cool.houge.infra.db.tables.records.GroupRecord;
 import javax.inject.Inject;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
+import org.jooq.impl.DSL;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -62,32 +63,70 @@ public class JooqGroupRepository implements GroupRepository, GroupQueryRepositor
 
   @Override
   public Mono<Void> joinMember(long gid, long uid) {
-    return null;
+    return Mono.from(
+            dsl.insertInto(GROUP_MEMBER).set(new GroupMemberRecord().setGid(gid).setUid(uid))
+            //
+            )
+        .thenMany(
+            dsl.update(GROUP)
+                .set(GROUP.MEMBER_SIZE, GROUP.MEMBER_SIZE.plus(1))
+                .set(GROUP.UPDATE_TIME, DSL.currentLocalDateTime())
+                .where(GROUP.ID.eq(gid))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<Void> removeMember(long gid, long uid) {
-    return null;
+    return Mono.from(
+            dsl.delete(GROUP_MEMBER).where(GROUP_MEMBER.GID.eq(gid), GROUP_MEMBER.UID.eq(uid))
+            //
+            )
+        .thenMany(
+            dsl.update(GROUP)
+                .set(GROUP.MEMBER_SIZE, GROUP.MEMBER_SIZE.minus(1))
+                .set(GROUP.UPDATE_TIME, DSL.currentLocalDateTime())
+                .where(GROUP.ID.eq(gid))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<Group> findById(long id) {
-    return null;
+    return Mono.from(
+            dsl.selectFrom(GROUP).where(GROUP.ID.eq(id))
+            //
+            )
+        .map(GroupRecordMapper.INSTANCE::map);
   }
 
   @Override
-  public Flux<Long> findUidByGid(long id) {
-    return null;
+  public Flux<Long> findUidByGid(long gid) {
+    return Flux.from(
+            dsl.select(GROUP_MEMBER.UID).from(GROUP_MEMBER).where(GROUP_MEMBER.GID.eq(gid))
+            //
+            )
+        .map(Record1::value1);
   }
 
   @Override
   public Flux<Long> findGidByUid(long uid) {
-    return null;
+    return Flux.from(
+            dsl.select(GROUP_MEMBER.GID).from(GROUP_MEMBER).where(GROUP_MEMBER.UID.eq(uid))
+            //
+            )
+        .map(Record1::value1);
   }
 
   @Override
-  public Mono<Nil> existsById(long id) {
-    return null;
+  public Mono<Nil> existsById(long gid) {
+    return Mono.from(
+            dsl.selectCount().from(GROUP).where(GROUP.ID.eq(gid))
+            //
+            )
+        .flatMap(r -> r.value1() > 0 ? Nil.mono() : Mono.empty());
   }
 
   private Mono<Long> nextId() {

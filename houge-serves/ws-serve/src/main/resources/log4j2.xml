@@ -68,8 +68,11 @@
     </RollingRandomAccessFile>
   </Appenders>
   <Loggers>
+    <!-- Netty -->
     <Logger name="io.netty" level="INFO"/>
     <Logger name="io.netty.buffer.PooledByteBufAllocator" level="DEBUG"/>
+    <!-- jOOQ -->
+    <Logger name="org.jooq.tools.LoggerListener" level="debug"/>
     <Root level="INFO">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="InfoFile"/>

@@ -17,6 +17,7 @@ package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * IM 服务实例信息.
@@ -24,6 +25,7 @@ import lombok.Data;
  * @author KK (kzou227@qq.com)
  */
 @Data
+@Accessors(chain = true)
 public class ServerInstance {
 
   /** 主键 ID. */

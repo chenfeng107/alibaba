@@ -22,6 +22,12 @@ import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
+import cool.houge.grpc.ReactorAuthGrpc;
+import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
+import cool.houge.grpc.ReactorPacketGrpc;
+import cool.houge.grpc.ReactorPacketGrpc.ReactorPacketStub;
+import cool.houge.grpc.ReactorUserGroupGrpc;
+import cool.houge.grpc.ReactorUserGroupGrpc.ReactorUserGroupStub;
 import cool.houge.ws.AgentServiceConfig;
 import cool.houge.ws.LogicServiceConfig;
 import cool.houge.ws.agent.ClientAgentManager;
@@ -103,9 +109,10 @@ public class WsModule extends AbstractModule {
     bind(ManagedChannel.class).toInstance(managedChannel);
 
     // gRPC 存根对象注册
-    //    bind(AuthStub.class).toInstance(AuthGrpc.newStub(managedChannel));
-    //    bind(PacketStub.class).toInstance(PacketGrpc.newStub(managedChannel));
-    //    bind(UserGroupStub.class).toInstance(UserGroupGrpc.newStub(managedChannel));
+    bind(ReactorAuthStub.class).toInstance(ReactorAuthGrpc.newReactorStub(managedChannel));
+    bind(ReactorPacketStub.class).toInstance(ReactorPacketGrpc.newReactorStub(managedChannel));
+    bind(ReactorUserGroupStub.class)
+        .toInstance(ReactorUserGroupGrpc.newReactorStub(managedChannel));
   }
 
   private void bindCommandHandlers() {

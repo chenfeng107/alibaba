@@ -18,6 +18,7 @@ package cool.houge.ws;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 逻辑服务配置.
@@ -27,6 +28,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Accessors(chain = false)
 public class LogicServiceConfig {
 
   /** 逻辑服务开放的 gRPC 访问地址. */

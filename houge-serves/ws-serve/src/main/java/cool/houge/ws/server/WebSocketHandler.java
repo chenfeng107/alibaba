@@ -18,22 +18,16 @@ package cool.houge.ws.server;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.UnsafeByteOperations;
-import cool.houge.grpc.AuthGrpc.AuthStub;
 import cool.houge.grpc.AuthPb.AuthRequest;
-import cool.houge.grpc.AuthPb.AuthResponse;
-import cool.houge.grpc.PacketGrpc.PacketStub;
 import cool.houge.grpc.PacketPb.PacketRequest;
-import cool.houge.grpc.PacketPb.PacketResponse;
-import cool.houge.grpc.SinkOneStreamObserver;
-import cool.houge.grpc.UserGroupGrpc.UserGroupStub;
+import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
+import cool.houge.grpc.ReactorPacketGrpc.ReactorPacketStub;
+import cool.houge.grpc.ReactorUserGroupGrpc.ReactorUserGroupStub;
 import cool.houge.grpc.UserGroupPb.ListGidsRequest;
-import cool.houge.grpc.UserGroupPb.ListGidsResponse;
 import cool.houge.util.SocketExceptionUtils;
-import cool.houge.ws.session.DefaultSession;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
-import io.grpc.stub.StreamObserver;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -64,9 +58,9 @@ public class WebSocketHandler {
   /** 认证令牌在 query 参数中的名称. */
   private static final String ACCESS_TOKEN_QUERY_NAME = "access_token";
 
-  private final AuthStub authStub;
-  private final PacketStub packetStub;
-  private final UserGroupStub userGroupStub;
+  private final ReactorAuthStub authStub;
+  private final ReactorPacketStub packetStub;
+  private final ReactorUserGroupStub userGroupStub;
   private final SessionManager sessionManager;
   private final SessionGroupManager sessionGroupManager;
 
@@ -79,9 +73,9 @@ public class WebSocketHandler {
    */
   @Inject
   public WebSocketHandler(
-      AuthStub authStub,
-      PacketStub packetStub,
-      UserGroupStub userGroupStub,
+      ReactorAuthStub authStub,
+      ReactorPacketStub packetStub,
+      ReactorUserGroupStub userGroupStub,
       SessionManager sessionManager,
       SessionGroupManager sessionGroupManager) {
     this.authStub = authStub;
@@ -143,59 +137,51 @@ public class WebSocketHandler {
             .setRequestUid(session.uid())
             .setDataBytes(UnsafeByteOperations.unsafeWrap(frame.content().nioBuffer()))
             .build();
-    packetStub.process(
-        request,
-        new StreamObserver<>() {
-
-          @Override
-          public void onNext(PacketResponse response) {
-            if (response.getDataBytes() == ByteString.EMPTY) {
-              return;
-            }
-            Supplier<ByteBuf> s =
-                () -> Unpooled.wrappedBuffer(response.getDataBytes().asReadOnlyByteBuffer());
-            session
-                .send(Mono.fromSupplier(s))
-                .doOnError(
-                    ex -> {
-                      if (!session.isClosed()) {
-                        session.close().subscribe();
-                      }
-                      if (SocketExceptionUtils.ignoreLogException(ex)) {
-                        log.debug("已忽略的网络异常", ex);
-                        return;
-                      }
-                      log.error(
-                          "向用户发送消息异常 session={} data(base64)={}",
-                          session,
-                          Base64.getEncoder().encodeToString(response.getDataBytes().toByteArray()),
-                          ex);
-                    })
-                .subscribe();
-          }
-
-          @Override
-          public void onError(Throwable t) {
-            log.error(
-                "远程接口处理 Packet 异常 session={} data(base64)={}",
-                session,
-                Base64.getEncoder().encodeToString(request.getDataBytes().toByteArray()),
-                t);
-          }
-
-          @Override
-          public void onCompleted() {
-            // noop
-          }
-        });
+    packetStub
+        .process(request)
+        .doOnNext(
+            response -> {
+              if (response.getDataBytes() == ByteString.EMPTY) {
+                return;
+              }
+              Supplier<ByteBuf> s =
+                  () -> Unpooled.wrappedBuffer(response.getDataBytes().asReadOnlyByteBuffer());
+              session
+                  .send(Mono.fromSupplier(s))
+                  .doOnError(
+                      ex -> {
+                        if (!session.isClosed()) {
+                          session.close().subscribe();
+                        }
+                        if (SocketExceptionUtils.ignoreLogException(ex)) {
+                          log.debug("已忽略的网络异常", ex);
+                          return;
+                        }
+                        log.error(
+                            "向用户发送消息异常 session={} data(base64)={}",
+                            session,
+                            Base64.getEncoder()
+                                .encodeToString(response.getDataBytes().toByteArray()),
+                            ex);
+                      })
+                  .subscribe();
+            })
+        .doOnError(
+            t -> {
+              //
+              log.error(
+                  "远程接口处理 Packet 异常 session={} data(base64)={}",
+                  session,
+                  Base64.getEncoder().encodeToString(request.getDataBytes().toByteArray()),
+                  t);
+            })
+        .subscribe();
   }
 
   @VisibleForTesting
   Mono<List<Long>> loadGids(long uid) {
     var request = ListGidsRequest.newBuilder().setUid(uid).build();
-    var sink = new SinkOneStreamObserver<ListGidsResponse>();
-    userGroupStub.listGids(request, sink);
-    return sink.asMono().map(ListGidsResponse::getGidList);
+    return userGroupStub.listGids(request).map(response -> response.getGidList());
   }
 
   @VisibleForTesting
@@ -210,9 +196,10 @@ public class WebSocketHandler {
     }
 
     var request = AuthRequest.newBuilder().setToken(token).build();
-    var streamObserver = new SinkOneStreamObserver<AuthResponse>();
-    authStub.auth(request, streamObserver);
-    return streamObserver.asMono().map(resp -> new DefaultSession(in, out, resp.getUid(), token));
+    //    return streamObserver.asMono().map(resp -> new DefaultSession(in, out, resp.getUid(),
+    // token));
+    // FIXME 完善认证逻辑
+    return Mono.empty();
   }
 
   @VisibleForTesting

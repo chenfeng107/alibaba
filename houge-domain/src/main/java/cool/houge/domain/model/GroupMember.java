@@ -17,11 +17,11 @@ package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /** 群组成员关系. */
 @Data
+@Accessors(chain = true)
 public class GroupMember {
 
   /** 群组. */

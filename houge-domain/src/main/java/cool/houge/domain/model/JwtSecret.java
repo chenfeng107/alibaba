@@ -17,6 +17,7 @@ package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * t_jwt_secret JWT 密钥配置.
@@ -24,6 +25,7 @@ import lombok.Data;
  * @author KK (kzou227@qq.com)
  */
 @Data
+@Accessors(chain = true)
 public class JwtSecret {
 
   /** kid 标识仅支持2个字符. */

@@ -38,10 +38,10 @@ public interface GroupQueryRepository {
   /**
    * 查询指定群成员的用户 ID 列表.
    *
-   * @param id 群 ID
+   * @param uid 群 ID
    * @return 成员用户 ID
    */
-  Flux<Long> findUidByGid(long id);
+  Flux<Long> findUidByGid(long uid);
 
   /**
    * 查询指定用户已经关联的群组 IDs.
@@ -54,8 +54,8 @@ public interface GroupQueryRepository {
   /**
    * 使用群组 ID 查询用户是否存在.
    *
-   * @param id 群组 ID
+   * @param gid 群组 ID
    * @return Nil.mono()/Mono.empty()
    */
-  Mono<Nil> existsById(long id);
+  Mono<Nil> existsById(long gid);
 }
