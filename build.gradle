@@ -180,21 +180,16 @@ allprojects {
 }
 
 ext {
-  // 数据库名称
-  def dbName = "houge"
-  // MySQL 配置
-  def dbHost = requireProperty("houge.mysql.host")
-  def dbPort = properties["houge.mysql.port"] ?: 3306
-  def dbUser = requireProperty("houge.mysql.user")
-  def dbPassword = requireProperty("houge.mysql.password")
-
   // ============================================================================== //
   // ~~~ 初始化环境配置
   // ============================================================================== //
-  hougeDbName = dbName
-  hougeJdbcUrl = "jdbc:mysql://${dbHost}:${dbPort}/${dbName}"
-  hougeJdbcUser = dbUser
-  hougeJdbcPassword = dbPassword
+
+  // 数据库配置参数
+  hougeDbName = "houge"
+  hougeDbHost = requireProperty("houge.mysql.host")
+  hougeDbPort = properties["houge.mysql.port"] ?: 3306
+  hougeDbUser = requireProperty("houge.mysql.user")
+  hougeDbPassword = requireProperty("houge.mysql.password")
 }
 
 def requireProperty(name) {
@@ -203,4 +198,37 @@ def requireProperty(name) {
     throw new IllegalArgumentException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
   }
   return v
+}
+
+// 准备开发环境
+task devEnv {
+  doLast {
+    def f = file("${rootDir}/houge.conf")
+    if (f.exists()) {
+      f.renameTo(file("${rootDir}/houge.conf.${java.time.Instant.now().epochSecond}"))
+    }
+
+    f.text = """### Generated ${java.time.LocalDateTime.now()}
+poplar {
+  r2dbc {
+    url = "r2dbc:mysql://${project.ext.hougeDbHost}:${project.ext.hougeDbPort}/${project.ext.hougeDbName}"
+    user = "${project.ext.hougeDbUser}"
+    password = "${project.ext.hougeDbPassword}"
+  }
+}
+
+ws {
+  poplar {
+    grpc-target = "127.0.0.1:11012"
+    stream-grpc-targets = "127.0.0.1:11012"
+  }
+}
+
+rest {
+  poplar {
+    grpc-target = "127.0.0.1:11012"
+  }
+}
+"""
+  }
 }

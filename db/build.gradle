@@ -7,9 +7,9 @@ configurations {
 
 flyway {
   driver = "com.mysql.cj.jdbc.Driver"
-  url = rootProject.ext.hougeJdbcUrl
-  user = rootProject.ext.hougeJdbcUser
-  password = rootProject.ext.hougeJdbcPassword
+  url = "jdbc:mysql://${rootProject.ext.hougeDbHost}:${rootProject.ext.hougeDbPort}/${rootProject.ext.hougeDbName}"
+  user = rootProject.ext.hougeDbUser
+  password = rootProject.ext.hougeDbPassword
   locations = ["filesystem:mysql/*.sql"]
   configurations = ["compileClasspath", "flywayMigration"]
 }
