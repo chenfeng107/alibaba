@@ -7,6 +7,7 @@ import cool.houge.infra.r2dbc.R2dbcClient;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -14,7 +15,7 @@ public class MsgDaoImpl implements MsgDao {
 
   private final R2dbcClient rc;
 
-  public MsgDaoImpl(R2dbcClient rc) {
+  public @Inject MsgDaoImpl(R2dbcClient rc) {
     this.rc = rc;
   }
 

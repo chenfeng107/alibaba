@@ -3,6 +3,7 @@ package cool.houge.infra.dao;
 import cool.houge.domain.group.GroupDao;
 import cool.houge.domain.model.Group;
 import cool.houge.infra.r2dbc.R2dbcClient;
+import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -10,7 +11,7 @@ public class GroupDaoImpl implements GroupDao {
 
   private final R2dbcClient rc;
 
-  public GroupDaoImpl(R2dbcClient rc) {
+  public @Inject GroupDaoImpl(R2dbcClient rc) {
     this.rc = rc;
   }
 

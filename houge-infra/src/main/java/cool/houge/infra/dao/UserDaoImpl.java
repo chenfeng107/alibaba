@@ -3,6 +3,7 @@ package cool.houge.infra.dao;
 import cool.houge.domain.model.User;
 import cool.houge.domain.user.UserDao;
 import cool.houge.infra.r2dbc.R2dbcClient;
+import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -10,7 +11,7 @@ public class UserDaoImpl implements UserDao {
 
   private final R2dbcClient rc;
 
-  public UserDaoImpl(R2dbcClient rc) {
+  public @Inject UserDaoImpl(R2dbcClient rc) {
     this.rc = rc;
   }
 

@@ -13,25 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar.server;
+package cool.houge.poplar;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import cool.houge.domain.system.AppInstDao;
+import cool.houge.infra.system.identifier.AbstractAppIdentifier;
+import javax.inject.Inject;
+import lombok.extern.log4j.Log4j2;
 
 /**
- * 逻辑服务配置.
+ * 应用程序标识符接口.
  *
  * @author KK (kzou227@qq.com)
  */
-@Getter
-@Setter
-@ToString
-public class PivotServerConfig {
+@Log4j2
+public class PoplarAppIdentifier extends AbstractAppIdentifier {
 
-  /** */
-  public static final String ROOT_CONFIG_NAME = "pivot-server";
+  /**
+   * 构造函数.
+   *
+   * @param appInstDao 应用实例数据访问对象
+   */
+  @Inject
+  public PoplarAppIdentifier(AppInstDao appInstDao) {
+    super(appInstDao);
+  }
 
-  /** gRPC服务地址. */
-  private String addr;
+  @Override
+  public String appName() {
+    return "houge-poplar";
+  }
 }

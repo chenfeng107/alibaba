@@ -15,7 +15,7 @@
  */
 package cool.houge.rest;
 
-import cool.houge.infra.system.identifier.AbstractApplicationIdentifier;
+import cool.houge.infra.system.identifier.AbstractAppIdentifier;
 import cool.houge.infra.system.identifier.ServerInstanceRepository;
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ import javax.inject.Inject;
  *
  * @author KK (kzou227@qq.com)
  */
-public class RestApplicationIdentifier extends AbstractApplicationIdentifier {
+public class RestAppIdentifier extends AbstractAppIdentifier {
 
   /**
    * 使用应用实例数据访问对象构造 REST 应用标识对象.
@@ -32,12 +32,12 @@ public class RestApplicationIdentifier extends AbstractApplicationIdentifier {
    * @param serverInstanceRepository 应用实例数据访问对象
    */
   @Inject
-  public RestApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
-    super(serverInstanceRepository);
+  public RestAppIdentifier(ServerInstanceRepository serverInstanceRepository) {
+    super(appInstDao);
   }
 
   @Override
-  public String applicationName() {
+  public String appName() {
     return "houge-rest";
   }
 }

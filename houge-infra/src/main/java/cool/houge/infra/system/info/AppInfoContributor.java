@@ -16,7 +16,7 @@
 package cool.houge.infra.system.info;
 
 import com.google.common.collect.ImmutableMap;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.infra.system.info.Info.Builder;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -31,16 +31,16 @@ import reactor.core.publisher.Mono;
  */
 public class AppInfoContributor implements InfoContributor {
 
-  private final ApplicationIdentifier applicationIdentifier;
+  private final AppIdentifier appIdentifier;
 
   /**
    * 使用应用标识构造对象.
    *
-   * @param applicationIdentifier 应用标识对象.
+   * @param appIdentifier 应用标识对象.
    */
   @Inject
-  public AppInfoContributor(ApplicationIdentifier applicationIdentifier) {
-    this.applicationIdentifier = applicationIdentifier;
+  public AppInfoContributor(AppIdentifier appIdentifier) {
+    this.appIdentifier = appIdentifier;
   }
 
   @Override
@@ -55,9 +55,9 @@ public class AppInfoContributor implements InfoContributor {
             .startInstant()
             .map(instant -> ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()));
     return ImmutableMap.<String, Object>builder()
-        .put("name", applicationIdentifier.applicationName())
-        .put("version", applicationIdentifier.version())
-        .put("fid", applicationIdentifier.fid())
+        .put("name", appIdentifier.appName())
+        .put("version", appIdentifier.version())
+        .put("fid", appIdentifier.fid())
         .put("work_dir", System.getProperty("user.dir"))
         .put("command", processInfo.command())
         .put("command_line", processInfo.commandLine())

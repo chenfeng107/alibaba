@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.AppIdentifier;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.UUID;
@@ -39,8 +39,8 @@ class AppInfoContributorTest {
     var version = UUID.randomUUID().toString();
     var fid = new SecureRandom().nextInt();
 
-    var identifier = mock(ApplicationIdentifier.class);
-    when(identifier.applicationName()).thenReturn(appName);
+    var identifier = mock(AppIdentifier.class);
+    when(identifier.appName()).thenReturn(appName);
     when(identifier.version()).thenReturn(version);
     when(identifier.fid()).thenReturn(fid);
 

@@ -18,16 +18,17 @@ package cool.houge.util;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 应用程序帮助类.
  *
  * @author KK (kzou227@qq.com)
  */
-@Log4j2
-public class AppShutdownHelper implements Runnable {
+public class AppShutdownHelper {
 
+  private static final Logger log = LogManager.getLogger();
   private final Set<Runnable> callbacks = new LinkedHashSet<>();
 
   /**
@@ -50,8 +51,7 @@ public class AppShutdownHelper implements Runnable {
     return this;
   }
 
-  @Override
-  public void run() {
+  public void await() {
     final var latch = new CountDownLatch(1);
     Runtime.getRuntime()
         .addShutdownHook(

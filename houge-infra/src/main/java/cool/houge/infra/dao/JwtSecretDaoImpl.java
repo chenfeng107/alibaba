@@ -5,6 +5,7 @@ import cool.houge.domain.shared.JwtSecretDao;
 import cool.houge.infra.r2dbc.R2dbcClient;
 import io.r2dbc.spi.Row;
 import java.time.LocalDateTime;
+import javax.inject.Inject;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,7 +14,7 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
 
   private final R2dbcClient rc;
 
-  public JwtSecretDaoImpl(R2dbcClient rc) {
+  public @Inject JwtSecretDaoImpl(R2dbcClient rc) {
     this.rc = rc;
   }
 

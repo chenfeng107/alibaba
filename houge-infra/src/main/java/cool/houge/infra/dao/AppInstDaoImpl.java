@@ -5,6 +5,7 @@ import cool.houge.domain.system.AppInstDao;
 import cool.houge.infra.r2dbc.R2dbcClient;
 import io.r2dbc.spi.Row;
 import java.time.LocalDateTime;
+import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -12,7 +13,7 @@ public class AppInstDaoImpl implements AppInstDao {
 
   private final R2dbcClient rc;
 
-  public AppInstDaoImpl(R2dbcClient rc) {
+  public @Inject AppInstDaoImpl(R2dbcClient rc) {
     this.rc = rc;
   }
 

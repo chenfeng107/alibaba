@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar.main;
+package cool.houge.poplar;
 
 import com.google.inject.Binding;
 import com.google.inject.Guice;
@@ -21,15 +21,8 @@ import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
-import cool.houge.infra.guice.BasisModule;
-import cool.houge.infra.guice.DaoModule;
-import cool.houge.infra.guice.ServiceModule;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
-import cool.houge.poplar.module.PivotModule;
-import cool.houge.poplar.server.PivotServer;
-import cool.houge.poplar.server.PivotServerConfig;
+import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.util.AppShutdownHelper;
 import io.grpc.BindableService;
 import java.util.List;
@@ -42,38 +35,32 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PivotMain implements Runnable {
+public class PoplarMain implements Runnable {
 
   private static final Logger log = LogManager.getLogger();
-  private static final String CONFIG_FILE = "houge-pivot.conf";
+  private static final String CONFIG_FILE = "houge-poplar.conf";
   private final AppShutdownHelper shutdownHelper = new AppShutdownHelper();
 
   public static void main(String[] args) {
-    new PivotMain().run();
+    new PoplarMain().run();
   }
 
   @Override
   public void run() {
     var config = loadConfig();
-    var injector =
-        Guice.createInjector(
-            new BasisModule(config), new DaoModule(), new ServiceModule(), new PivotModule());
-    var applicationIdentifier = injector.getInstance(ApplicationIdentifier.class);
+    var injector = Guice.createInjector(new PoplarModule(config));
+    var applicationIdentifier = injector.getInstance(AppIdentifier.class);
 
     // 启动服务
-    var pivotServer =
-        new PivotServer(
-            ConfigBeanFactory.create(
-                config.getConfig(PivotServerConfig.ROOT_CONFIG_NAME), PivotServerConfig.class),
-            findBindableServices(injector));
-    pivotServer.start();
+    var poplarServer = injector.getInstance(PoplarServer.class);
+    poplarServer.start();
 
     // 清理应用的钩子
     shutdownHelper
-        .addCallback(pivotServer::stop)
+        .addCallback(poplarServer::stop)
         // 清理应用程序标识
         .addCallback(applicationIdentifier::clean)
-        .run();
+        .await();
   }
 
   private Config loadConfig() {

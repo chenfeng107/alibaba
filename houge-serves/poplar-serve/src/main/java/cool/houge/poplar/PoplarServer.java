@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar.server;
+package cool.houge.poplar;
 
 import com.google.common.net.HostAndPort;
+import com.typesafe.config.Config;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.List;
+import java.util.Set;
+import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,31 +32,31 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PivotServer {
+public class PoplarServer {
 
   private static final Logger log = LogManager.getLogger();
 
-  private final PivotServerConfig serverConfig;
-  private final List<BindableService> bindableServices;
+  private final Set<BindableService> grpcServices;
   private Server server;
+  private final String addr;
 
   /**
    * 使用服务配置与 gRPC服务列表构造对象.
    *
-   * @param serverConfig 服务配置
-   * @param bindableServices 绑定的 gRPC 服务
+   * @param config 应用配置
+   * @param grpcServices 绑定的 gRPC 服务
    */
-  public PivotServer(PivotServerConfig serverConfig, List<BindableService> bindableServices) {
-    this.serverConfig = serverConfig;
-    this.bindableServices = bindableServices;
+  public @Inject PoplarServer(Config config, Set<BindableService> grpcServices) {
+    this.grpcServices = grpcServices;
+    this.addr = config.getString("poplar-server.addr");
   }
 
   /** 启动逻辑服务. */
   public void start() {
-    var hap = HostAndPort.fromString(serverConfig.getAddr());
+    var hap = HostAndPort.fromString(addr);
     var address = new InetSocketAddress(hap.getHost(), hap.getPort());
     var builder = NettyServerBuilder.forAddress(address);
-    for (BindableService service : bindableServices) {
+    for (BindableService service : grpcServices) {
       builder.addService(service);
     }
 

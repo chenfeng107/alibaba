@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.AppIdentifier;
 
 /**
  * {@link YeinGidMessageIdGenerator} 单元测试.
@@ -32,7 +32,7 @@ class YeinGidMsgIdGeneratorTest {
 
   @Test
   void nextId() {
-    var applicationIdentifier = mock(ApplicationIdentifier.class);
+    var applicationIdentifier = mock(AppIdentifier.class);
     when(applicationIdentifier.fid()).thenReturn(0);
 
     var messageIdGenerator = new YeinGidMessageIdGenerator(applicationIdentifier);
@@ -41,7 +41,7 @@ class YeinGidMsgIdGeneratorTest {
 
   @Test
   void nextIds() {
-    var applicationIdentifier = mock(ApplicationIdentifier.class);
+    var applicationIdentifier = mock(AppIdentifier.class);
     when(applicationIdentifier.fid()).thenReturn(0);
 
     var messageIdGenerator = new YeinGidMessageIdGenerator(applicationIdentifier);

@@ -28,7 +28,7 @@ import cool.houge.domain.auth.TokenService;
 import cool.houge.infra.service.auth.JwsAuthService;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
-import cool.houge.rest.RestApplicationIdentifier;
+import cool.houge.rest.RestAppIdentifier;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.controller.ServerAuthInterceptor;
@@ -45,7 +45,7 @@ import cool.houge.infra.system.health.HealthIndicator;
 import cool.houge.infra.system.health.HealthService;
 import cool.houge.infra.system.health.HealthServiceImpl;
 import cool.houge.infra.system.health.PostgresHealthIndicator;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.infra.system.info.AppInfoContributor;
 import cool.houge.infra.system.info.InfoContributor;
 import cool.houge.infra.system.info.InfoService;
@@ -75,7 +75,7 @@ public class RestModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(ApplicationIdentifier.class).to(RestApplicationIdentifier.class).in(Scopes.SINGLETON);
+    bind(AppIdentifier.class).to(RestAppIdentifier.class).in(Scopes.SINGLETON);
 
     // 消息 ID 生成器
     bind(MessageIdGenerator.class).to(YeinGidMessageIdGenerator.class).in(Scopes.SINGLETON);

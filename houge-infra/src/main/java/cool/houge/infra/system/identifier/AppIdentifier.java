@@ -13,29 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar.packet;
-
-import lombok.Builder;
-import lombok.Value;
+package cool.houge.infra.system.identifier;
 
 /**
- * 错误包.
+ * 应用程序标识符接口.
  *
  * @author KK (kzou227@qq.com)
  */
-@Value
-@Builder
-public class ErrorPacket implements Packet {
+public interface AppIdentifier {
 
-  /** 错误码. */
-  private int code;
-  /** 错误描述. */
-  private String message;
-  /** 详细描述. */
-  private Object details;
+  /**
+   * 返回应用名称.
+   *
+   * @return 应用名称
+   */
+  String appName();
 
-  @Override
-  public String getNs() {
-    return Packet.NS_ERROR;
-  }
+  /**
+   * 返回应用标识 ID.
+   *
+   * <p>FID 应用实例在<b>集群</b>中的唯一标识符.
+   *
+   * @return 应用标识 ID
+   */
+  int fid();
+
+  /**
+   * 返回应用版本.
+   *
+   * @return 应用版本
+   */
+  String version();
+
+  /** 清理应用数据. */
+  void clean();
 }

@@ -23,7 +23,7 @@ import cool.houge.ConfigKeys;
 import cool.houge.infra.guice.BasisModule;
 import cool.houge.infra.guice.DaoModule;
 import cool.houge.infra.guice.ServiceModule;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.module.RestModule;
@@ -63,7 +63,7 @@ public class RestMain implements Runnable {
             new BasisModule(config), new DaoModule(), new ServiceModule(), new RestModule(config));
 
     // 启动 IM 服务
-    var applicationIdentifier = injector.getInstance(ApplicationIdentifier.class);
+    var applicationIdentifier = injector.getInstance(AppIdentifier.class);
     var restServer =
         new RestServer(
             config.getString(ConfigKeys.REST_SERVER_ADDR),
@@ -74,13 +74,13 @@ public class RestMain implements Runnable {
 
     restServer.start();
     log.info(
-        "{} 服务启动成功 fid={}", applicationIdentifier.applicationName(), applicationIdentifier.fid());
+        "{} 服务启动成功 fid={}", applicationIdentifier.appName(), applicationIdentifier.fid());
 
     shutdownHelper
         .addCallback(restServer::stop)
         // 清理应用标识数据信息
         .addCallback(applicationIdentifier::clean)
-        .run();
+        .await();
     log.info("REST 服务停止完成");
   }
 

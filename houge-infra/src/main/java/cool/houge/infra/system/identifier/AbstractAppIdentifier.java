@@ -17,6 +17,7 @@ package cool.houge.infra.system.identifier;
 
 import cool.houge.Version;
 import cool.houge.domain.model.AppInst;
+import cool.houge.domain.system.AppInstDao;
 import cool.houge.util.HostNameUtils;
 import cool.houge.util.YeinGid;
 import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
@@ -40,7 +41,7 @@ import reactor.core.publisher.Mono;
  *
  * @author KK (kzou227@qq.com)
  */
-public abstract class AbstractApplicationIdentifier implements ApplicationIdentifier {
+public abstract class AbstractAppIdentifier implements AppIdentifier {
 
   private static final Logger log = LogManager.getLogger();
 
@@ -56,16 +57,16 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
   // 健康检查的周期
   private static final Duration CHECK_HEALTH_PERIOD = Duration.ofMinutes(1);
 
-  private final ServerInstanceRepository serverInstanceRepository;
+  private final AppInstDao appInstDao;
   private final int fid;
 
   /**
    * 使用服务实例数据访问对象构造对象.
    *
-   * @param serverInstanceRepository 服务实例数据访问对象
+   * @param appInstDao
    */
-  protected AbstractApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
-    this.serverInstanceRepository = serverInstanceRepository;
+  protected AbstractAppIdentifier(AppInstDao appInstDao) {
+    this.appInstDao = appInstDao;
     this.fid = initFid();
     this.checkHealth();
   }
@@ -82,15 +83,15 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
 
   @Override
   public void clean() {
-    var future = serverInstanceRepository.delete(fid).toFuture();
+    var future = appInstDao.delete(fid).toFuture();
     try {
       future.get(5, TimeUnit.SECONDS);
-      log.info("<{}>应用标识[{}]清理完成", applicationName(), fid);
+      log.info("<{}>应用标识[{}]清理完成", appName(), fid);
     } catch (InterruptedException e) {
       log.warn("Interrupted", e);
       Thread.currentThread().interrupt();
     } catch (Exception e) {
-      throw new IllegalStateException("<" + applicationName() + ">应用标识[" + fid + "]清理异常", e);
+      throw new IllegalStateException("<" + appName() + ">应用标识[" + fid + "]清理异常", e);
     }
   }
 
@@ -154,7 +155,7 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
 
     var e = new AppInst();
     e.setId(id);
-    e.setAppName(applicationName());
+    e.setAppName(appName());
     e.setHostName(inetAddress.getHostName());
     e.setHostAddress(inetAddress.getHostAddress());
     e.setOsName(System.getProperty("os.name"));
@@ -169,7 +170,7 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
   }
 
   private void checkHealth() {
-    serverInstanceRepository
+    appInstDao
         .updateCheckTime(fid)
         .doOnSuccess(unused -> log.debug("健康检查成功 fid: {}", fid))
         .onErrorContinue((ex, o) -> log.error("健康检查异常", ex))

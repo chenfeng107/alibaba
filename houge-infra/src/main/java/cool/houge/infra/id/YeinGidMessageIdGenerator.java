@@ -15,7 +15,7 @@
  */
 package cool.houge.infra.id;
 
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.AppIdentifier;
 import cool.houge.util.YeinGid;
 import javax.inject.Inject;
 import reactor.core.publisher.Flux;
@@ -27,21 +27,21 @@ import reactor.core.publisher.Flux;
  */
 public class YeinGidMessageIdGenerator implements MessageIdGenerator {
 
-  private final ApplicationIdentifier applicationIdentifier;
+  private final AppIdentifier appIdentifier;
 
   /**
    * 可以被 IoC 容器使用的构造函数.
    *
-   * @param applicationIdentifier 应用标志对象
+   * @param appIdentifier 应用标志对象
    */
   @Inject
-  public YeinGidMessageIdGenerator(ApplicationIdentifier applicationIdentifier) {
-    this.applicationIdentifier = applicationIdentifier;
+  public YeinGidMessageIdGenerator(AppIdentifier appIdentifier) {
+    this.appIdentifier = appIdentifier;
   }
 
   @Override
   public String nextId() {
-    return new YeinGid(applicationIdentifier.fid()).toHexString();
+    return new YeinGid(appIdentifier.fid()).toHexString();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class YeinGidMessageIdGenerator implements MessageIdGenerator {
           }
 
           for (int i = 0; i < limit; i++) {
-            sink.next(new YeinGid(applicationIdentifier.fid()).toHexString());
+            sink.next(new YeinGid(appIdentifier.fid()).toHexString());
           }
           sink.complete();
         });
