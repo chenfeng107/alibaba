@@ -19,32 +19,61 @@
 <Configuration status="WARN">
   <Properties>
     <Property name="appName">houge</Property>
-    <Property name="logsDir">/var/log/${appName}</Property>
+    <Property name="logDir">/var/log/${appName}</Property>
+    <Property name="pattern">%d{ISO8601} %level{length=1} [%t] %c{5} %L; %msg%n</Property>
+    <Property name="logFileMaxSize">1G</Property>
   </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{ISO8601} %level{length=1} [%t] %c{5} %L; %msg%n"/>
+      <PatternLayout pattern="${pattern}"/>
     </Console>
 
-    <RollingFile name="FileError" fileName="${logsDir}/${appName}-error.log"
-      filePattern="${logsDir}/${appName}-error-%d{yyyy-MM-dd}.log">
-      <PatternLayout>
-        <pattern>[%-1level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-      </PatternLayout>
+    <RollingRandomAccessFile name="Info" fileName="${logDir}/info.log"
+      filePattern="${logDir}/info-%d{yyyyMMdd}-%i.gz">
+      <PatternLayout pattern="${pattern}"/>
       <Policies>
+        <SizeBasedTriggeringPolicy size="${logFileMaxSize}"/>
         <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
       </Policies>
       <Filters>
-        <ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
+        <ThresholdFilter level="INFO" onMismatch="NEUTRAL"/>
       </Filters>
-    </RollingFile>
+      <!-- max=1天之内最多产生的日志文件数 -->
+      <DefaultRolloverStrategy max="9">
+        <!-- 将超过保留期限的 INFO 日志删除 -->
+        <Delete basePath="${logDir}" maxDepth="1">
+          <IfFileName glob="info-*.gz"/>
+          <IfLastModified age="3d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+
+    <RollingRandomAccessFile name="Error" fileName="${logDir}/error.log"
+      filePattern="${logDir}/error-%d{yyyyMMdd}-%i.gz">
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="${logFileMaxSize}"/>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="WARN" onMatch="NEUTRAL"/>
+      </Filters>
+      <DefaultRolloverStrategy>
+        <!-- 将超过保留期限的 ERROR 日志删除 -->
+        <Delete basePath="${logDir}" maxDepth="1">
+          <IfFileName glob="error-*.gz"/>
+          <IfLastModified age="7d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
   </Appenders>
   <Loggers>
     <Logger name="io.netty" level="INFO"/>
     <Logger name="io.netty.buffer.PooledByteBufAllocator" level="DEBUG"/>
-
     <Root level="INFO">
       <AppenderRef ref="Console"/>
+      <AppenderRef ref="Info"/>
+      <AppenderRef ref="Error"/>
     </Root>
   </Loggers>
 </Configuration>
