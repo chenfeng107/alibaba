@@ -2,9 +2,10 @@ package cool.houge.infra.r2dbc;
 
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;
-import io.r2dbc.spi.R2dbcException;
 import java.util.Objects;
-import reactor.core.publisher.Mono;
+import java.util.function.Function;
+import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
 
 /**
  * 默认实现.
@@ -30,16 +31,34 @@ public class DefaultR2dbcClient implements R2dbcClient {
     return connectionFactory;
   }
 
+  //  @Override
+  //  public Mono<ExecuteSpec> sql(String sql) {
+  //    return Mono.usingWhen(
+  //        ConnectionFactoryUtils.getConnection(connectionFactory),
+  //        conn -> {
+  //          try {
+  //            return Mono.just(new DefaultExecuteSpec(conn, sql));
+  //          } catch (R2dbcException e) {
+  //            return Mono.error(e);
+  //          }
+  //        },
+  //        Connection::close);
+  //  }
+
   @Override
-  public Mono<ExecuteSpec> sql(String sql) {
-    return Mono.usingWhen(
+  public <R> Flux<R> use(Function<SqlSpec, Publisher<R>> function) {
+    return Flux.usingWhen(
         ConnectionFactoryUtils.getConnection(connectionFactory),
         conn -> {
-          try {
-            return Mono.just(new DefaultExecuteSpec(conn, sql));
-          } catch (R2dbcException e) {
-            return Mono.error(e);
-          }
+          var spec =
+              new SqlSpec() {
+
+                @Override
+                public ExecuteSpec sql(String sql) {
+                  return new DefaultExecuteSpec(conn, sql);
+                }
+              };
+          return Flux.from(function.apply(spec));
         },
         Connection::close);
   }

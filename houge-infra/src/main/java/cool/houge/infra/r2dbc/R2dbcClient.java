@@ -4,6 +4,7 @@ import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.Row;
 import java.util.Map;
 import java.util.function.Function;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -27,7 +28,24 @@ public interface R2dbcClient {
    * @param sql 需执行的 SQL
    * @return 执行的规范对象
    */
-  Mono<ExecuteSpec> sql(String sql);
+  //  Mono<ExecuteSpec> sql(String sql);
+
+  /**
+   * @param function
+   * @param <R>
+   * @return
+   */
+  <R> Flux<R> use(Function<SqlSpec, Publisher<R>> function);
+
+  /** */
+  interface SqlSpec {
+
+    /**
+     * @param sql
+     * @return
+     */
+    ExecuteSpec sql(String sql);
+  }
 
   /** 用于指定 SQL 的执行规范. */
   interface ExecuteSpec {
