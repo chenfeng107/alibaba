@@ -22,7 +22,7 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
     return rc.use(
             spec ->
                 spec.sql(
-                        "INSERT INTO jwt_secrets(id,algorithm,secret) VALUES(?id,?algorithm,?secret)")
+                        "INSERT INTO t_jwt_secret(id,algorithm,secret) VALUES(?id,?algorithm,?secret)")
                     .bind("id", m.getId())
                     .bind("algorithm", m.getAlgorithm())
                     .bind("secret", m.getSecret())
@@ -34,7 +34,7 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
   public Mono<Integer> delete(String id) {
     return rc.use(
             spec ->
-                spec.sql("UPDATE jwt_secrets SET deleted=?deleted WHERE id=?id")
+                spec.sql("UPDATE t_jwt_secret SET deleted=?deleted WHERE id=?id")
                     .bind("deleted", System.currentTimeMillis() / 1000)
                     .bind("id", id)
                     .rowsUpdated())
@@ -45,7 +45,7 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
   public Mono<JwtSecret> findById(String id) {
     return rc.use(
             spec ->
-                spec.sql("SELECT * FROM jwt_secrets WHERE id=?id")
+                spec.sql("SELECT * FROM t_jwt_secret WHERE id=?id")
                     .bind("id", id)
                     .fetch(this::mapEntity))
         .singleOrEmpty();
@@ -53,7 +53,7 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
 
   @Override
   public Flux<JwtSecret> findAll() {
-    return rc.use(spec -> spec.sql("SELECT * FROM jwt_secrets").fetch(this::mapEntity));
+    return rc.use(spec -> spec.sql("SELECT * FROM t_jwt_secret").fetch(this::mapEntity));
   }
 
   private JwtSecret mapEntity(Row row) {

@@ -27,7 +27,7 @@ public class MsgDaoImpl implements MsgDao {
   public Mono<Integer> updateUnread(List<String> ids) {
     return rc.use(
             spec ->
-                spec.sql("UPDATE msgs SET unread=?unread,update_time=NOW() WHERE id IN (?ids)")
+                spec.sql("UPDATE t_msg SET unread=?unread,update_time=NOW() WHERE id IN (?ids)")
                     .bind("unread", 1)
                     .bind("ids", Joiner.on(',').join(ids))
                     .rowsUpdated())
@@ -38,7 +38,7 @@ public class MsgDaoImpl implements MsgDao {
     return rc.use(
             spec ->
                 spec.sql(
-                        "INSERT INTO msgs(id,sender_id,receiver_id,group_id,kind,content,content_type,extra)"
+                        "INSERT INTO t_msg(id,sender_id,receiver_id,group_id,kind,content,content_type,extra)"
                             + " values(?id,?sender_id,?receiver_id,?group_id,?kind,?content,?content_type,?extra)")
                     .bind("id", m.getId())
                     .bind("sender_id", m.getSender().getId())
@@ -66,7 +66,7 @@ public class MsgDaoImpl implements MsgDao {
             "正将消息[id:" + id + "]与NULL关联 - uids: " + Arrays.toString(uids.toArray()));
       }
 
-      sql.append("INSERT INTO user_msgs(uid,msg_id) VALUES(")
+      sql.append("INSERT INTO user_t_msg(uid,msg_id) VALUES(")
           .append(uid)
           .append(",'")
           .append(uid)

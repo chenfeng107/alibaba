@@ -21,7 +21,7 @@ public class AppInstDaoImpl implements AppInstDao {
     return rc.use(
             spec ->
                 spec.sql(
-                        "INSERT INTO app_insts(id,app_name,host_name,host_address,os_name,os_version,os_user,java_vm_name,java_vm_version,java_vm_vendor,work_dir,pid)"
+                        "INSERT INTO t_app_inst(id,app_name,host_name,host_address,os_name,os_version,os_user,java_vm_name,java_vm_version,java_vm_vendor,work_dir,pid)"
                             + "values(?id,?app_name,?host_name,?host_address,?os_name,?os_version,?os_user,?java_vm_name,?java_vm_version,?java_vm_vendor,?work_dir,?pid)")
                     .bind("id", m.getId())
                     .bind("app_name", m.getAppName())
@@ -42,7 +42,7 @@ public class AppInstDaoImpl implements AppInstDao {
   @Override
   public Mono<Integer> delete(int id) {
     return rc.use(
-            spec -> spec.sql("delete from app_insts where id=?id").bind("id", id).rowsUpdated())
+            spec -> spec.sql("delete from t_app_inst where id=?id").bind("id", id).rowsUpdated())
         .single();
   }
 
@@ -50,7 +50,7 @@ public class AppInstDaoImpl implements AppInstDao {
   public Mono<Integer> updateCheckTime(int id) {
     return rc.use(
             spec ->
-                spec.sql("update app_insts set check_time=now() where id=?id")
+                spec.sql("update t_app_inst set check_time=now() where id=?id")
                     .bind("id", id)
                     .rowsUpdated())
         .singleOrEmpty();
@@ -60,7 +60,7 @@ public class AppInstDaoImpl implements AppInstDao {
   public Mono<AppInst> findById(int id) {
     return rc.use(
             spec ->
-                spec.sql("select * from app_insts where id=?id")
+                spec.sql("select * from t_app_inst where id=?id")
                     .bind("id", id)
                     .fetch(this::mapEntity))
         .singleOrEmpty();

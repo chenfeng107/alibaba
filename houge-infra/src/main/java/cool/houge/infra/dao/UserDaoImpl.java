@@ -18,7 +18,7 @@ public class UserDaoImpl implements UserDao {
   public Mono<Integer> insert(User m) {
     return rc.use(
             spec ->
-                spec.sql("INSERT INTO users(origin_uid) values(?origin_id)")
+                spec.sql("INSERT INTO t_user(origin_uid) values(?origin_id)")
                     .bind("origin_id", m.getOriginUid(), String.class)
                     .returnGeneratedValues("id")
                     .fetch(row -> row.get("id", Integer.class)))

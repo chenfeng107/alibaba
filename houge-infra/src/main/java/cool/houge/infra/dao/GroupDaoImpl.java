@@ -18,9 +18,7 @@ public class GroupDaoImpl implements GroupDao {
   public Mono<Integer> insert(Group m) {
     return rc.use(
             spec ->
-                spec.sql(
-                        "INSERT INTO groups(creator_id,owner_id)"
-                            + " VALUES(?creator_id,?owner_id)")
+                spec.sql("INSERT INTO t_group(creator_id,owner_id) VALUES(?creator_id,?owner_id)")
                     .bind("creator_id", m.getCreator().getId())
                     .bind("owner_id", m.getOwner().getId())
                     .returnGeneratedValues("id")
@@ -31,19 +29,33 @@ public class GroupDaoImpl implements GroupDao {
 
   @Override
   public Mono<Integer> joinMember(int gid, int uid) {
-    return insertMember0(gid, uid).delayUntil(unused -> this.incMemberSize(gid, 1));
+    return insertMember0(gid, uid)
+        .flatMap(
+            n -> {
+              if (n != 1) {
+                return Mono.just(n);
+              }
+              return this.incMemberSize(gid, 1);
+            });
   }
 
   @Override
   public Mono<Integer> removeMember(int gid, int uid) {
-    return removeMember0(gid, uid).delayUntil(unused -> this.incMemberSize(gid, -1));
+    return removeMember0(gid, uid)
+        .flatMap(
+            n -> {
+              if (n != 1) {
+                return Mono.just(n);
+              }
+              return this.incMemberSize(gid, -1);
+            });
   }
 
   Mono<Integer> incMemberSize(int id, int delta) {
     return rc.use(
             spec ->
                 spec.sql(
-                        "UPDATE groups SET member_size=member_size+?delta,update_time=NOW() WHERE id=?id")
+                        "UPDATE t_group SET member_size=member_size+?delta,update_time=NOW() WHERE id=?id")
                     .bind("id", id)
                     .bind("delta", delta)
                     .rowsUpdated())
@@ -53,7 +65,7 @@ public class GroupDaoImpl implements GroupDao {
   Mono<Integer> insertMember0(int gid, int uid) {
     return rc.use(
             spec ->
-                spec.sql("INSERT INTO group_members(gid,uid) VALUES(?gid,?uid)")
+                spec.sql("INSERT INTO t_group_member(gid,uid) VALUES(?gid,?uid)")
                     .bind("gid", gid)
                     .bind("uid", uid)
                     .rowsUpdated())
@@ -63,7 +75,7 @@ public class GroupDaoImpl implements GroupDao {
   Mono<Integer> removeMember0(int gid, int uid) {
     return rc.use(
             spec ->
-                spec.sql("DELETE FROM group_members WHERE gid=?gid AND uid=?uid")
+                spec.sql("DELETE FROM t_group_member WHERE gid=?gid AND uid=?uid")
                     .bind("gid", gid)
                     .bind("uid", uid)
                     .rowsUpdated())
