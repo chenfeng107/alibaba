@@ -1,16 +1,5 @@
-buildscript {
-  repositories {
-    mavenLocal()
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath("org.jooq:jooq-codegen:3.15.1")
-    classpath("org.postgresql:postgresql:42.2.23")
-  }
-}
-
 apply plugin: "com.google.protobuf"
+apply plugin: "nu.studer.jooq"
 
 def grpcGeneratedFilesBaseDir = "${projectDir}/generated"
 
@@ -48,6 +37,56 @@ protobuf {
   }
 }
 
+jooq {
+  version = "3.15.1"  // the default (can be omitted)
+  edition = nu.studer.gradle.jooq.JooqEdition.OSS  // the default (can be omitted)
+
+  configurations {
+    main {  // name of the jOOQ configuration
+      generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+      generationTool {
+        jdbc {
+          driver = "org.postgresql.Driver"
+          url = "jdbc:postgresql://localhost:5432/houge"
+          user = "postgres"
+          password = "123456"
+        }
+        generator {
+          name = "org.jooq.codegen.DefaultGenerator"
+          database {
+            name = "org.jooq.meta.postgres.PostgresDatabase"
+            inputSchema = "public"
+            forcedTypes {
+              forcedType {
+                name = "varchar"
+                includeExpression = ".*"
+                includeTypes = "JSONB?"
+              }
+              forcedType {
+                name = "varchar"
+                includeExpression = ".*"
+                includeTypes = "INET"
+              }
+            }
+          }
+          generate {
+            deprecated = false
+            records = true
+            immutablePojos = true
+            fluentSetters = true
+          }
+          target {
+            packageName = "cool.houge.infra.db"
+            directory = "build/generated-src/jooq/main"  // default (can be omitted)
+          }
+          strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
+        }
+      }
+    }
+  }
+}
+
 dependencies {
   protobuf(project(":houge-proto"))
   api(project(":houge-domain"))
@@ -72,35 +111,6 @@ dependencies {
   testImplementation("com.typesafe:config")
   testImplementation("org.apache.logging.log4j:log4j-core")
   testImplementation("org.apache.logging.log4j:log4j-slf4j-impl")
-}
 
-import org.jooq.codegen.GenerationTool
-import org.jooq.meta.jaxb.*
-
-task generateJOOQ {
-  doLast {
-    def target = new Target()
-      .withPackageName('org.jooq.example.gradle.db')
-      .withDirectory('src/main/java')
-
-    def generate = new Generate()
-      .withPojos(true)
-      .withDaos(true)
-
-    def generator = new Generator()
-      .withDatabase(new Database())
-      .withGenerate(generate)
-      .withTarget(target)
-
-    def jdbc = new Jdbc()
-      .withDriver("org.postgresql.Driver")
-      .withUrl("jdbc:postgresql://106.14.192.224:5432/zhoubao")
-      .withUser("postgres")
-      .withPassword("hellohuixin")
-
-    def configuration = new Configuration()
-      .withJdbc(jdbc)
-      .withGenerator(generator)
-    GenerationTool.generate(configuration)
-  }
+  jooqGenerator("org.postgresql:postgresql:42.2.14")
 }
