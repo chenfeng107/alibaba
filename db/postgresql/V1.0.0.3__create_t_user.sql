@@ -23,3 +23,6 @@ comment on column t_user.ver is '数据版本';
 comment on column t_user.create_time is '创建时间';
 
 comment on column t_user.update_time is '更新时间';
+
+create unique index t_user_origin_uid_uindex
+  on t_user (origin_uid);

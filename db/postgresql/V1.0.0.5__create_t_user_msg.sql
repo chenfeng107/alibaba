@@ -32,3 +32,12 @@ comment on column t_user_msg.unread is '是否未读
 0: 已读';
 
 comment on column t_user_msg.create_time is '创建时间';
+
+create index t_user_msg_create_time_index
+  on t_user_msg (create_time);
+
+create index t_user_msg_rec_uid_index
+  on t_user_msg (rec_uid);
+
+create index t_user_msg_send_uid_index
+  on t_user_msg (send_uid);

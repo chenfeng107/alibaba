@@ -27,3 +27,9 @@ comment on column t_group_msg.content_type is '消息内容类型
 comment on column t_group_msg.extra is '扩展参数';
 
 comment on column t_group_msg.create_time is '创建时间';
+
+create index t_group_msg_create_time_index
+  on t_group_msg (create_time);
+
+create index t_group_msg_group_id_index
+  on t_group_msg (group_id);
