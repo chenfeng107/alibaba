@@ -35,7 +35,7 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
     var model = new JwtSecret();
     model.setId("TEST-" + faker.random().hex(3));
     model.setAlgorithm("HS512");
-    model.setSecretKey(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
+    model.setSecret(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
 
     var p = repos.insert(model);
     StepVerifier.create(p).expectComplete().verify();
@@ -94,7 +94,7 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
                     s -> {
                       s.assertThat(jwtSecret.getId()).isEqualTo(record.getId());
                       s.assertThat(jwtSecret.getAlgorithm()).isEqualTo(record.getAlgorithm());
-                      s.assertThat(jwtSecret.getSecretKey()).isEqualTo(record.getSecretKey());
+                      s.assertThat(jwtSecret.getSecret()).isEqualTo(record.getSecretKey());
                       s.assertThat(jwtSecret.getCreateTime()).isNotNull();
                       s.assertThat(jwtSecret.getUpdateTime()).isNotNull();
                     })

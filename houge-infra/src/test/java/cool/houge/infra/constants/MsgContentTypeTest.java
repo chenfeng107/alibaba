@@ -17,22 +17,22 @@ package cool.houge.infra.constants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cool.houge.domain.constants.MessageReadStatus;
+import cool.houge.domain.constants.MessageContentType;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@link MessageReadStatus} 单元测试.
+ * {@link MessageContentType} 单元测试.
  *
  * @author KK (kzou227@qq.com)
  */
-class MessageReadStatusTest {
+class MsgContentTypeTest {
 
   @Test
   void forCode() {
-    for (MessageReadStatus value : MessageReadStatus.values()) {
-      assertThat(MessageReadStatus.forCode(value.getCode())).isEqualTo(value);
+    for (MessageContentType value : MessageContentType.values()) {
+      assertThat(MessageContentType.forCode(value.getCode())).isEqualTo(value);
     }
-    assertThat(MessageReadStatus.forCode(null)).isEqualTo(MessageReadStatus.UNRECOGNIZED);
-    assertThat(MessageReadStatus.forCode(9999)).isEqualTo(MessageReadStatus.UNRECOGNIZED);
+    assertThat(MessageContentType.forCode(null)).isEqualTo(MessageContentType.UNRECOGNIZED);
+    assertThat(MessageContentType.forCode(9999)).isEqualTo(MessageContentType.UNRECOGNIZED);
   }
 }

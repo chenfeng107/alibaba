@@ -29,11 +29,9 @@ import lombok.experimental.Accessors;
 public class User {
 
   /** 用户 ID. */
-  private Long id;
+  private Integer id;
   /** 原用户 ID. */
   private String originUid;
   /** 创建时间. */
   private LocalDateTime createTime;
-  /** 更新时间. */
-  private LocalDateTime updateTime;
 }

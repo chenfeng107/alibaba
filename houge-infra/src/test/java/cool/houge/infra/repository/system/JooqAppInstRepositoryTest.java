@@ -2,7 +2,7 @@ package cool.houge.infra.repository.system;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import cool.houge.domain.model.ServerInstance;
+import cool.houge.domain.model.AppInst;
 import cool.houge.infra.db.Tables;
 import cool.houge.infra.repository.JooqTestBase;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import reactor.test.StepVerifier;
  *
  * @author KK (kzou227@qq.com)
  */
-class JooqServerInstanceRepositoryTest extends JooqTestBase {
+class JooqAppInstRepositoryTest extends JooqTestBase {
 
   JooqServerInstanceRepository repos;
 
@@ -27,7 +27,7 @@ class JooqServerInstanceRepositoryTest extends JooqTestBase {
   @Test
   void insert() {
     var model =
-        new ServerInstance()
+        new AppInst()
             .setId((int) faker.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
@@ -51,7 +51,7 @@ class JooqServerInstanceRepositoryTest extends JooqTestBase {
   @Test
   void delete() {
     var model =
-        new ServerInstance()
+        new AppInst()
             .setId((int) faker.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
@@ -72,7 +72,7 @@ class JooqServerInstanceRepositoryTest extends JooqTestBase {
   @Test
   void updateCheckTime() {
     var model =
-        new ServerInstance()
+        new AppInst()
             .setId((int) faker.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
@@ -96,7 +96,7 @@ class JooqServerInstanceRepositoryTest extends JooqTestBase {
   @Test
   void findById() {
     var model =
-        new ServerInstance()
+        new AppInst()
             .setId((int) faker.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")

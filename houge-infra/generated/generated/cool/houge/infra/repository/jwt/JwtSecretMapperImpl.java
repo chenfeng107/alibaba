@@ -22,7 +22,7 @@ public class JwtSecretMapperImpl implements JwtSecretMapper {
 
         jwtSecretRecord.setId( model.getId() );
         jwtSecretRecord.setAlgorithm( model.getAlgorithm() );
-        byte[] secretKey = model.getSecretKey();
+        byte[] secretKey = model.getSecret();
         if ( secretKey != null ) {
             jwtSecretRecord.setSecretKey( Arrays.copyOf( secretKey, secretKey.length ) );
         }
@@ -43,7 +43,7 @@ public class JwtSecretMapperImpl implements JwtSecretMapper {
         jwtSecret.setAlgorithm( record.getAlgorithm() );
         byte[] secretKey = record.getSecretKey();
         if ( secretKey != null ) {
-            jwtSecret.setSecretKey( Arrays.copyOf( secretKey, secretKey.length ) );
+            jwtSecret.setSecret( Arrays.copyOf( secretKey, secretKey.length ) );
         }
         if ( record.getDeleted() != null ) {
             jwtSecret.setDeleted( record.getDeleted() );

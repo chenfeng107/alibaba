@@ -16,7 +16,7 @@
 package cool.houge.domain.service.message;
 
 import cool.houge.domain.Paging;
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import cool.houge.domain.repository.message.UserMessageQuery;
 import java.util.List;
 import reactor.core.publisher.Flux;
@@ -45,5 +45,5 @@ public interface MessageService {
    * @param paging 分页
    * @return
    */
-  Flux<Message> queryByUser(UserMessageQuery q, Paging paging);
+  Flux<Msg> queryByUser(UserMessageQuery q, Paging paging);
 }

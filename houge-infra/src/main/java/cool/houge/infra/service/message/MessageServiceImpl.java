@@ -15,9 +15,9 @@
  */
 package cool.houge.infra.service.message;
 
-import cool.houge.domain.constants.MessageReadStatus;
+import cool.houge.domain.constants.MsgReadStatus;
 import cool.houge.domain.Paging;
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import cool.houge.domain.repository.message.MessageQueryRepository;
 import cool.houge.domain.repository.message.MessageRepository;
 import cool.houge.domain.repository.message.UserMessageQuery;
@@ -61,11 +61,11 @@ public class MessageServiceImpl implements MessageService {
 
   @Override
   public Mono<Void> readMessages(long uid, List<String> messageIds) {
-    return messageRepository.updateUnreadStatus(uid, messageIds, MessageReadStatus.READ.getCode());
+    return messageRepository.updateUnreadStatus(uid, messageIds, MsgReadStatus.READ.getCode());
   }
 
   @Override
-  public Flux<Message> queryByUser(UserMessageQuery q, Paging paging) {
+  public Flux<Msg> queryByUser(UserMessageQuery q, Paging paging) {
     var beginTimeLimit = LocalDateTime.now().minus(messageProps.getPullBeginTimeLimit());
     if (q.getBeginTime() == null || beginTimeLimit.isAfter(q.getBeginTime())) {
       q.setBeginTime(beginTimeLimit);

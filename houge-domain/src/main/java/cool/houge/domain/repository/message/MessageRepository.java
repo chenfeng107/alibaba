@@ -1,6 +1,6 @@
 package cool.houge.domain.repository.message;
 
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
@@ -13,7 +13,7 @@ public interface MessageRepository {
    * @param uids 关联的用户 IDs
    * @return 受影响行数
    */
-  Mono<Void> insert(Message entity, List<Long> uids);
+  Mono<Void> insert(Msg entity, List<Long> uids);
 
   /**
    * 批量将用户的消息 {@code unread} 修改为指定状态.

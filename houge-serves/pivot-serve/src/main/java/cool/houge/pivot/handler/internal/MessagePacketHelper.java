@@ -17,7 +17,7 @@ package cool.houge.pivot.handler.internal;
 
 import cool.houge.domain.constants.MessageKind;
 import cool.houge.domain.model.Group;
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import cool.houge.domain.model.User;
 import cool.houge.pivot.packet.MessagePacket;
 
@@ -28,8 +28,8 @@ public class MessagePacketHelper {
    * @param packet
    * @return
    */
-  public static Message toMessageEntity(MessagePacket packet) {
-    var entity = new Message();
+  public static Msg toMessageEntity(MessagePacket packet) {
+    var entity = new Msg();
     if (MessageKind.forCode(packet.getKind()).isGroup()) {
       entity.setGroup(new Group().setId(packet.getTo()));
     } else {
@@ -42,7 +42,7 @@ public class MessagePacketHelper {
         .setKind(packet.getKind())
         .setContent(packet.getContent())
         .setContentType(packet.getContentType())
-        .setExtraArgs(packet.getExtraArgs());
+        .setExtra(packet.getExtraArgs());
     return entity;
   }
 }

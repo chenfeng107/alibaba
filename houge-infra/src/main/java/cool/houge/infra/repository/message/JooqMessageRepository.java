@@ -4,7 +4,7 @@ import static cool.houge.infra.db.Tables.MESSAGE;
 import static cool.houge.infra.db.Tables.USER_MESSAGE;
 
 import cool.houge.domain.Paging;
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import cool.houge.domain.repository.message.MessageQueryRepository;
 import cool.houge.domain.repository.message.MessageRepository;
 import cool.houge.domain.repository.message.UserMessageQuery;
@@ -26,7 +26,7 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
   }
 
   @Override
-  public Mono<Void> insert(Message entity, List<Long> uids) {
+  public Mono<Void> insert(Msg entity, List<Long> uids) {
     var record =
         new MessageRecord()
             .setId(entity.getId())
@@ -34,7 +34,7 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
             .setSenderId(entity.getSender().getId())
             .setContent(entity.getContent())
             .setContentType(entity.getContentType().shortValue())
-            .setExtraArgs(entity.getExtraArgs());
+            .setExtraArgs(entity.getExtra());
     if (entity.getReceiver() != null) {
       record.setReceiverId(entity.getReceiver().getId());
     }
@@ -68,7 +68,7 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
   }
 
   @Override
-  public Mono<Message> queryById(String id) {
+  public Mono<Msg> queryById(String id) {
     return Mono.from(
             dsl.selectFrom(MESSAGE).where(MESSAGE.ID.eq(id))
             //
@@ -77,7 +77,7 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
   }
 
   @Override
-  public Flux<Message> queryByUser(UserMessageQuery q, Paging paging) {
+  public Flux<Msg> queryByUser(UserMessageQuery q, Paging paging) {
     return Flux.from(
             dsl.select(MESSAGE.fields())
                 .from(USER_MESSAGE)

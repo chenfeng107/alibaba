@@ -15,7 +15,7 @@
  */
 package cool.houge.domain.model;
 
-import cool.houge.domain.constants.MessageReadStatus;
+import cool.houge.domain.constants.MsgReadStatus;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class Message {
+public class Msg {
 
   /** 系统消息类型. */
   public static final int KIND_SYSTEM = 1;
@@ -68,11 +68,11 @@ public class Message {
    */
   private Integer contentType;
   /** 扩展参数. */
-  private String extraArgs;
+  private String extra;
   /**
    * 消息是否未读.
    *
-   * @see MessageReadStatus
+   * @see MsgReadStatus
    */
   private Integer unread;
   /** 创建时间. */

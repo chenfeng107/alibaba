@@ -17,7 +17,7 @@ package cool.houge.infra.repository.system;
 
 import static cool.houge.infra.db.Tables.SERVER_INSTANCE;
 
-import cool.houge.domain.model.ServerInstance;
+import cool.houge.domain.model.AppInst;
 import cool.houge.infra.db.tables.records.ServerInstanceRecord;
 import cool.houge.infra.system.identifier.ServerInstanceRepository;
 import javax.inject.Inject;
@@ -40,7 +40,7 @@ public class JooqServerInstanceRepository implements ServerInstanceRepository {
   }
 
   @Override
-  public Mono<Void> insert(ServerInstance model) {
+  public Mono<Void> insert(AppInst model) {
     var record =
         new ServerInstanceRecord()
             .setId(model.getId())
@@ -74,7 +74,7 @@ public class JooqServerInstanceRepository implements ServerInstanceRepository {
   }
 
   @Override
-  public Mono<ServerInstance> findById(int id) {
+  public Mono<AppInst> findById(int id) {
     return Mono.from(dsl.selectFrom(SERVER_INSTANCE).where(SERVER_INSTANCE.ID.eq(id)))
         .map(ServerInstanceMapper.INSTANCE::map);
   }

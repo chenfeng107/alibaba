@@ -33,7 +33,7 @@ public class JwtSecret {
   /** 签名算法名称. */
   private String algorithm;
   /** HMAC 密钥. */
-  private byte[] secretKey;
+  private byte[] secret;
   /**
    * 删除数据的时间戳.
    *

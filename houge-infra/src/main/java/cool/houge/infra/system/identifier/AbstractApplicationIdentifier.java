@@ -16,7 +16,7 @@
 package cool.houge.infra.system.identifier;
 
 import cool.houge.Version;
-import cool.houge.domain.model.ServerInstance;
+import cool.houge.domain.model.AppInst;
 import cool.houge.util.HostNameUtils;
 import cool.houge.util.YeinGid;
 import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
@@ -144,7 +144,7 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
     }
   }
 
-  private ServerInstance newServerInstance(int id) {
+  private AppInst newServerInstance(int id) {
     InetAddress inetAddress;
     try {
       inetAddress = HostNameUtils.getLocalHostLANAddress();
@@ -152,7 +152,7 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
       throw new IllegalStateException(e);
     }
 
-    var e = new ServerInstance();
+    var e = new AppInst();
     e.setId(id);
     e.setAppName(applicationName());
     e.setHostName(inetAddress.getHostName());

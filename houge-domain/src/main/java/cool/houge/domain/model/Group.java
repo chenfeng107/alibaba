@@ -29,7 +29,7 @@ import lombok.experimental.Accessors;
 public class Group {
 
   /** 群组 ID. */
-  private Long id;
+  private Integer id;
   /** 创建群的用户 ID. */
   private User creator;
   /** 群持有者用户 ID. */

@@ -1,6 +1,6 @@
 package cool.houge.infra.repository.system;
 
-import cool.houge.domain.model.ServerInstance;
+import cool.houge.domain.model.AppInst;
 import cool.houge.infra.db.tables.records.ServerInstanceRecord;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -15,5 +15,5 @@ public interface ServerInstanceMapper {
    * @param record
    * @return
    */
-  ServerInstance map(ServerInstanceRecord record);
+  AppInst map(ServerInstanceRecord record);
 }

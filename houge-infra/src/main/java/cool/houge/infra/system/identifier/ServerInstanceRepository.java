@@ -15,7 +15,7 @@
  */
 package cool.houge.infra.system.identifier;
 
-import cool.houge.domain.model.ServerInstance;
+import cool.houge.domain.model.AppInst;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -27,7 +27,7 @@ public interface ServerInstanceRepository {
    * @param model 实体
    * @return RS
    */
-  Mono<Void> insert(ServerInstance model);
+  Mono<Void> insert(AppInst model);
 
   /**
    * 删除应用服务实例.
@@ -51,5 +51,5 @@ public interface ServerInstanceRepository {
    * @param id 应用 ID
    * @return 实体
    */
-  Mono<ServerInstance> findById(int id);
+  Mono<AppInst> findById(int id);
 }

@@ -15,7 +15,7 @@
  */
 package cool.houge.infra.service.message;
 
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import cool.houge.domain.repository.message.MessageRepository;
 import cool.houge.domain.service.message.MessageStorageService;
 import java.util.List;
@@ -43,7 +43,7 @@ public class MessageStorageServiceImpl implements MessageStorageService {
   }
 
   @Override
-  public Mono<Void> store(Message model, List<Long> uids) {
+  public Mono<Void> store(Msg model, List<Long> uids) {
     return messageDao.insert(model, uids);
   }
 }

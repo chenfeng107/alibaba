@@ -22,7 +22,7 @@ package cool.houge.domain.constants;
  *
  * @author KK (kzou227@qq.com)
  */
-public enum MessageReadStatus implements EnumLite {
+public enum MsgReadStatus implements EnumLite {
 
   /** 不认识未被承认的枚举. */
   UNRECOGNIZED(-1),
@@ -34,7 +34,7 @@ public enum MessageReadStatus implements EnumLite {
 
   private final int code;
 
-  MessageReadStatus(int code) {
+  MsgReadStatus(int code) {
     this.code = code;
   }
 
@@ -51,7 +51,7 @@ public enum MessageReadStatus implements EnumLite {
    * @param code 对应枚举项的数值
    * @return 与给定数值关联的枚举
    */
-  public static MessageReadStatus forCode(Integer code) {
+  public static MsgReadStatus forCode(Integer code) {
     if (code == null) {
       return UNRECOGNIZED;
     }

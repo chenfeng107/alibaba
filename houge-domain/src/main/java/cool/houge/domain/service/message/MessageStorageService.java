@@ -15,7 +15,7 @@
  */
 package cool.houge.domain.service.message;
 
-import cool.houge.domain.model.Message;
+import cool.houge.domain.model.Msg;
 import java.util.List;
 import reactor.core.publisher.Mono;
 
@@ -33,5 +33,5 @@ public interface MessageStorageService {
    * @param uids 用户ID列表
    * @return RS
    */
-  Mono<Void> store(Message model, List<Long> uids);
+  Mono<Void> store(Msg model, List<Long> uids);
 }

@@ -20,13 +20,13 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * IM 服务实例信息.
+ * 应用服务实例信息.
  *
  * @author KK (kzou227@qq.com)
  */
 @Data
 @Accessors(chain = true)
-public class ServerInstance {
+public class AppInst {
 
   /** 主键 ID. */
   private int id;
@@ -40,8 +40,6 @@ public class ServerInstance {
   private String osName;
   /** 系统版本. */
   private String osVersion;
-  /** OS Arch. */
-  private String osArch;
   /** 系统用户. */
   private String osUser;
   /** Java 虚拟机名称. */
