@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar;
+package cool.houge.hub;
 
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
@@ -28,23 +28,23 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PoplarMain implements Runnable {
+public class HubMain implements Runnable {
 
   private static final Logger log = LogManager.getLogger();
-  private static final String CONFIG_FILE = "houge-poplar.conf";
+  private static final String CONFIG_FILE = "houge-hub.conf";
   private final AppShutdownHelper shutdownHelper = new AppShutdownHelper();
 
   public static void main(String[] args) {
-    new PoplarMain().run();
+    new HubMain().run();
   }
 
   @Override
   public void run() {
     var config = loadConfig();
-    var injector = Guice.createInjector(new PoplarModule(config));
+    var injector = Guice.createInjector(new HubModule(config));
     // 启动服务
-    var poplarServer = injector.getInstance(PoplarServer.class);
-    poplarServer.start();
+    var hubServer = injector.getInstance(HubServer.class);
+    hubServer.start();
 
     // 应用标识
     var appIdentifier = injector.getInstance(AppIdentifier.class);
@@ -53,7 +53,7 @@ public class PoplarMain implements Runnable {
     shutdownHelper
         // 清理应用程序标识
         .addCallback(appIdentifier::clean)
-        .addCallback(poplarServer::stop)
+        .addCallback(hubServer::stop)
         .await();
   }
 

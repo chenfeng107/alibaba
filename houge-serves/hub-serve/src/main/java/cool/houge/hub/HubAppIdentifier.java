@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar;
+package cool.houge.hub;
 
 import cool.houge.domain.system.AppInstDao;
 import cool.houge.infra.system.identifier.AbstractAppIdentifier;
@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
  * @author KK (kzou227@qq.com)
  */
 @Log4j2
-public class PoplarAppIdentifier extends AbstractAppIdentifier {
+public class HubAppIdentifier extends AbstractAppIdentifier {
 
   /**
    * 构造函数.
@@ -34,12 +34,12 @@ public class PoplarAppIdentifier extends AbstractAppIdentifier {
    * @param appInstDao 应用实例数据访问对象
    */
   @Inject
-  public PoplarAppIdentifier(AppInstDao appInstDao) {
+  public HubAppIdentifier(AppInstDao appInstDao) {
     super(appInstDao);
   }
 
   @Override
   public String appName() {
-    return "houge-poplar";
+    return "houge-hub";
   }
 }

@@ -54,9 +54,9 @@ public class DaoModule extends AbstractModule {
 
   @Provides
   public ConnectionFactory connectionFactory(Config config) {
-    var url = config.getString("poplar.r2dbc.url");
-    var user = config.getString("poplar.r2dbc.user");
-    var password = config.getString("poplar.r2dbc.password");
+    var url = config.getString("hub.r2dbc.url");
+    var user = config.getString("hub.r2dbc.user");
+    var password = config.getString("hub.r2dbc.password");
 
     var options =
         ConnectionFactoryOptions.parse(url)

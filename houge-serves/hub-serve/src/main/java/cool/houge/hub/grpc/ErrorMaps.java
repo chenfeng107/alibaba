@@ -1,4 +1,4 @@
-package cool.houge.poplar.grpc;
+package cool.houge.hub.grpc;
 
 import cool.houge.domain.BizCodes;
 import cool.houge.protos.ErrorInfo;

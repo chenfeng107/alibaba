@@ -1,9 +1,9 @@
-package cool.houge.poplar.grpc;
+package cool.houge.hub.grpc;
 
 import cool.houge.grpc.AttachBrokerRequest;
 import cool.houge.grpc.AttachBrokerResponse;
 import cool.houge.grpc.ReactorBrokerGrpc;
-import cool.houge.poplar.broker.BrokerManager;
+import cool.houge.hub.broker.BrokerManager;
 import javax.inject.Inject;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -110,7 +110,7 @@ public class RestModule extends AbstractModule {
   @Singleton
   @Provides
   public ManagedChannel managedChannel() {
-    var target = config.getString("rest.poplar.grpc-target");
+    var target = config.getString("rest.houge-hub.grpc-target");
     var managedChannel =
         ManagedChannelBuilder.forTarget(target)
             .enableRetry()

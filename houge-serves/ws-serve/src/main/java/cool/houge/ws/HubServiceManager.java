@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
 
 /** @author KK (kzou227@qq.com) */
-public class PoplarServiceManager {
+public class HubServiceManager {
 
   private static final Logger log = LogManager.getLogger();
   /** 跳过重复错误日志的限制. */
@@ -37,10 +37,11 @@ public class PoplarServiceManager {
    * @param config
    * @param msgHandler
    */
-  public @Inject PoplarServiceManager(Config config, BrokerMsgHandler msgHandler) {
+  public @Inject
+  HubServiceManager(Config config, BrokerMsgHandler msgHandler) {
     this.msgHandler = msgHandler;
     this.name = this.genName();
-    this.streamGrpcTargets = config.getString("ws.poplar.stream-grpc-targets");
+    this.streamGrpcTargets = config.getString("ws.houge-hub.stream-grpc-targets");
   }
 
   /** */
@@ -49,15 +50,15 @@ public class PoplarServiceManager {
       throw new IllegalStateException("不能重复启动");
     }
     if (Strings.isNullOrEmpty(streamGrpcTargets)) {
-      throw new ConfigException.BadValue("ws.poplar.stream-grpc-targets", "不能为空");
+      throw new ConfigException.BadValue("ws.houge-hub.stream-grpc-targets", "不能为空");
     }
 
     var targetList = List.of(streamGrpcTargets).stream().distinct().collect(Collectors.toList());
-    log.info("ws.poplar.stream-grpc-targets={}", targetList);
+    log.info("ws.houge-hub.stream-grpc-targets={}", targetList);
 
     for (String target : targetList) {
       workers.add(new Worker(target));
-      log.info("初始化Poplar gRPC通道完成 target={}", target);
+      log.info("初始化houge-hub gRPC通道完成 target={}", target);
     }
 
     this.runWorkers();
@@ -87,7 +88,7 @@ public class PoplarServiceManager {
         try {
           worker.run();
         } catch (Exception e) {
-          log.error("Poplar Worker运行异常 target={} channel={}", worker.target, worker.channel, e);
+          log.error("houge-hub Worker运行异常 target={} channel={}", worker.target, worker.channel, e);
         }
       }
     }
@@ -113,7 +114,7 @@ public class PoplarServiceManager {
           .retry(3)
           .doOnTerminate(
               () -> {
-                log.info("Poplar 消息监听终止 target={}", target);
+                log.info("houge-hub 消息监听终止 target={}", target);
                 running.set(false);
               })
           .subscribe(
@@ -128,7 +129,7 @@ public class PoplarServiceManager {
               },
               e -> {
                 if (!channel.isShutdown()) {
-                  log.error("Poplar 消息监听出现异常 target={}", target, e);
+                  log.error("houge-hub 消息监听出现异常 target={}", target, e);
                 }
               });
     }

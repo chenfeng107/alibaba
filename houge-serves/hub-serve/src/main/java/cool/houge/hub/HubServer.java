@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar;
+package cool.houge.hub;
 
 import com.google.common.net.HostAndPort;
 import com.typesafe.config.Config;
@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PoplarServer {
+public class HubServer {
 
   private static final Logger log = LogManager.getLogger();
 
@@ -46,9 +46,10 @@ public class PoplarServer {
    * @param config 应用配置
    * @param grpcServices 绑定的 gRPC 服务
    */
-  public @Inject PoplarServer(Config config, Set<BindableService> grpcServices) {
+  public @Inject
+  HubServer(Config config, Set<BindableService> grpcServices) {
     this.grpcServices = grpcServices;
-    this.addr = config.getString("poplar.server.addr");
+    this.addr = config.getString("hub.server.addr");
   }
 
   /** 启动逻辑服务. */

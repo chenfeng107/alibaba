@@ -1,4 +1,4 @@
-package cool.houge.poplar.grpc;
+package cool.houge.hub.grpc;
 
 import cool.houge.domain.model.Group;
 import cool.houge.domain.model.GroupMsg;
@@ -14,7 +14,7 @@ import cool.houge.grpc.ReactorMsgGrpc;
 import cool.houge.grpc.SendMsgRequest;
 import cool.houge.grpc.SendMsgResponse;
 import cool.houge.infra.id.MsgIdGenerator;
-import cool.houge.poplar.broker.MsgRouter;
+import cool.houge.hub.broker.MsgRouter;
 import cool.houge.protos.MsgKind;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;

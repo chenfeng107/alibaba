@@ -1,4 +1,4 @@
-package cool.houge.poplar.broker;
+package cool.houge.hub.broker;
 
 import cool.houge.grpc.AttachBrokerRequest;
 import cool.houge.grpc.AttachBrokerResponse;

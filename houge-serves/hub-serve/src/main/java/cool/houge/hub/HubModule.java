@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.poplar;
+package cool.houge.hub;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -24,14 +24,14 @@ import cool.houge.infra.guice.ServiceModule;
 import cool.houge.infra.id.MsgIdGenerator;
 import cool.houge.infra.id.YeinGidMsgIdGenerator;
 import cool.houge.infra.system.identifier.AppIdentifier;
-import cool.houge.poplar.broker.BrokerManager;
-import cool.houge.poplar.broker.MsgRouter;
-import cool.houge.poplar.broker.SimpleMsgRouter;
-import cool.houge.poplar.grpc.BrokerGrpcImpl;
-import cool.houge.poplar.grpc.GroupGrpcImpl;
-import cool.houge.poplar.grpc.MsgGrpcImpl;
-import cool.houge.poplar.grpc.TokenGrpcImpl;
-import cool.houge.poplar.grpc.UserGrpcImpl;
+import cool.houge.hub.broker.BrokerManager;
+import cool.houge.hub.broker.MsgRouter;
+import cool.houge.hub.broker.SimpleMsgRouter;
+import cool.houge.hub.grpc.BrokerGrpcImpl;
+import cool.houge.hub.grpc.GroupGrpcImpl;
+import cool.houge.hub.grpc.MsgGrpcImpl;
+import cool.houge.hub.grpc.TokenGrpcImpl;
+import cool.houge.hub.grpc.UserGrpcImpl;
 import io.grpc.BindableService;
 
 /**
@@ -39,11 +39,11 @@ import io.grpc.BindableService;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PoplarModule extends AbstractModule {
+public class HubModule extends AbstractModule {
 
   private final Config config;
 
-  public PoplarModule(Config config) {
+  public HubModule(Config config) {
     this.config = config;
   }
 
@@ -53,9 +53,9 @@ public class PoplarModule extends AbstractModule {
     install(new ServiceModule());
 
     bind(Config.class).toInstance(config);
-    bind(PoplarServer.class);
+    bind(HubServer.class);
 
-    bind(AppIdentifier.class).to(PoplarAppIdentifier.class).in(Scopes.SINGLETON);
+    bind(AppIdentifier.class).to(HubAppIdentifier.class).in(Scopes.SINGLETON);
     bind(MsgIdGenerator.class).to(YeinGidMsgIdGenerator.class).in(Scopes.SINGLETON);
 
     bind(BrokerManager.class).in(Scopes.SINGLETON);

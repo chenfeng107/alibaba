@@ -1,4 +1,4 @@
-package cool.houge.poplar.grpc;
+package cool.houge.hub.grpc;
 
 import cool.houge.domain.group.GroupService;
 import cool.houge.domain.model.Group;
