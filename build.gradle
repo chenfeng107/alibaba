@@ -114,6 +114,7 @@ allprojects {
     }
     dependencies {
       dependency("org.projectlombok:lombok:1.18.20")
+      dependency("com.google.guava:guava:31.0.1-jre")
       dependency("com.typesafe:config:1.4.1")
       dependency("com.github.ben-manes.caffeine:caffeine:3.0.3")
       dependency("io.lettuce:lettuce-core:6.1.4.RELEASE")

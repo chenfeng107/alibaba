@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.server;
+package cool.houge.rest;
 
 import com.google.common.net.HostAndPort;
 import cool.houge.rest.controller.RoutingService;

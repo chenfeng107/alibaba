@@ -42,7 +42,10 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 }
 
 dependencies {
-  implementation(project(":houge-infra"))
+  api("top.yein.chaos:chaos-core:1.0-SNAPSHOT")
+  implementation(project(":houge-proto"))
+  implementation("com.google.guava:guava")
+  implementation("io.projectreactor.netty:reactor-netty")
   implementation("io.grpc:grpc-netty")
   implementation("com.salesforce.servicelibs:reactor-grpc-stub")
 

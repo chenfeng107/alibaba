@@ -39,7 +39,7 @@ public enum Env {
   public static final String SYSTEM_ENV_VAR_NAME = "HOUGE_ENV";
 
   /** Java 系统属性名称. */
-  public static final String SYSTEM_PROP_VAR_NAME = "tethys.env";
+  public static final String SYSTEM_PROP_VAR_NAME = "houge.env";
 
   /**
    * 当前运行的环境. 默认为 {@link #PROD}.
@@ -48,7 +48,7 @@ public enum Env {
    *
    * <ul>
    *   <li>设置系统环境变量 {@code HOUGE_ENV}
-   *   <li>设置 java 启动时命令行参数 {@code -Dtethys.env=test} 设置
+   *   <li>设置 java 启动时命令行参数 {@code -Dhouge.env=test} 设置
    * </ul>
    */
   public static Env current() {
