@@ -14,7 +14,7 @@ class UserDaoImplTest extends AbstractTestDao {
 
   @BeforeEach
   void setup() {
-    this.userDao = new UserDaoImpl();
+    this.userDao = new UserDaoImpl(rc);
   }
 
   @Test
