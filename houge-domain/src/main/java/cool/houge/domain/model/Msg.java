@@ -15,7 +15,7 @@
  */
 package cool.houge.domain.model;
 
-import cool.houge.domain.constants.MsgReadStatus;
+import cool.houge.domain.constants.EnumLite;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -72,11 +72,61 @@ public class Msg {
   /**
    * 消息是否未读.
    *
-   * @see MsgReadStatus
+   * @see ReadStatus
    */
   private Integer unread;
   /** 创建时间. */
   private LocalDateTime createTime;
   /** 更新时间. */
   private LocalDateTime updateTime;
+
+  /**
+   * 消息读取状态枚举.
+   *
+   * <p>{@link #UNRECOGNIZED} 是枚举的空值.
+   *
+   * @author KK (kzou227@qq.com)
+   */
+  public enum ReadStatus implements EnumLite {
+
+    /** 不认识未被承认的枚举. */
+    UNRECOGNIZED(-1),
+    /** 已读状态. */
+    READ(0),
+    /** 未读状态. */
+    UNREAD(1),
+    ;
+
+    private final int code;
+
+    ReadStatus(int code) {
+      this.code = code;
+    }
+
+    @Override
+    public int getCode() {
+      return code;
+    }
+
+    /**
+     * 将给定数值转换为枚举.
+     *
+     * <p>如果给定的数值未查找到对应的枚举则会返回 {@link #UNRECOGNIZED}.
+     *
+     * @param code 对应枚举项的数值
+     * @return 与给定数值关联的枚举
+     */
+    public static ReadStatus forCode(Integer code) {
+      if (code == null) {
+        return UNRECOGNIZED;
+      }
+      if (code == READ.code) {
+        return READ;
+      }
+      if (code == UNREAD.code) {
+        return UNREAD;
+      }
+      return UNRECOGNIZED;
+    }
+  }
 }
