@@ -45,9 +45,9 @@ jooq {
         jdbc {
           driver = "org.postgresql.Driver"
           // 通过 gradle.properties 或 gradle-${environmentName}.properties 文件配置数据库连接参数
-          url = rootProject.properties["jooq.generator.jdbc.url"]
-          user = rootProject.properties["jooq.generator.jdbc.user"]
-          password = rootProject.properties["jooq.generator.jdbc.password"]
+          url = rootProject.ext.hougeJdbcUrl
+          user = rootProject.ext.hougeJdbcUser
+          password = rootProject.ext.hougeJdbcPassword
         }
         generator {
           name = "org.jooq.codegen.DefaultGenerator"

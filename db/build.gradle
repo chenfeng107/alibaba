@@ -1,4 +1,17 @@
+apply plugin: "org.flywaydb.flyway"
 apply plugin: "com.bmuschko.docker-remote-api"
+
+flyway {
+  url = rootProject.ext.hougeJdbcUrl
+  user = rootProject.ext.hougeJdbcUser
+  password = rootProject.ext.hougeJdbcPassword
+  locations = ["filesystem:migrations/*.sql"]
+}
+
+dependencies {
+  // flywaydb 需要使用的依赖 https://flywaydb.org/
+  implementation("org.postgresql:postgresql")
+}
 
 task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
   group "docker"

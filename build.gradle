@@ -22,15 +22,6 @@ plugins {
   id "nu.studer.jooq" version "6.0"
 }
 
-flyway {
-  configFiles = ["${projectDir}/flyway.conf"]
-}
-
-dependencies {
-  // flywaydb 需要使用的依赖 https://flywaydb.org/
-  implementation("org.postgresql:postgresql")
-}
-
 allprojects {
 
   apply plugin: "java"
@@ -174,38 +165,21 @@ allprojects {
   }
 }
 
-// ============================================================================== //
-// ~~~ 初始化开发环境
-// ============================================================================== //
-task initDevEnv {
-  group "dev"
-  doLast {
-    // 数据库名称
-    def databaseName = "houge"
-    // PostgreSQL 配置
-    def postgresHost = requireProperty("houge.postgres.host")
-    def postgresPort = properties["houge.postgres.port"] ?: 5432
-    def postgresUser = requireProperty("houge.postgres.user")
-    def postgresPassword = requireProperty("houge.postgres.password")
-    // JDBC 参数
-    def jdbcUrl = "jdbc:postgresql://${postgresHost}:${postgresPort}/${databaseName}"
-    // 初始化 Flyway 配置
-    initFlywayConf(jdbcUrl, postgresUser, postgresPassword)
-    // 初始化 jOOQ 配置
-  }
-}
+ext {
+  // 数据库名称
+  def databaseName = "houge"
+  // PostgreSQL 配置
+  def postgresHost = requireProperty("hougePostgresHost")
+  def postgresPort = properties["hougePostgresPort"] ?: 5432
+  def postgresUser = requireProperty("hougePostgresUser")
+  def postgresPassword = requireProperty("hougePostgresPassword")
 
-def initFlywayConf(jdbcUrl, user, password) {
-  def confPath = java.nio.file.Paths.get("${rootDir}/flyway.conf")
-  if (confPath.toFile().exists()) {
-    confPath.toFile().delete()
-  }
-
-  java.nio.file.Files.copy(java.nio.file.Paths.get("${rootDir}/flyway.conf.template"), confPath)
-  def text = confPath.text.replace("@JDBC_URL@", jdbcUrl)
-    .replace("@JDBC_USER@", user)
-    .replace("@JDBC_PASSWORD@", password)
-  confPath.setText(text, "UTF-8")
+  // ============================================================================== //
+  // ~~~ 初始化环境配置
+  // ============================================================================== //
+  hougeJdbcUrl = "jdbc:postgresql://${postgresHost}:${postgresPort}/${databaseName}"
+  hougeJdbcUser = postgresUser
+  hougeJdbcPassword = postgresPassword
 }
 
 def requireProperty(name) {
