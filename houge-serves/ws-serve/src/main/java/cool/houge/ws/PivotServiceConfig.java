@@ -27,7 +27,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LogicServiceConfig {
+public class PivotServiceConfig {
 
   /** 逻辑服务开放的 gRPC 访问地址. */
   private String grpcTarget;

@@ -27,7 +27,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AgentServiceConfig {
+public class PivotStreamServiceConfig {
 
   /**
    * 监视消息响应 gRPC 服务的目标地址, 多个采用英文逗号分隔，WS服务会与每个 agent 单独保持链接.

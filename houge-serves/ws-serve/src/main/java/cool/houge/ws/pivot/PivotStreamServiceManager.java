@@ -21,7 +21,7 @@ import cool.houge.grpc.broker.BrokerGrpc;
 import cool.houge.grpc.broker.BrokerGrpc.BrokerStub;
 import cool.houge.grpc.broker.BrokerPb;
 import cool.houge.grpc.broker.BrokerPb.AttachRequest;
-import cool.houge.ws.AgentServiceConfig;
+import cool.houge.ws.PivotStreamServiceConfig;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Status;
@@ -48,14 +48,14 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PivotConnectionManager {
+public class PivotStreamServiceManager {
 
   private static final Logger log = LogManager.getLogger();
   /** 跳过重复错误日志的限制. */
   private static final int SKIP_REPEAT_ERROR_LOG_LIMIT = 16;
 
   private final String name;
-  private final AgentServiceConfig agentServiceConfig;
+  private final PivotStreamServiceConfig pivotStreamServiceConfig;
   private final PacketProcessor packetProcessor;
   private final CommandProcessor commandProcessor;
   private final AtomicBoolean STARTED = new AtomicBoolean();
@@ -65,19 +65,19 @@ public class PivotConnectionManager {
   /**
    * 使用配置及处理器构造对象.
    *
-   * @param agentServiceConfig 配置对象
+   * @param pivotStreamServiceConfig 配置对象
    * @param packetProcessor Packet处理器
    * @param commandProcessor Command处理器
    */
   @Inject
-  public PivotConnectionManager(
-      AgentServiceConfig agentServiceConfig,
+  public PivotStreamServiceManager(
+      PivotStreamServiceConfig pivotStreamServiceConfig,
       PacketProcessor packetProcessor,
       CommandProcessor commandProcessor) {
     var pid = ProcessHandle.current().pid();
     var ran = (short) new SecureRandom().nextInt(Short.MAX_VALUE);
     this.name = Strings.lenientFormat("tethys-ws-%s.%s", pid, ran);
-    this.agentServiceConfig = agentServiceConfig;
+    this.pivotStreamServiceConfig = pivotStreamServiceConfig;
     this.packetProcessor = packetProcessor;
     this.commandProcessor = commandProcessor;
   }
@@ -88,10 +88,10 @@ public class PivotConnectionManager {
       throw new IllegalStateException("已启动的 WatchManager");
     }
 
-    if (Strings.isNullOrEmpty(agentServiceConfig.getMultiGrpcTarget())) {
+    if (Strings.isNullOrEmpty(pivotStreamServiceConfig.getMultiGrpcTarget())) {
       throw new ConfigException.BadValue("agent-service.multi-grpc-target", "不能为空");
     }
-    var targets = agentServiceConfig.getMultiGrpcTarget().split(",");
+    var targets = pivotStreamServiceConfig.getMultiGrpcTarget().split(",");
     if (targets.length <= 0) {
       throw new ConfigException.BadValue("agent-service.multi-grpc-target", "至少需要配置一个 agent 服务");
     }
