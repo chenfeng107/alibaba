@@ -22,12 +22,17 @@ import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
+import cool.houge.ws.AgentServiceConfig;
+import cool.houge.ws.LogicServiceConfig;
+import cool.houge.ws.agent.ClientAgentManager;
+import cool.houge.ws.agent.CommandProcessor;
 import cool.houge.ws.agent.PacketProcessor;
 import cool.houge.ws.agent.command.CommandHandler;
 import cool.houge.ws.agent.command.SubGroupCommandHandler;
 import cool.houge.ws.agent.command.UnsubGroupCommandHandler;
 import cool.houge.ws.agent.internal.CommandProcessorImpl;
 import cool.houge.ws.agent.internal.PacketProcessorImpl;
+import cool.houge.ws.server.WebSocketHandler;
 import cool.houge.ws.server.WsServer;
 import cool.houge.ws.server.WsServerConfig;
 import cool.houge.ws.session.DefaultSessionGroupManager;
@@ -36,17 +41,6 @@ import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import cool.houge.grpc.AuthGrpc;
-import cool.houge.grpc.AuthGrpc.AuthStub;
-import cool.houge.grpc.PacketGrpc;
-import cool.houge.grpc.PacketGrpc.PacketStub;
-import cool.houge.grpc.UserGroupGrpc;
-import cool.houge.grpc.UserGroupGrpc.UserGroupStub;
-import cool.houge.ws.AgentServiceConfig;
-import cool.houge.ws.LogicServiceConfig;
-import cool.houge.ws.agent.ClientAgentManager;
-import cool.houge.ws.agent.CommandProcessor;
-import cool.houge.ws.server.WebSocketHandler;
 
 /**
  * WS的Guice模块.
@@ -74,8 +68,8 @@ public class WsModule extends AbstractModule {
 
     bind(PacketProcessor.class).to(PacketProcessorImpl.class).in(Scopes.SINGLETON);
     bind(CommandProcessor.class).to(CommandProcessorImpl.class).in(Scopes.SINGLETON);
-    this.bindCommandHandlers();
 
+    this.bindCommandHandlers();
     this.bindGrpcStub();
   }
 
@@ -109,9 +103,9 @@ public class WsModule extends AbstractModule {
     bind(ManagedChannel.class).toInstance(managedChannel);
 
     // gRPC 存根对象注册
-    bind(AuthStub.class).toInstance(AuthGrpc.newStub(managedChannel));
-    bind(PacketStub.class).toInstance(PacketGrpc.newStub(managedChannel));
-    bind(UserGroupStub.class).toInstance(UserGroupGrpc.newStub(managedChannel));
+    //    bind(AuthStub.class).toInstance(AuthGrpc.newStub(managedChannel));
+    //    bind(PacketStub.class).toInstance(PacketGrpc.newStub(managedChannel));
+    //    bind(UserGroupStub.class).toInstance(UserGroupGrpc.newStub(managedChannel));
   }
 
   private void bindCommandHandlers() {
