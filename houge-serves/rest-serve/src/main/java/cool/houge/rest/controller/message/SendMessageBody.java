@@ -16,7 +16,6 @@
 package cool.houge.rest.controller.message;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import cool.houge.domain.constants.MessageContentType;
 import lombok.Data;
 
 /** @author KK (kzou227@qq.com) */
@@ -32,9 +31,9 @@ public class SendMessageBody {
   /**
    * 消息内容类型.
    *
-   * @see MessageContentType
+   * @see cool.houge.domain.model.Msg.ContentType
    */
   private int contentType;
   /** 扩展参数. */
-  private @JsonUnwrapped String extraArgs;
+  private @JsonUnwrapped String extra;
 }

@@ -29,7 +29,7 @@ public interface AuthContext {
    *
    * @return 用户 ID
    */
-  long uid();
+  int uid();
 
   /**
    * 返回认证令牌.

@@ -18,7 +18,6 @@ package cool.houge.rest.controller.message;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.http.AbstractRestSupport;
-import cool.houge.service.message.SendMessageService;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,16 +35,8 @@ public class SendMessageController extends AbstractRestSupport implements Routin
 
   private static final Logger log = LogManager.getLogger();
 
-  private final SendMessageService sendMessageService;
-
-  /**
-   * 使用发送消息服务构造对象.
-   *
-   * @param sendMessageService 发送消息服务
-   */
-  public @Inject SendMessageController(SendMessageService sendMessageService) {
-    this.sendMessageService = sendMessageService;
-  }
+  /** 使用发送消息服务构造对象. */
+  public @Inject SendMessageController() {}
 
   @Override
   public void update(HttpServerRoutes routes, Interceptors interceptors) {
@@ -67,9 +58,11 @@ public class SendMessageController extends AbstractRestSupport implements Routin
               var body = t.getT2();
 
               log.debug("发送用户消息 uid={} body={}", ac.uid(), body);
-              return sendMessageService
-                  .sendToUser(MessageMapper.INSTANCE.mapToUser(body, ac.uid()))
-                  .flatMap(output -> json(response, output));
+              // FIXME
+              //              return sendMessageService
+              //                  .sendToUser(MessageMapper.INSTANCE.mapToUser(body, ac.uid()))
+              //                  .flatMap(output -> json(response, output));
+              return Mono.empty();
             });
   }
 
@@ -86,9 +79,11 @@ public class SendMessageController extends AbstractRestSupport implements Routin
               var ac = t.getT1();
               var body = t.getT2();
               log.debug("发送群组消息 uid={} body={}", ac.uid(), body);
-              return sendMessageService
-                  .sendToGroup(MessageMapper.INSTANCE.mapToGroup(body, ac.uid()))
-                  .flatMap(output -> json(response, output));
+              // FIXME
+              //              return sendMessageService
+              //                  .sendToGroup(MessageMapper.INSTANCE.mapToGroup(body, ac.uid()))
+              //                  .flatMap(output -> json(response, output));
+              return Mono.empty();
             });
   }
 }

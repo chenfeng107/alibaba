@@ -16,12 +16,11 @@
 package cool.houge.rest.controller.message;
 
 import cool.houge.domain.Paging;
+import cool.houge.domain.msg.MsgQuery;
+import cool.houge.domain.msg.MsgService;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.http.AbstractRestSupport;
-import cool.houge.service.message.MessageService;
-import cool.houge.service.message.ReadMessageInput;
-import cool.houge.storage.query.UserMessageQuery;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
@@ -39,15 +38,15 @@ import reactor.netty.http.server.HttpServerRoutes;
 public class MessageController extends AbstractRestSupport implements RoutingService {
 
   private static final Logger log = LogManager.getLogger();
-  private final MessageService messageService;
+  private final MsgService msgService;
 
   /**
    * 可以被 IoC 容器使用的构造函数.
    *
-   * @param messageService 消息服务
+   * @param msgService 消息服务
    */
-  public @Inject MessageController(MessageService messageService) {
-    this.messageService = messageService;
+  public @Inject MessageController(MsgService msgService) {
+    this.msgService = msgService;
   }
 
   @Override
@@ -70,8 +69,8 @@ public class MessageController extends AbstractRestSupport implements RoutingSer
               var beginTime = queryDateTime(request, "begin_time", () -> null);
               var offset = queryInt(request, "offset", 0);
               var limit = queryInt(request, "limit", 500);
-              var q = UserMessageQuery.builder().uid(ac.uid()).beginTime(beginTime).build();
-              return messageService
+              var q = MsgQuery.builder().uid(ac.uid()).beginTime(beginTime).build();
+              return msgService
                   .queryByUser(q, Paging.of(offset, limit))
                   .collectList()
                   .flatMap(messages -> json(response, messages));
@@ -87,13 +86,13 @@ public class MessageController extends AbstractRestSupport implements RoutingSer
    */
   Mono<Void> readMessages(HttpServerRequest request, HttpServerResponse response) {
     return authContext()
-        .zipWith(json(request, ReadMessageInput.class))
+        .zipWith(json(request, ReadMessageForm.class))
         .flatMap(
             t -> {
               var ac = t.getT1();
               var vo = t.getT2();
-              return messageService
-                  .readMessages(ac.uid(), vo.getMessageIds())
+              return msgService
+                  .readMessages(ac.uid(), vo.getMsgIds())
                   .then(response.status(HttpResponseStatus.NO_CONTENT).send());
             });
   }

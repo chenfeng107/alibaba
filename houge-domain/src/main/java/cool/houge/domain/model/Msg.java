@@ -129,4 +129,141 @@ public class Msg {
       return UNRECOGNIZED;
     }
   }
+
+  /**
+   * 消息类型枚举.
+   *
+   * <p>{@link #UNRECOGNIZED} 是枚举的空值.
+   */
+  public static enum Kind implements EnumLite {
+
+    /** 不认识未被承认的枚举. */
+    UNRECOGNIZED(-1, false, false),
+    /** 私聊消息. */
+    P_MESSAGE(0, false, false),
+    /** 群组消息. */
+    G_MESSAGE(1, true, false),
+    /** 系统消息<b>单人</b>. */
+    SP_MESSAGE(8, false, true),
+    /** 系统消息<b>群组</b>. */
+    SG_MESSAGE(9, true, true),
+    ;
+
+    private final int code;
+    private final boolean group;
+    private final boolean system;
+
+    Kind(int code, boolean group, boolean system) {
+      this.code = code;
+      this.group = group;
+      this.system = system;
+    }
+
+    @Override
+    public int getCode() {
+      return this.code;
+    }
+
+    /**
+     * 返回枚举类型是否为群组消息.
+     *
+     * @return true/false
+     */
+    public boolean isGroup() {
+      return group;
+    }
+
+    /**
+     * 返回枚举类型是否为系统消息.
+     *
+     * @return true/false
+     */
+    public boolean isSystem() {
+      return system;
+    }
+
+    /**
+     * 将给定数值转换为枚举.
+     *
+     * <p>如果给定的数值未查找到对应的枚举则会返回 {@link #UNRECOGNIZED}.
+     *
+     * @param code 对应枚举项的数值
+     * @return 与给定数值关联的枚举
+     */
+    public static Kind forCode(Integer code) {
+      if (code == null) {
+        return UNRECOGNIZED;
+      }
+      if (code == P_MESSAGE.code) {
+        return P_MESSAGE;
+      }
+      if (code == G_MESSAGE.code) {
+        return G_MESSAGE;
+      }
+      if (code == SP_MESSAGE.code) {
+        return SP_MESSAGE;
+      }
+      if (code == SG_MESSAGE.code) {
+        return SG_MESSAGE;
+      }
+      return UNRECOGNIZED;
+    }
+  }
+
+  /**
+   * 消息内容类型枚举定义.
+   *
+   * <p>{@link #UNRECOGNIZED} 是枚举的空值.
+   */
+  public enum ContentType implements EnumLite {
+
+    /** 不认识未被承认的枚举. */
+    UNRECOGNIZED(-1),
+    /** 普通文本消息. */
+    TEXT(0),
+    /** 图片消息. */
+    IMAGE(1),
+    /** 语音消息. */
+    VOICE(2),
+    /** 视频消息. */
+    VIDEO(3),
+    ;
+    private final int code;
+
+    ContentType(int code) {
+      this.code = code;
+    }
+
+    @Override
+    public int getCode() {
+      return code;
+    }
+
+    /**
+     * 将给定数值转换为枚举.
+     *
+     * <p>如果给定的数值未查找到对应的枚举则会返回 {@link #UNRECOGNIZED}.
+     *
+     * @param code 对应枚举项的数值
+     * @return 与给定数值关联的枚举
+     */
+    public static ContentType forCode(Integer code) {
+      if (code == null) {
+        return UNRECOGNIZED;
+      }
+      if (code == TEXT.code) {
+        return TEXT;
+      }
+      if (code == IMAGE.code) {
+        return IMAGE;
+      }
+      if (code == VOICE.code) {
+        return VOICE;
+      }
+      if (code == VIDEO.code) {
+        return VIDEO;
+      }
+      return UNRECOGNIZED;
+    }
+  }
 }
