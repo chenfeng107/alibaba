@@ -15,8 +15,14 @@
  */
 package cool.houge.infra.repository.system;
 
+import static cool.houge.infra.db.Tables.SERVER_INSTANCE;
+
 import cool.houge.domain.model.ServerInstance;
+import cool.houge.infra.db.tables.records.ServerInstanceRecord;
 import cool.houge.infra.system.identifier.ServerInstanceRepository;
+import javax.inject.Inject;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,28 +32,63 @@ import reactor.core.publisher.Mono;
  */
 public class JooqServerInstanceRepository implements ServerInstanceRepository {
 
+  private final DSLContext dsl;
+
+  @Inject
+  public JooqServerInstanceRepository(DSLContext dsl) {
+    this.dsl = dsl;
+  }
+
   @Override
-  public Mono<Void> insert(ServerInstance entity) {
-    return null;
+  public Mono<Void> insert(ServerInstance model) {
+    var record =
+        new ServerInstanceRecord()
+            .setId(model.getId())
+            .setAppName(model.getAppName())
+            .setHostName(model.getHostName())
+            .setHostAddress(model.getHostAddress())
+            .setOsName(model.getOsName())
+            .setOsVersion(model.getOsVersion())
+            .setOsArch(model.getOsArch())
+            .setOsUser(model.getOsUser())
+            .setJavaVmName(model.getJavaVmName())
+            .setJavaVmVersion(model.getJavaVmVersion())
+            .setJavaVmVendor(model.getJavaVmVendor())
+            .setWorkDir(model.getWorkDir())
+            .setPid(model.getPid());
+    return Mono.from(
+            dsl.insertInto(SERVER_INSTANCE).set(record)
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<Void> delete(int id) {
-    return null;
-  }
-
-  @Override
-  public Mono<Void> update(ServerInstance entity) {
-    return null;
+    return Mono.from(
+            dsl.delete(SERVER_INSTANCE).where(SERVER_INSTANCE.ID.eq(id))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<Void> updateCheckTime(int id) {
-    return null;
+    return Mono.from(
+            dsl.update(SERVER_INSTANCE)
+                .set(SERVER_INSTANCE.CHECK_TIME, DSL.currentLocalDateTime())
+                .where(SERVER_INSTANCE.ID.eq(id))
+            //
+            )
+        .then();
   }
 
   @Override
   public Mono<ServerInstance> findById(int id) {
-    return null;
+    return Mono.from(
+            dsl.selectFrom(SERVER_INSTANCE).where(SERVER_INSTANCE.ID.eq(id))
+            //
+            )
+        .map(ServerInstanceMapper.INSTANCE::map);
   }
 }

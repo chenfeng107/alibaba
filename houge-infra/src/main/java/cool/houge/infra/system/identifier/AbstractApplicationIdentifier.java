@@ -24,7 +24,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -108,48 +107,7 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
 
           // fid 是否存在
           var fidExists = new AtomicBoolean(false);
-          var insertMono =
-              Mono.defer(
-                  () -> {
-                    // 当 FID 不存在时执行插入操作
-                    if (fidExists.get()) {
-                      return Mono.empty();
-                    }
-                    var entity = newServerInstance(tempFid.get());
-                    log.info("新增 ServerInstance: {}", entity);
-
-                    return serverInstanceRepository
-                        .insert(entity)
-                        .doOnSuccess(
-                            unused -> {
-                              fidFuture.complete(tempFid.get());
-                              isRun.set(false);
-                            });
-                  });
-
-          return serverInstanceRepository
-              .findById(tempFid.get())
-              .filter(
-                  si -> {
-                    fidExists.set(true);
-                    // 服务实例最后检查时间与当前时间相差超过1小时则视服务实例已销毁
-                    var diff = Duration.between(si.getCheckTime(), LocalDateTime.now());
-                    return diff.toSeconds() > INSTANCE_EXPIRES_IN;
-                  })
-              .flatMap(
-                  si -> {
-                    log.info("发现已过期的服务实例: {}", si);
-                    var entity = newServerInstance(tempFid.get());
-                    entity.setVer(si.getVer());
-                    log.info("修改 ServerInstance: {}", entity);
-                    return serverInstanceRepository.update(entity);
-                  })
-              .doOnSuccess(
-                  unused -> {
-                    fidFuture.complete(tempFid.get());
-                    isRun.set(false);
-                  })
-              .switchIfEmpty(insertMono);
+          return Mono.empty();
         };
 
     Mono.defer(makeFidFunc)

@@ -24,32 +24,24 @@ public interface ServerInstanceRepository {
   /**
    * 新增应用服务实例.
    *
-   * @param entity 实体
-   * @return 受影响行数
+   * @param model 实体
+   * @return RS
    */
-  Mono<Void> insert(ServerInstance entity);
+  Mono<Void> insert(ServerInstance model);
 
   /**
    * 删除应用服务实例.
    *
    * @param id 应用 ID
-   * @return 受影响行数
+   * @return RS
    */
   Mono<Void> delete(int id);
-
-  /**
-   * 更新应用服务实例.
-   *
-   * @param entity 实体
-   * @return 受影响行数
-   */
-  Mono<Void> update(ServerInstance entity);
 
   /**
    * 更新最后检查时间.
    *
    * @param id 应用 ID
-   * @return 受影响行数
+   * @return RS
    */
   Mono<Void> updateCheckTime(int id);
 
