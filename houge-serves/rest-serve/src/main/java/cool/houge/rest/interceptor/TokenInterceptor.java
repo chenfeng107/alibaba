@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.controller;
+package cool.houge.rest.interceptor;
 
+import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
+import cool.houge.grpc.VerifyTokenRequest;
+import cool.houge.rest.auth.AuthContext;
+import cool.houge.rest.web.AbstractRestSupport;
 import java.util.function.BiFunction;
 import javax.inject.Inject;
 import lombok.extern.log4j.Log4j2;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 import reactor.util.context.Context;
 import top.yein.chaos.biz.BizCode;
 import top.yein.chaos.biz.BizCodeException;
-import cool.houge.domain.auth.AuthService;
-import cool.houge.rest.http.AbstractRestSupport;
 
 /**
  * 用户认证拦截器.
@@ -34,20 +36,19 @@ import cool.houge.rest.http.AbstractRestSupport;
  * @author KK (kzou227@qq.com)
  */
 @Log4j2
-public class UserAuthInterceptor extends AbstractRestSupport {
+public class TokenInterceptor extends AbstractRestSupport {
 
   private static final String ACCESS_TOKEN_QUERY_NAME = "access_token";
 
-  private final AuthService authService;
+  private final ReactorTokenStub tokenStub;
 
   /**
    * 构造函数.
    *
-   * @param authService 认证服务
+   * @param tokenStub
    */
-  @Inject
-  public UserAuthInterceptor(AuthService authService) {
-    this.authService = authService;
+  public @Inject TokenInterceptor(ReactorTokenStub tokenStub) {
+    this.tokenStub = tokenStub;
   }
 
   /**
@@ -60,18 +61,35 @@ public class UserAuthInterceptor extends AbstractRestSupport {
       BiFunction<? super HttpServerRequest, ? super HttpServerResponse, ? extends Publisher<Void>>
           next) {
     return (request, response) ->
-        Mono.defer(
+        Flux.defer(
             () -> {
-              var accessToken = queryParam(request, ACCESS_TOKEN_QUERY_NAME);
-              if (accessToken == null || accessToken.isEmpty()) {
+              var token = queryParam(request, ACCESS_TOKEN_QUERY_NAME);
+              if (token == null || token.isEmpty()) {
                 throw new BizCodeException(BizCode.C401, "缺少 access_token");
               }
-              return authService
-                  .authenticate(accessToken)
-                  .flatMap(
-                      authContext ->
-                          Mono.defer(() -> Mono.from(next.apply(request, response)))
-                              .contextWrite(Context.of(AUTH_CONTEXT_KEY, authContext)));
+
+              var req = VerifyTokenRequest.newBuilder().setToken(token).build();
+              return tokenStub
+                  .verify(req)
+                  .flatMapMany(
+                      resp -> {
+                        var uid = resp.getUid();
+                        var ac =
+                            new AuthContext() {
+                              @Override
+                              public int uid() {
+                                return uid;
+                              }
+
+                              @Override
+                              public String token() {
+                                return token;
+                              }
+                            };
+
+                        return Flux.defer(() -> next.apply(request, response))
+                            .contextWrite(Context.of(AUTH_CONTEXT_KEY, ac));
+                      });
             });
   }
 }

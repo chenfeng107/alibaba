@@ -1,4 +1,4 @@
-package cool.houge.rest.controller.user;
+package cool.houge.rest.controller.msg;
 
 import cool.houge.rest.interceptor.Interceptors;
 import cool.houge.rest.web.AbstractRestSupport;
@@ -13,12 +13,12 @@ import reactor.netty.http.server.HttpServerRoutes;
  *
  * @author KK (kzou227@qq.com)
  */
-public class UserController extends AbstractRestSupport implements RoutingService {
+public class MsgController extends AbstractRestSupport implements RoutingService {
 
   @Override
   public void update(HttpServerRoutes routes, Interceptors interceptors) {
-    routes.get("/msg-ids", interceptors.token(this::genIds));
-    routes.post("/msgs/send", interceptors.token(this::send));
+    routes.post("/messages/ids", interceptors.token(this::genIds));
+    routes.post("/messages/send", interceptors.token(this::send));
   }
 
   Mono<Void> genIds(HttpServerRequest request, HttpServerResponse response) {

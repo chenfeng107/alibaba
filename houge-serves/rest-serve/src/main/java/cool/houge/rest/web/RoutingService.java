@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.controller.group;
+package cool.houge.rest.web;
 
-import lombok.Data;
+import cool.houge.rest.interceptor.Interceptors;
+import reactor.netty.http.server.HttpServerRoutes;
 
 /**
- * 群组加入成员请求数据.
+ * 服务器路由注册服务.
  *
  * @author KK (kzou227@qq.com)
  */
-@Data
-public class JoinMemberBody {
+@FunctionalInterface
+public interface RoutingService {
 
-  /** 用户ID. */
-  private long uid;
+  /**
+   * 更新 Routes.
+   *
+   * @param routes 服务器路由
+   * @param interceptors 服务器拦截器
+   */
+  void update(HttpServerRoutes routes, Interceptors interceptors);
 }

@@ -19,38 +19,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
-import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import cool.houge.ConfigKeys;
-import cool.houge.domain.system.TokenService;
-import cool.houge.infra.id.MessageIdGenerator;
-import cool.houge.infra.id.YeinGidMessageIdGenerator;
-import cool.houge.infra.service.TokenServiceImpl;
-import cool.houge.infra.system.health.HealthIndicator;
-import cool.houge.infra.system.health.HealthService;
-import cool.houge.infra.system.health.HealthServiceImpl;
-import cool.houge.infra.system.health.PostgresHealthIndicator;
-import cool.houge.infra.system.identifier.AppIdentifier;
-import cool.houge.infra.system.info.AppInfoContributor;
-import cool.houge.infra.system.info.InfoContributor;
-import cool.houge.infra.system.info.InfoService;
-import cool.houge.infra.system.info.InfoServiceImpl;
-import cool.houge.infra.system.info.JavaInfoContributor;
-import cool.houge.rest.RestAppIdentifier;
-import cool.houge.rest.controller.Interceptors;
-import cool.houge.rest.controller.RoutingService;
-import cool.houge.rest.controller.ServerAuthInterceptor;
-import cool.houge.rest.controller.UserAuthInterceptor;
-import cool.houge.rest.controller.health.HealthController;
-import cool.houge.rest.controller.info.InfoController;
-import cool.houge.rest.controller.message.MessageController;
-import cool.houge.rest.controller.message.MessageIdController;
-import cool.houge.rest.controller.message.SendMessageController;
-import cool.houge.rest.controller.token.TokenController;
-import cool.houge.rest.controller.user.UserController;
+import cool.houge.rest.interceptor.AkskInterceptor;
+import cool.houge.rest.interceptor.Interceptors;
+import cool.houge.rest.interceptor.TokenInterceptor;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 import javax.inject.Singleton;
 
 /**
@@ -73,63 +48,17 @@ public class RestModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(AppIdentifier.class).to(RestAppIdentifier.class).in(Scopes.SINGLETON);
-
-    // 消息 ID 生成器
-    bind(MessageIdGenerator.class).to(YeinGidMessageIdGenerator.class).in(Scopes.SINGLETON);
-
-    // 令牌服务
-    bind(TokenService.class).to(TokenServiceImpl.class).in(Scopes.SINGLETON);
-
     // 绑定 Web 访问资源对象
-    bind(UserAuthInterceptor.class).in(Scopes.SINGLETON);
-    this.bindResources();
-
-    this.bindInfoService();
-    this.bindHealthService();
+    bind(TokenInterceptor.class).in(Scopes.SINGLETON);
   }
 
   @Provides
   @Singleton
-  public Interceptors interceptors(UserAuthInterceptor userAuthInterceptor) {
-    return new Interceptors(userAuthInterceptor::handle, serviceAuthInterceptor()::handle);
+  public Interceptors interceptors(TokenInterceptor tokenInterceptor) {
+    return new Interceptors(tokenInterceptor::handle, akskInterceptor()::handle);
   }
 
-  private void bindInfoService() {
-    var binder = Multibinder.newSetBinder(binder(), InfoContributor.class);
-    binder.addBinding().to(JavaInfoContributor.class).in(Scopes.SINGLETON);
-    binder.addBinding().to(AppInfoContributor.class).in(Scopes.SINGLETON);
-
-    bind(InfoService.class).to(InfoServiceImpl.class).in(Scopes.SINGLETON);
-  }
-
-  private void bindHealthService() {
-    var binder = Multibinder.newSetBinder(binder(), HealthIndicator.class);
-    Consumer<Class<? extends HealthIndicator>> co =
-        clazz -> binder.addBinding().to(clazz).in(Scopes.SINGLETON);
-    co.accept(PostgresHealthIndicator.class);
-
-    bind(HealthService.class).to(HealthServiceImpl.class).in(Scopes.SINGLETON);
-  }
-
-  private void bindResources() {
-    var binder = Multibinder.newSetBinder(binder(), RoutingService.class);
-    Consumer<Class<? extends RoutingService>> b =
-        clazz -> binder.addBinding().to(clazz).in(Scopes.SINGLETON);
-
-    b.accept(InfoController.class);
-    b.accept(HealthController.class);
-
-    b.accept(MessageIdController.class);
-    b.accept(MessageController.class);
-    b.accept(SendMessageController.class);
-
-    //    b.accept(GroupController.class);
-    b.accept(UserController.class);
-    b.accept(TokenController.class);
-  }
-
-  private ServerAuthInterceptor serviceAuthInterceptor() {
+  private AkskInterceptor akskInterceptor() {
     var basicUsersBuilder = ImmutableMap.<String, String>builder();
     if (config.hasPath(ConfigKeys.SERVICE_AUTH_BASIC)) {
       for (Entry<String, ConfigValue> entry :
@@ -137,6 +66,6 @@ public class RestModule extends AbstractModule {
         basicUsersBuilder.put(entry.getKey(), entry.getValue().unwrapped().toString());
       }
     }
-    return new ServerAuthInterceptor(basicUsersBuilder.build());
+    return new AkskInterceptor(basicUsersBuilder.build());
   }
 }

@@ -15,7 +15,7 @@
  */
 package cool.houge.rest.resource;
 
-import cool.houge.domain.auth.AuthContext;
+import cool.houge.rest.auth.AuthContext;
 import java.security.SecureRandom;
 
 /**

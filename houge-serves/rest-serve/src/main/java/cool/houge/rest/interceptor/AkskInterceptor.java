@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.controller;
+package cool.houge.rest.interceptor;
 
-import cool.houge.rest.http.AbstractRestSupport;
+import cool.houge.rest.web.AbstractRestSupport;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -35,7 +35,7 @@ import top.yein.chaos.biz.BizCodeException;
  * @author KK (kzou227@qq.com)
  */
 @Log4j2
-public class ServerAuthInterceptor extends AbstractRestSupport {
+public class AkskInterceptor extends AbstractRestSupport {
 
   private static final String AUTH_BASIC_SCHEME = "Basic";
 
@@ -46,7 +46,7 @@ public class ServerAuthInterceptor extends AbstractRestSupport {
    *
    * @param basicUsers BASIC 认证用户信息及密码
    */
-  public ServerAuthInterceptor(Map<String, String> basicUsers) {
+  public AkskInterceptor(Map<String, String> basicUsers) {
     Objects.requireNonNull(basicUsers, "[basicUsers]不能为空");
     this.basicUsers = basicUsers;
   }

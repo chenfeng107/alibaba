@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.http;
+package cool.houge.rest.web;
 
 import com.google.common.collect.ImmutableMap;
 import cool.houge.Env;

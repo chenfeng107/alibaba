@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.main;
+package cool.houge.rest;
 
 import com.google.inject.Guice;
 import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cool.houge.ConfigKeys;
-import cool.houge.infra.guice.DaoModule;
-import cool.houge.infra.guice.ServiceModule;
-import cool.houge.infra.system.identifier.AppIdentifier;
-import cool.houge.rest.controller.Interceptors;
-import cool.houge.rest.controller.RoutingService;
-import cool.houge.rest.RestModule;
-import cool.houge.rest.RestServer;
+import cool.houge.rest.interceptor.Interceptors;
+import cool.houge.rest.web.RoutingService;
 import cool.houge.util.AppShutdownHelper;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
@@ -57,11 +52,9 @@ public class RestMain implements Runnable {
     // 初始化配置
     final var config = loadConfig();
     // 初始化 Guice
-    final var injector =
-        Guice.createInjector(new DaoModule(), new ServiceModule(), new RestModule(config));
+    final var injector = Guice.createInjector(new RestModule(config));
 
-    // 启动 IM 服务
-    var applicationIdentifier = injector.getInstance(AppIdentifier.class);
+    // 启动 REST 服务
     var restServer =
         new RestServer(
             config.getString(ConfigKeys.REST_SERVER_ADDR),
@@ -71,14 +64,10 @@ public class RestMain implements Runnable {
                 .collect(Collectors.toList()));
 
     restServer.start();
-    log.info("{} 服务启动成功 fid={}", applicationIdentifier.appName(), applicationIdentifier.fid());
+    log.info("houge-rest 服务启动成功");
 
-    shutdownHelper
-        .addCallback(restServer::stop)
-        // 清理应用标识数据信息
-        .addCallback(applicationIdentifier::clean)
-        .await();
-    log.info("REST 服务停止完成");
+    shutdownHelper.addCallback(restServer::stop).await();
+    log.info("houge-rest 服务停止完成");
   }
 
   private Config loadConfig() {

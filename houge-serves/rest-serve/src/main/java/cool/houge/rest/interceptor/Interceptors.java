@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest.controller;
+package cool.houge.rest.interceptor;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -31,25 +31,24 @@ public class Interceptors {
 
   /** 认证拦截器. */
   private final UnaryOperator<BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>>>
-      authFunc;
+      tokenFn;
   /** 服务认证拦截器. */
   private final UnaryOperator<BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>>>
-      serviceAuthFunc;
+      akskFn;
 
   /**
    * 使用拦截回调函数创建实例.
    *
-   * @param authFunc 认证拦截函数
-   * @param serviceAuthFunc 服务认证拦截器
+   * @param tokenFn 认证拦截函数
+   * @param akskFn 服务认证拦截器
    */
   public Interceptors(
-      UnaryOperator<BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>>> authFunc,
-      UnaryOperator<BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>>>
-          serviceAuthFunc) {
-    Objects.requireNonNull(authFunc, "[authFunc]不能为null");
-    Objects.requireNonNull(serviceAuthFunc, "[serviceAuthFunc]不能为null");
-    this.authFunc = authFunc;
-    this.serviceAuthFunc = serviceAuthFunc;
+      UnaryOperator<BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>>> tokenFn,
+      UnaryOperator<BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>>> akskFn) {
+    Objects.requireNonNull(tokenFn, "[tokenFn]不能为null");
+    Objects.requireNonNull(akskFn, "[akskFn]不能为null");
+    this.tokenFn = tokenFn;
+    this.akskFn = akskFn;
   }
 
   /**
@@ -58,9 +57,9 @@ public class Interceptors {
    * @param next 执行成功后的下一个函数
    * @return 认证拦截器
    */
-  public BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> userAuth(
+  public BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> token(
       BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> next) {
-    return authFunc.apply(next);
+    return tokenFn.apply(next);
   }
 
   /**
@@ -69,8 +68,8 @@ public class Interceptors {
    * @param next 执行成功后的下一个函数
    * @return 服务认证拦截器
    */
-  public BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> serverAuth(
+  public BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> aksk(
       BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> next) {
-    return serviceAuthFunc.apply(next);
+    return akskFn.apply(next);
   }
 }
