@@ -37,7 +37,7 @@ public interface MessageIdGenerator {
   /**
    * 生成一批 IDs.
    *
-   * <p>通过 {@link Flux#limitRequest(long)} 设置请求的 ID 数量，如果请求值超过 {@link #REQUEST_IDS_LIMIT} 则返回 {@link
+   * <p>通过 {@link Flux#take(long)} 设置请求的 ID 数量，如果请求值超过 {@link #REQUEST_IDS_LIMIT} 则返回 {@link
    * #REQUEST_IDS_LIMIT} 数量的 ID.
    *
    * @return IDs
