@@ -10,10 +10,10 @@ public interface UserService {
   /**
    * 创建用户.
    *
-   * @param in 创建用户参数
+   * @param user 创建用户参数
    * @return 用户ID
    */
-  Mono<User> create(User user);
+  Mono<Integer> create(User user);
 
   /**
    * 判断指定用户是否存在.
@@ -23,5 +23,5 @@ public interface UserService {
    * @param uid 用户 ID
    * @return true/false
    */
-  Mono<Nil> existsById(long uid);
+  Mono<Nil> exists(int uid);
 }

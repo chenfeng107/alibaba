@@ -30,6 +30,7 @@ import cool.houge.poplar.broker.SimpleMsgRouter;
 import cool.houge.poplar.grpc.BrokerGrpcImpl;
 import cool.houge.poplar.grpc.MsgGrpcImpl;
 import cool.houge.poplar.grpc.TokenGrpcImpl;
+import cool.houge.poplar.grpc.UserGrpcImpl;
 import io.grpc.BindableService;
 
 /**
@@ -59,10 +60,11 @@ public class PoplarModule extends AbstractModule {
     bind(BrokerManager.class).in(Scopes.SINGLETON);
     bind(MsgRouter.class).to(SimpleMsgRouter.class).in(Scopes.SINGLETON);
 
-    // 绑定 gRPC
+    // gRPC实现
     var grpcBinder = Multibinder.newSetBinder(binder(), BindableService.class);
     grpcBinder.addBinding().to(BrokerGrpcImpl.class).in(Scopes.SINGLETON);
     grpcBinder.addBinding().to(TokenGrpcImpl.class).in(Scopes.SINGLETON);
     grpcBinder.addBinding().to(MsgGrpcImpl.class).in(Scopes.SINGLETON);
+    grpcBinder.addBinding().to(UserGrpcImpl.class).in(Scopes.SINGLETON);
   }
 }
