@@ -43,6 +43,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -89,7 +90,7 @@ private static final long serialVersionUID = 0L;
           }
           case 74: {
             java.lang.String s = input.readStringRequireUtf8();
-
+            bitField0_ |= 0x00000001;
             extra_ = s;
             break;
           }
@@ -125,6 +126,7 @@ private static final long serialVersionUID = 0L;
             cool.houge.grpc.BrokerMsg.class, cool.houge.grpc.BrokerMsg.Builder.class);
   }
 
+  private int bitField0_;
   public static final int KIND_FIELD_NUMBER = 1;
   private int kind_;
   /**
@@ -308,7 +310,19 @@ private static final long serialVersionUID = 0L;
    * 扩展参数会原样转发给客户端
    * </pre>
    *
-   * <code>string extra = 9;</code>
+   * <code>optional string extra = 9;</code>
+   * @return Whether the extra field is set.
+   */
+  @java.lang.Override
+  public boolean hasExtra() {
+    return ((bitField0_ & 0x00000001) != 0);
+  }
+  /**
+   * <pre>
+   * 扩展参数会原样转发给客户端
+   * </pre>
+   *
+   * <code>optional string extra = 9;</code>
    * @return The extra.
    */
   @java.lang.Override
@@ -329,7 +343,7 @@ private static final long serialVersionUID = 0L;
    * 扩展参数会原样转发给客户端
    * </pre>
    *
-   * <code>string extra = 9;</code>
+   * <code>optional string extra = 9;</code>
    * @return The bytes for extra.
    */
   @java.lang.Override
@@ -379,7 +393,7 @@ private static final long serialVersionUID = 0L;
     if (contentType_ != cool.houge.protos.MsgContentType.TEXT.getNumber()) {
       output.writeEnum(6, contentType_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(extra_)) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 9, extra_);
     }
     unknownFields.writeTo(output);
@@ -413,7 +427,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(6, contentType_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(extra_)) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, extra_);
     }
     size += unknownFields.getSerializedSize();
@@ -441,8 +455,11 @@ private static final long serialVersionUID = 0L;
     if (!getContent()
         .equals(other.getContent())) return false;
     if (contentType_ != other.contentType_) return false;
-    if (!getExtra()
-        .equals(other.getExtra())) return false;
+    if (hasExtra() != other.hasExtra()) return false;
+    if (hasExtra()) {
+      if (!getExtra()
+          .equals(other.getExtra())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -466,8 +483,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getContent().hashCode();
     hash = (37 * hash) + CONTENT_TYPE_FIELD_NUMBER;
     hash = (53 * hash) + contentType_;
-    hash = (37 * hash) + EXTRA_FIELD_NUMBER;
-    hash = (53 * hash) + getExtra().hashCode();
+    if (hasExtra()) {
+      hash = (37 * hash) + EXTRA_FIELD_NUMBER;
+      hash = (53 * hash) + getExtra().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -614,7 +633,7 @@ private static final long serialVersionUID = 0L;
       contentType_ = 0;
 
       extra_ = "";
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -641,13 +660,19 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public cool.houge.grpc.BrokerMsg buildPartial() {
       cool.houge.grpc.BrokerMsg result = new cool.houge.grpc.BrokerMsg(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.kind_ = kind_;
       result.msgId_ = msgId_;
       result.from_ = from_;
       result.to_ = to_;
       result.content_ = content_;
       result.contentType_ = contentType_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        to_bitField0_ |= 0x00000001;
+      }
       result.extra_ = extra_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -716,7 +741,8 @@ private static final long serialVersionUID = 0L;
       if (other.contentType_ != 0) {
         setContentTypeValue(other.getContentTypeValue());
       }
-      if (!other.getExtra().isEmpty()) {
+      if (other.hasExtra()) {
+        bitField0_ |= 0x00000001;
         extra_ = other.extra_;
         onChanged();
       }
@@ -748,6 +774,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int kind_ = 0;
     /**
@@ -1181,7 +1208,18 @@ private static final long serialVersionUID = 0L;
      * 扩展参数会原样转发给客户端
      * </pre>
      *
-     * <code>string extra = 9;</code>
+     * <code>optional string extra = 9;</code>
+     * @return Whether the extra field is set.
+     */
+    public boolean hasExtra() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * 扩展参数会原样转发给客户端
+     * </pre>
+     *
+     * <code>optional string extra = 9;</code>
      * @return The extra.
      */
     public java.lang.String getExtra() {
@@ -1201,7 +1239,7 @@ private static final long serialVersionUID = 0L;
      * 扩展参数会原样转发给客户端
      * </pre>
      *
-     * <code>string extra = 9;</code>
+     * <code>optional string extra = 9;</code>
      * @return The bytes for extra.
      */
     public com.google.protobuf.ByteString
@@ -1222,7 +1260,7 @@ private static final long serialVersionUID = 0L;
      * 扩展参数会原样转发给客户端
      * </pre>
      *
-     * <code>string extra = 9;</code>
+     * <code>optional string extra = 9;</code>
      * @param value The extra to set.
      * @return This builder for chaining.
      */
@@ -1231,7 +1269,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-  
+  bitField0_ |= 0x00000001;
       extra_ = value;
       onChanged();
       return this;
@@ -1241,11 +1279,11 @@ private static final long serialVersionUID = 0L;
      * 扩展参数会原样转发给客户端
      * </pre>
      *
-     * <code>string extra = 9;</code>
+     * <code>optional string extra = 9;</code>
      * @return This builder for chaining.
      */
     public Builder clearExtra() {
-      
+      bitField0_ = (bitField0_ & ~0x00000001);
       extra_ = getDefaultInstance().getExtra();
       onChanged();
       return this;
@@ -1255,7 +1293,7 @@ private static final long serialVersionUID = 0L;
      * 扩展参数会原样转发给客户端
      * </pre>
      *
-     * <code>string extra = 9;</code>
+     * <code>optional string extra = 9;</code>
      * @param value The bytes for extra to set.
      * @return This builder for chaining.
      */
@@ -1265,7 +1303,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      
+      bitField0_ |= 0x00000001;
       extra_ = value;
       onChanged();
       return this;

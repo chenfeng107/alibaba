@@ -9,6 +9,26 @@ public interface SendMsgRequestOrBuilder extends
 
   /**
    * <pre>
+   * 消息ID
+   * </pre>
+   *
+   * <code>string msg_id = 1;</code>
+   * @return The msgId.
+   */
+  java.lang.String getMsgId();
+  /**
+   * <pre>
+   * 消息ID
+   * </pre>
+   *
+   * <code>string msg_id = 1;</code>
+   * @return The bytes for msgId.
+   */
+  com.google.protobuf.ByteString
+      getMsgIdBytes();
+
+  /**
+   * <pre>
    * 消息发送者
    * </pre>
    *

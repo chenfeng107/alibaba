@@ -24,7 +24,11 @@ import cool.houge.infra.guice.ServiceModule;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
 import cool.houge.infra.system.identifier.AppIdentifier;
+import cool.houge.poplar.broker.BrokerManager;
+import cool.houge.poplar.broker.MsgRouter;
+import cool.houge.poplar.broker.SimpleMsgRouter;
 import cool.houge.poplar.grpc.BrokerGrpcImpl;
+import cool.houge.poplar.grpc.MsgGrpcImpl;
 import cool.houge.poplar.grpc.TokenGrpcImpl;
 import io.grpc.BindableService;
 
@@ -52,13 +56,13 @@ public class PoplarModule extends AbstractModule {
     bind(AppIdentifier.class).to(PoplarAppIdentifier.class).in(Scopes.SINGLETON);
     bind(MessageIdGenerator.class).to(YeinGidMessageIdGenerator.class).in(Scopes.SINGLETON);
 
-    // 认证服务
-    //    bind(JwsAuthService.class).in(Scopes.SINGLETON);
-    //    bind(AuthService.class).to(JwsAuthService.class);
+    bind(BrokerManager.class).in(Scopes.SINGLETON);
+    bind(MsgRouter.class).to(SimpleMsgRouter.class).in(Scopes.SINGLETON);
 
     // 绑定 gRPC
     var grpcBinder = Multibinder.newSetBinder(binder(), BindableService.class);
     grpcBinder.addBinding().to(BrokerGrpcImpl.class).in(Scopes.SINGLETON);
     grpcBinder.addBinding().to(TokenGrpcImpl.class).in(Scopes.SINGLETON);
+    grpcBinder.addBinding().to(MsgGrpcImpl.class).in(Scopes.SINGLETON);
   }
 }

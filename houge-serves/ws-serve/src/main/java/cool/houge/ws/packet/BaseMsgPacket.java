@@ -17,6 +17,7 @@ package cool.houge.ws.packet;
 
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 通用的消息包.
@@ -25,6 +26,7 @@ import lombok.ToString;
  */
 @ToString
 @Setter
+@Accessors(chain = true)
 public abstract class BaseMsgPacket implements MsgPacket {
 
   /** 消息 ID 全局唯一. */

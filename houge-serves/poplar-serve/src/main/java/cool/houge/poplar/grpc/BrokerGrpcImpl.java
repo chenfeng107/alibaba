@@ -19,6 +19,6 @@ public class BrokerGrpcImpl extends ReactorBrokerGrpc.BrokerImplBase {
 
   @Override
   public Flux<AttachBrokerResponse> attach(Mono<AttachBrokerRequest> request) {
-    return request.flatMapMany(req -> brokerManager.attach(req));
+    return request.flatMapMany(req -> brokerManager.attach(req)).onErrorMap(ErrorMaps::map);
   }
 }

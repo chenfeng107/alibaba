@@ -110,7 +110,16 @@ public interface BrokerMsgOrBuilder extends
    * 扩展参数会原样转发给客户端
    * </pre>
    *
-   * <code>string extra = 9;</code>
+   * <code>optional string extra = 9;</code>
+   * @return Whether the extra field is set.
+   */
+  boolean hasExtra();
+  /**
+   * <pre>
+   * 扩展参数会原样转发给客户端
+   * </pre>
+   *
+   * <code>optional string extra = 9;</code>
    * @return The extra.
    */
   java.lang.String getExtra();
@@ -119,7 +128,7 @@ public interface BrokerMsgOrBuilder extends
    * 扩展参数会原样转发给客户端
    * </pre>
    *
-   * <code>string extra = 9;</code>
+   * <code>optional string extra = 9;</code>
    * @return The bytes for extra.
    */
   com.google.protobuf.ByteString

@@ -21,6 +21,8 @@ option java_multiple_files = true;
 import "cool/houge/protos/msg_enums.proto";
 
 message SendMsgRequest {
+  // 消息ID
+  string msg_id = 1;
   // 消息发送者
   fixed32 from = 2;
   // 消息接收者

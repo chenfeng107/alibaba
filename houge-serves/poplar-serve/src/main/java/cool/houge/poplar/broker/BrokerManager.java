@@ -4,6 +4,7 @@ import cool.houge.grpc.AttachBrokerRequest;
 import cool.houge.grpc.AttachBrokerResponse;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
@@ -15,7 +16,7 @@ public class BrokerManager {
   private static final Logger log = LogManager.getLogger();
   private final ConcurrentMap<String, Sinks.Many<AttachBrokerResponse>> brokers;
 
-  public BrokerManager() {
+  public @Inject BrokerManager() {
     this.brokers = new ConcurrentHashMap<>();
   }
 
@@ -39,6 +40,11 @@ public class BrokerManager {
     return sink.asFlux()
         .doOnCancel(() -> this.removeBroker(name))
         .doOnTerminate(() -> this.removeBroker(name));
+  }
+
+  /** @return */
+  public Flux<Sinks.Many<AttachBrokerResponse>> all() {
+    return Flux.fromIterable(brokers.values());
   }
 
   void removeBroker(String name) {

@@ -31,7 +31,14 @@ public class PoplarServiceManager {
   private final String streamGrpcTargets;
   private final List<Worker> workers = new CopyOnWriteArrayList<>();
 
-  public @Inject PoplarServiceManager(Config config) {
+  private final BrokerMsgHandler msgHandler;
+
+  /**
+   * @param config
+   * @param msgHandler
+   */
+  public @Inject PoplarServiceManager(Config config, BrokerMsgHandler msgHandler) {
+    this.msgHandler = msgHandler;
     this.name = this.genName();
     this.streamGrpcTargets = config.getString("ws.poplar.stream-grpc-targets");
   }
@@ -111,6 +118,11 @@ public class PoplarServiceManager {
               })
           .subscribe(
               resp -> {
+                // 分发消息
+                if (resp.hasMsg()) {
+                  msgHandler.run(resp.getMsg());
+                }
+
                 System.out.println("响应数据");
                 System.out.println(resp);
               },

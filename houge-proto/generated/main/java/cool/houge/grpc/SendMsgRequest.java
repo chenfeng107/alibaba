@@ -16,6 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private SendMsgRequest() {
+    msgId_ = "";
     content_ = "";
     contentType_ = 0;
     extra_ = "";
@@ -51,6 +52,12 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
+          case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            msgId_ = s;
+            break;
+          }
           case 21: {
 
             from_ = input.readFixed32();
@@ -109,6 +116,52 @@ private static final long serialVersionUID = 0L;
     return cool.houge.grpc.MsgOuterClass.internal_static_SendMsgRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             cool.houge.grpc.SendMsgRequest.class, cool.houge.grpc.SendMsgRequest.Builder.class);
+  }
+
+  public static final int MSG_ID_FIELD_NUMBER = 1;
+  private volatile java.lang.Object msgId_;
+  /**
+   * <pre>
+   * 消息ID
+   * </pre>
+   *
+   * <code>string msg_id = 1;</code>
+   * @return The msgId.
+   */
+  @java.lang.Override
+  public java.lang.String getMsgId() {
+    java.lang.Object ref = msgId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      msgId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * 消息ID
+   * </pre>
+   *
+   * <code>string msg_id = 1;</code>
+   * @return The bytes for msgId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getMsgIdBytes() {
+    java.lang.Object ref = msgId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      msgId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int FROM_FIELD_NUMBER = 2;
@@ -274,6 +327,9 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(msgId_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, msgId_);
+    }
     if (from_ != 0) {
       output.writeFixed32(2, from_);
     }
@@ -298,6 +354,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(msgId_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, msgId_);
+    }
     if (from_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeFixed32Size(2, from_);
@@ -331,6 +390,8 @@ private static final long serialVersionUID = 0L;
     }
     cool.houge.grpc.SendMsgRequest other = (cool.houge.grpc.SendMsgRequest) obj;
 
+    if (!getMsgId()
+        .equals(other.getMsgId())) return false;
     if (getFrom()
         != other.getFrom()) return false;
     if (getTo()
@@ -351,6 +412,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + MSG_ID_FIELD_NUMBER;
+    hash = (53 * hash) + getMsgId().hashCode();
     hash = (37 * hash) + FROM_FIELD_NUMBER;
     hash = (53 * hash) + getFrom();
     hash = (37 * hash) + TO_FIELD_NUMBER;
@@ -494,6 +557,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      msgId_ = "";
+
       from_ = 0;
 
       to_ = 0;
@@ -530,6 +595,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public cool.houge.grpc.SendMsgRequest buildPartial() {
       cool.houge.grpc.SendMsgRequest result = new cool.houge.grpc.SendMsgRequest(this);
+      result.msgId_ = msgId_;
       result.from_ = from_;
       result.to_ = to_;
       result.content_ = content_;
@@ -583,6 +649,10 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(cool.houge.grpc.SendMsgRequest other) {
       if (other == cool.houge.grpc.SendMsgRequest.getDefaultInstance()) return this;
+      if (!other.getMsgId().isEmpty()) {
+        msgId_ = other.msgId_;
+        onChanged();
+      }
       if (other.getFrom() != 0) {
         setFrom(other.getFrom());
       }
@@ -626,6 +696,102 @@ private static final long serialVersionUID = 0L;
           mergeFrom(parsedMessage);
         }
       }
+      return this;
+    }
+
+    private java.lang.Object msgId_ = "";
+    /**
+     * <pre>
+     * 消息ID
+     * </pre>
+     *
+     * <code>string msg_id = 1;</code>
+     * @return The msgId.
+     */
+    public java.lang.String getMsgId() {
+      java.lang.Object ref = msgId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        msgId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * 消息ID
+     * </pre>
+     *
+     * <code>string msg_id = 1;</code>
+     * @return The bytes for msgId.
+     */
+    public com.google.protobuf.ByteString
+        getMsgIdBytes() {
+      java.lang.Object ref = msgId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        msgId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * 消息ID
+     * </pre>
+     *
+     * <code>string msg_id = 1;</code>
+     * @param value The msgId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMsgId(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      msgId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 消息ID
+     * </pre>
+     *
+     * <code>string msg_id = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMsgId() {
+      
+      msgId_ = getDefaultInstance().getMsgId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 消息ID
+     * </pre>
+     *
+     * <code>string msg_id = 1;</code>
+     * @param value The bytes for msgId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMsgIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      msgId_ = value;
+      onChanged();
       return this;
     }
 

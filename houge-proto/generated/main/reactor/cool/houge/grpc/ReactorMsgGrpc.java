@@ -42,7 +42,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息发送者
+         *  消息ID
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> reactorRequest) {
@@ -51,7 +51,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息接收者
+         *  消息发送者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToGroup(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> reactorRequest) {
@@ -60,7 +60,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息发送者
+         *  消息ID
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(cool.houge.grpc.SendMsgRequest reactorRequest) {
@@ -69,7 +69,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息接收者
+         *  消息发送者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToGroup(cool.houge.grpc.SendMsgRequest reactorRequest) {
@@ -87,7 +87,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息发送者
+         *  消息ID
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToUser(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> request) {
@@ -96,7 +96,7 @@ public final class ReactorMsgGrpc {
 
         /**
          * <pre>
-         *  消息接收者
+         *  消息发送者
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.SendMsgResponse> sendToGroup(reactor.core.publisher.Mono<cool.houge.grpc.SendMsgRequest> request) {

@@ -44,17 +44,18 @@ public final class BrokerOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\034cool/houge/grpc/broker.proto\032!cool/hou" +
-      "ge/protos/msg_enums.proto\"\223\001\n\tBrokerMsg\022" +
+      "ge/protos/msg_enums.proto\"\242\001\n\tBrokerMsg\022" +
       "\026\n\004kind\030\001 \001(\0162\010.MsgKind\022\r\n\005msgId\030\002 \001(\t\022\014" +
       "\n\004from\030\003 \001(\007\022\n\n\002to\030\004 \001(\007\022\017\n\007content\030\005 \001(" +
       "\t\022%\n\014content_type\030\006 \001(\0162\017.MsgContentType" +
-      "\022\r\n\005extra\030\t \001(\t\"\035\n\rBrokerCommand\022\014\n\004name" +
-      "\030\001 \001(\t\"#\n\023AttachBrokerRequest\022\014\n\004name\030\001 " +
-      "\001(\t\"\\\n\024AttachBrokerResponse\022\031\n\003msg\030\001 \001(\013" +
-      "2\n.BrokerMsgH\000\022!\n\007command\030\t \001(\0132\016.Broker" +
-      "CommandH\000B\006\n\004kind2C\n\006Broker\0229\n\006Attach\022\024." +
-      "AttachBrokerRequest\032\025.AttachBrokerRespon" +
-      "se\"\0000\001B\023\n\017cool.houge.grpcP\001b\006proto3"
+      "\022\022\n\005extra\030\t \001(\tH\000\210\001\001B\010\n\006_extra\"\035\n\rBroker" +
+      "Command\022\014\n\004name\030\001 \001(\t\"#\n\023AttachBrokerReq" +
+      "uest\022\014\n\004name\030\001 \001(\t\"\\\n\024AttachBrokerRespon" +
+      "se\022\031\n\003msg\030\001 \001(\0132\n.BrokerMsgH\000\022!\n\007command" +
+      "\030\t \001(\0132\016.BrokerCommandH\000B\006\n\004kind2C\n\006Brok" +
+      "er\0229\n\006Attach\022\024.AttachBrokerRequest\032\025.Att" +
+      "achBrokerResponse\"\0000\001B\023\n\017cool.houge.grpc" +
+      "P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -66,7 +67,7 @@ public final class BrokerOuterClass {
     internal_static_BrokerMsg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_BrokerMsg_descriptor,
-        new java.lang.String[] { "Kind", "MsgId", "From", "To", "Content", "ContentType", "Extra", });
+        new java.lang.String[] { "Kind", "MsgId", "From", "To", "Content", "ContentType", "Extra", "Extra", });
     internal_static_BrokerCommand_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_BrokerCommand_fieldAccessorTable = new

@@ -34,14 +34,15 @@ public final class MsgOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\031cool/houge/grpc/msg.proto\032!cool/houge/" +
-      "protos/msg_enums.proto\"q\n\016SendMsgRequest" +
-      "\022\014\n\004from\030\002 \001(\007\022\n\n\002to\030\003 \001(\007\022\017\n\007content\030\004 " +
-      "\001(\t\022%\n\014content_type\030\005 \001(\0162\017.MsgContentTy" +
-      "pe\022\r\n\005extra\030\t \001(\t\"!\n\017SendMsgResponse\022\016\n\006" +
-      "msg_id\030\001 \001(\t2l\n\003Msg\0221\n\nSendToUser\022\017.Send" +
-      "MsgRequest\032\020.SendMsgResponse\"\000\0222\n\013SendTo" +
-      "Group\022\017.SendMsgRequest\032\020.SendMsgResponse" +
-      "\"\000B\023\n\017cool.houge.grpcP\001b\006proto3"
+      "protos/msg_enums.proto\"\201\001\n\016SendMsgReques" +
+      "t\022\016\n\006msg_id\030\001 \001(\t\022\014\n\004from\030\002 \001(\007\022\n\n\002to\030\003 " +
+      "\001(\007\022\017\n\007content\030\004 \001(\t\022%\n\014content_type\030\005 \001" +
+      "(\0162\017.MsgContentType\022\r\n\005extra\030\t \001(\t\"!\n\017Se" +
+      "ndMsgResponse\022\016\n\006msg_id\030\001 \001(\t2l\n\003Msg\0221\n\n" +
+      "SendToUser\022\017.SendMsgRequest\032\020.SendMsgRes" +
+      "ponse\"\000\0222\n\013SendToGroup\022\017.SendMsgRequest\032" +
+      "\020.SendMsgResponse\"\000B\023\n\017cool.houge.grpcP\001" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -53,7 +54,7 @@ public final class MsgOuterClass {
     internal_static_SendMsgRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SendMsgRequest_descriptor,
-        new java.lang.String[] { "From", "To", "Content", "ContentType", "Extra", });
+        new java.lang.String[] { "MsgId", "From", "To", "Content", "ContentType", "Extra", });
     internal_static_SendMsgResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_SendMsgResponse_fieldAccessorTable = new

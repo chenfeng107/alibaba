@@ -28,6 +28,7 @@ public class TokenGrpcImpl extends ReactorTokenGrpc.TokenImplBase {
             info -> {
               // 响应
               return VerifyTokenResponse.newBuilder().setUid(info.getUid()).build();
-            });
+            })
+        .onErrorMap(ErrorMaps::map);
   }
 }
