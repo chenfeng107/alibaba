@@ -1,4 +1,4 @@
-package cool.houge.rest.controller.token;
+package cool.houge.rest.controller;
 
 import cool.houge.rest.facade.token.TokenFacade;
 import cool.houge.rest.facade.token.TokenInput;

@@ -1,4 +1,4 @@
-package cool.houge.rest.controller.user;
+package cool.houge.rest.controller;
 
 import cool.houge.rest.facade.user.UserFacade;
 import cool.houge.rest.facade.user.UserInput;

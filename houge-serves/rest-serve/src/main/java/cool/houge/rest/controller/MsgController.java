@@ -1,4 +1,4 @@
-package cool.houge.rest.controller.msg;
+package cool.houge.rest.controller;
 
 import am.ik.yavi.builder.ValidatorBuilder;
 import am.ik.yavi.core.ConstraintViolationsException;
