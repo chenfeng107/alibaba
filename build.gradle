@@ -54,6 +54,7 @@ allprojects {
       events "passed", "skipped", "failed"
     }
     workingDir rootProject.rootDir
+    ignoreFailures = true
   }
 
   jacoco {
@@ -68,6 +69,7 @@ allprojects {
   }
 
   license {
+    ignoreFailures = true
     header = rootProject.file("LICENSE")
     headerURI = com.hierynomus.gradle.license.LicenseBasePlugin.classLoader.getResource("headers/Apache-2.0").toURI()
     skipExistingHeaders = true

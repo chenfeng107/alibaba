@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.constants;
+package cool.houge.infra.constants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cool.houge.domain.constants.MessageReadStatus;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@link MessageContentType} 单元测试.
+ * {@link MessageReadStatus} 单元测试.
  *
  * @author KK (kzou227@qq.com)
  */
-class MessageContentTypeTest {
+class MessageReadStatusTest {
 
   @Test
   void forCode() {
-    for (MessageContentType value : MessageContentType.values()) {
-      assertThat(MessageContentType.forCode(value.getCode())).isEqualTo(value);
+    for (MessageReadStatus value : MessageReadStatus.values()) {
+      assertThat(MessageReadStatus.forCode(value.getCode())).isEqualTo(value);
     }
-    assertThat(MessageContentType.forCode(null)).isEqualTo(MessageContentType.UNRECOGNIZED);
-    assertThat(MessageContentType.forCode(9999)).isEqualTo(MessageContentType.UNRECOGNIZED);
+    assertThat(MessageReadStatus.forCode(null)).isEqualTo(MessageReadStatus.UNRECOGNIZED);
+    assertThat(MessageReadStatus.forCode(9999)).isEqualTo(MessageReadStatus.UNRECOGNIZED);
   }
 }
