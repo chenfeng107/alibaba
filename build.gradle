@@ -135,8 +135,7 @@ allprojects {
       dependency("org.openjdk.jmh:jmh-core:1.33")
       dependency("org.openjdk.jmh:jmh-generator-annprocess:1.33")
       dependency("org.assertj:assertj-core:3.20.2")
-      dependency("org.mockito:mockito-core:3.12.4")
-      dependency("org.mockito:mockito-inline:3.12.4")
+      dependency("org.mockito:mockito-junit-jupiter:4.2.0")
     }
   }
 
@@ -159,8 +158,8 @@ allprojects {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.projectreactor:reactor-tools")
     testImplementation("org.assertj:assertj-core")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.mockito:mockito-inline")
+
+    testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("com.github.javafaker:javafaker")
 
     jmh("org.openjdk.jmh:jmh-core")
