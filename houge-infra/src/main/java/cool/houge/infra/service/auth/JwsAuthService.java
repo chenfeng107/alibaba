@@ -26,7 +26,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.annotations.VisibleForTesting;
-import cool.houge.BizCodes;
+import cool.houge.domain.BizCodes;
 import cool.houge.domain.service.auth.AuthContext;
 import cool.houge.domain.service.auth.AuthService;
 import cool.houge.domain.service.auth.TokenService;

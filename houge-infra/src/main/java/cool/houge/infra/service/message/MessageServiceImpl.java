@@ -15,7 +15,7 @@
  */
 package cool.houge.infra.service.message;
 
-import cool.houge.constants.MessageReadStatus;
+import cool.houge.domain.constants.MessageReadStatus;
 import cool.houge.domain.Paging;
 import cool.houge.domain.model.Message;
 import cool.houge.domain.repository.message.MessageQueryRepository;

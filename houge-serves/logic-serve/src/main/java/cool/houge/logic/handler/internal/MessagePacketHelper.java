@@ -15,7 +15,7 @@
  */
 package cool.houge.logic.handler.internal;
 
-import cool.houge.constants.MessageKind;
+import cool.houge.domain.constants.MessageKind;
 import cool.houge.logic.packet.MessagePacket;
 import cool.houge.model.Message;
 

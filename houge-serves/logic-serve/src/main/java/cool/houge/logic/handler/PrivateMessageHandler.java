@@ -17,8 +17,8 @@ package cool.houge.logic.handler;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
-import cool.houge.BizCodes;
-import cool.houge.constants.MessageContentType;
+import cool.houge.domain.BizCodes;
+import cool.houge.domain.constants.MessageContentType;
 import cool.houge.id.MessageIdGenerator;
 import cool.houge.logic.agent.PacketSender;
 import cool.houge.logic.handler.internal.MessagePacketHelper;

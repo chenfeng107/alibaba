@@ -15,8 +15,8 @@
  */
 package cool.houge.logic.packet;
 
-import cool.houge.constants.MessageContentType;
-import cool.houge.constants.MessageKind;
+import cool.houge.domain.constants.MessageContentType;
+import cool.houge.domain.constants.MessageKind;
 
 /**
  * 聊天消息包接口.

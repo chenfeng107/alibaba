@@ -16,7 +16,7 @@
 package cool.houge.rest.controller.message;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import cool.houge.constants.MessageContentType;
+import cool.houge.domain.constants.MessageContentType;
 import lombok.Data;
 
 /** @author KK (kzou227@qq.com) */

@@ -16,7 +16,7 @@
 package cool.houge.domain.service.message;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import cool.houge.constants.MessageContentType;
+import cool.houge.domain.constants.MessageContentType;
 import lombok.Builder;
 import lombok.Value;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 the original author or authors
+ * Copyright 2019-2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.model;
+package cool.houge.domain.constants;
 
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+/**
+ * 在字段集中使用的枚举值或数值值描述符的接口.
+ *
+ * @author KK (kzou227@qq.com)
+ */
+public interface EnumLite {
 
-/** 群组成员关系. */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GroupMember {
-
-  /** 群组 ID. */
-  private Long gid;
-  /** 用户 ID. */
-  private Long uid;
-  /** 创建时间. */
-  private LocalDateTime createTime;
+  /**
+   * 返回枚举数值.
+   *
+   * @return 数值
+   */
+  int getCode();
 }

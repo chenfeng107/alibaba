@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge;
+package cool.houge.domain;
 
 import top.yein.chaos.biz.BizCode;
 

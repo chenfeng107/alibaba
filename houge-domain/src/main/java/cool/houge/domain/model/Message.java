@@ -15,7 +15,7 @@
  */
 package cool.houge.domain.model;
 
-import cool.houge.constants.MessageReadStatus;
+import cool.houge.domain.constants.MessageReadStatus;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

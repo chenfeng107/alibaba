@@ -49,7 +49,7 @@ import reactor.util.context.Context;
 import top.yein.chaos.biz.BizCode;
 import top.yein.chaos.biz.BizCodeException;
 import cool.houge.domain.service.auth.AuthContext;
-import cool.houge.BizCodes;
+import cool.houge.domain.BizCodes;
 import cool.houge.util.JsonUtils;
 
 /** @author KK (kzou227@qq.com) */

@@ -17,7 +17,7 @@ package cool.houge.logic.packet;
 
 import lombok.Setter;
 import lombok.ToString;
-import cool.houge.constants.MessageContentType;
+import cool.houge.domain.constants.MessageContentType;
 
 /**
  * 通用的消息包.
