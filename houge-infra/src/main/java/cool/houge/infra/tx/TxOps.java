@@ -35,7 +35,7 @@ public class TxOps {
    * @return
    */
   public <T> Mono<T> tx(Mono<T> p) {
-    return tx(Flux.from(p)).singleOrEmpty();
+    return p.as(Flux::from).as(this::tx).singleOrEmpty();
   }
 
   /**

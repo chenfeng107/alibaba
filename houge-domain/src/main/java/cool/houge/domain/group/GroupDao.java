@@ -12,17 +12,6 @@ public interface GroupDao {
    */
   Mono<Integer> insert(Group m);
 
-  /**
-   * @param gid
-   * @param uid
-   * @return
-   */
-  Mono<Integer> joinMember(int gid, int uid);
-
-  /**
-   * @param gid
-   * @param uid
-   * @return
-   */
-  Mono<Integer> removeMember(int gid, int uid);
+  /** @param m@return */
+  Mono<Integer> updateMemberUids(Group m);
 }
