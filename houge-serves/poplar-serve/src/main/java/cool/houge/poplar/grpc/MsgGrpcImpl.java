@@ -1,8 +1,8 @@
 package cool.houge.poplar.grpc;
 
 import cool.houge.domain.model.Group;
-import cool.houge.domain.model.Msg;
 import cool.houge.domain.model.User;
+import cool.houge.domain.model.UserMsg;
 import cool.houge.domain.msg.MsgService;
 import cool.houge.grpc.BrokerMsg;
 import cool.houge.grpc.CreateMsgIdRequest;
@@ -77,12 +77,12 @@ public class MsgGrpcImpl extends ReactorMsgGrpc.MsgImplBase {
     }
 
     var msg =
-        new Msg()
+        new UserMsg()
             .setId(req.getMsgId())
-            .setKind(kind.getNumber())
-            .setSender(new User().setId(req.getFrom()))
-            .setReceiver(receiver)
-            .setGroup(group)
+            //            .setKind(kind.getNumber())
+            .setSend(new User().setId(req.getFrom()))
+            .setRec(receiver)
+            //            .setGroup(group)
             .setContent(req.getContent())
             .setContentType(req.getContentTypeValue())
             .setExtra(req.getExtra());
