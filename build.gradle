@@ -127,6 +127,7 @@ allprojects {
       dependency("io.lettuce:lettuce-core:6.1.4.RELEASE")
       dependency("com.auth0:java-jwt:3.18.1")
       dependency("org.roaringbitmap:RoaringBitmap:0.9.16")
+      dependency("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
 
       // 测试工具
       dependency("com.github.javafaker:javafaker:1.0.2")

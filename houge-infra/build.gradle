@@ -108,6 +108,8 @@ dependencies {
   protobuf(project(":houge-proto"))
   api(project(":houge-domain"))
   api("io.r2dbc:r2dbc-postgresql")
+  api("dev.miku:r2dbc-mysql")
+
   api("io.r2dbc:r2dbc-pool")
   api("com.github.ben-manes.caffeine:caffeine")
   api("org.roaringbitmap:RoaringBitmap")
