@@ -18,7 +18,6 @@ package cool.houge.ws.main;
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cool.houge.util.AppShutdownHelper;
 import cool.houge.ws.agent.AgentServiceManager;
 import cool.houge.ws.module.WsModule;
 import cool.houge.ws.server.WsServer;
@@ -34,7 +33,6 @@ public class WsMain implements Runnable {
 
   private static final Logger log = LogManager.getLogger();
   private static final String CONFIG_FILE = "houge-ws.conf";
-  private final AppShutdownHelper shutdownHelper = new AppShutdownHelper();
 
   public static void main(String[] args) {
     new WsMain().run();
@@ -52,12 +50,23 @@ public class WsMain implements Runnable {
     var wsServer = injector.getInstance(WsServer.class);
     wsServer.start();
 
-    shutdownHelper
-        // 停止 WS 服务
-        .addCallback(wsServer::stop)
-        // 停止 Agent 服务管理器
-        .addCallback(agentServiceManager::stop)
-        .run();
+    // 停止服务的勾子
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(
+                () -> {
+                  try {
+                    wsServer.stop();
+                  } catch (Exception e) {
+                    log.error("停止WebSocket服务异常", e);
+                  }
+                  try {
+                    agentServiceManager.stop();
+                  } catch (Exception e) {
+                    log.error("停止AgentServiceManager异常", e);
+                  }
+                },
+                "shutdown"));
   }
 
   private Config loadConfig() {
