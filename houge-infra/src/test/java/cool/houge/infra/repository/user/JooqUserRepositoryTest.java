@@ -16,7 +16,7 @@ import reactor.test.StepVerifier;
  *
  * @author KK (kzou227@qq.com)
  */
-class PostgreUserRepositoryTest {
+class JooqUserRepositoryTest {
 
   @Test
   void insert() {
