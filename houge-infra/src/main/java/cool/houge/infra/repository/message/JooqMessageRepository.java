@@ -14,12 +14,12 @@ import org.jooq.DSLContext;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public class PostgreMessageRepository implements MessageRepository, MessageQueryRepository {
+public class JooqMessageRepository implements MessageRepository, MessageQueryRepository {
 
   private final DSLContext dsl;
 
   @Inject
-  public PostgreMessageRepository(DSLContext dsl) {
+  public JooqMessageRepository(DSLContext dsl) {
     this.dsl = dsl;
   }
 
