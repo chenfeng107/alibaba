@@ -18,16 +18,11 @@ package cool.houge.domain.service.group;
 import lombok.Builder;
 import lombok.Value;
 
-/**
- * 创建群组返回对象.
- */
+/** 创建群组返回对象. */
 @Value
 @Builder
-public
-class CreateGroupResult {
+public class CreateGroupResult {
 
-  /**
-   * 群组 ID.
-   */
+  /** 群组 ID. */
   private Long gid;
 }

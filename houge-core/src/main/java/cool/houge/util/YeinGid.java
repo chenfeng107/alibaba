@@ -65,7 +65,8 @@ public class YeinGid {
   private static final int CURRENT_VERSION = 1;
 
   private static final int SEQ_BOUND = SEQ_MASK + 1;
-  private static final AtomicInteger SEQUENCE = new AtomicInteger(new SecureRandom().nextInt(SEQ_MASK));
+  private static final AtomicInteger SEQUENCE =
+      new AtomicInteger(new SecureRandom().nextInt(SEQ_MASK));
 
   private int version;
   private int timestamp;

@@ -26,9 +26,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
 /** @author KK (kzou227@qq.com) */
-@Mapper(
-  nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT
-)
+@Mapper(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface MessageMapper {
 
   MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);

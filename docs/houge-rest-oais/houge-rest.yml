@@ -18,13 +18,13 @@ tags:
     description: IM 消息
 x-tagGroups:
   - name: 支撑
-    tags: [SUPPORT]
+    tags: [ SUPPORT ]
   - name: 消息
-    tags: [MESSAGE]
+    tags: [ MESSAGE ]
 paths:
   /-/info:
     get:
-      tags: [SUPPORT]
+      tags: [ SUPPORT ]
       summary: 应用信息
       responses:
         "200":
@@ -34,7 +34,7 @@ paths:
               example: { "app": { "name": "houge-rest", "version": "unknown", "fid": 98847 }, "java": { "version": "11.0.8", "vendor": "Oracle Corporation" } }
   /-/health:
     get:
-      tags: [SUPPORT]
+      tags: [ SUPPORT ]
       summary: 应用健康状况
       responses:
         "200":
@@ -52,8 +52,8 @@ paths:
           type: integer
           format: int64
     post:
-      tags: [SUPPORT]
-      security: [Basic:[]]
+      tags: [ SUPPORT ]
+      security: [ Basic: [ ] ]
       summary: 为指定用户生成访问令牌
       responses:
         "200":
@@ -70,8 +70,8 @@ paths:
                     description: 可用于访问 IM 系统接口的认证令牌
   /i/users:
     post:
-      tags: [SUPPORT]
-      security: [Basic:[]]
+      tags: [ SUPPORT ]
+      security: [ Basic: [ ] ]
       summary: 创建用户
       description: |
         在 Houge 系统中创建可用于聊天的用户。
@@ -110,8 +110,8 @@ paths:
                     description: 全局唯一的用户 ID
   /i/groups:
     post:
-      tags: [SUPPORT]
-      security: [Basic:[]]
+      tags: [ SUPPORT ]
+      security: [ Basic: [ ] ]
       summary: 创建群组
       description: |
         在 Houge 系统中创建可用于多人聊天的群组，群组创建成功后创建者（`creator_id`）将自动加入为该群的成员。
@@ -157,8 +157,8 @@ paths:
           type: integer
           format: int64
     delete:
-      tags: [SUPPORT]
-      security: [Basic:[]]
+      tags: [ SUPPORT ]
+      security: [ Basic: [ ] ]
       summary: 删除指定的群组
       description: |
         删除指定群组并解除群成员关系。
@@ -175,8 +175,8 @@ paths:
           type: integer
           format: int64
     put:
-      tags: [SUPPORT]
-      security: [Basic:[]]
+      tags: [ SUPPORT ]
+      security: [ Basic: [ ] ]
       summary: 将用户添加为指定群组的成员
       requestBody:
         content:
@@ -194,8 +194,8 @@ paths:
         "204":
           description: OK
     delete:
-      tags: [SUPPORT]
-      security: [Basic:[]]
+      tags: [ SUPPORT ]
+      security: [ Basic: [ ] ]
       summary: 将用户与指定群组的成员关系解除
       requestBody:
         content:
@@ -223,8 +223,8 @@ paths:
             format: int32
             minimum: 1
             maximum: 100
-      tags: [MESSAGE]
-      security: [AccessToken:[]]
+      tags: [ MESSAGE ]
+      security: [ AccessToken: [ ] ]
       summary: 获取 IM 消息 ID
       description: |
         返回 IM 消息 ID 列表，该列表中的 ID 用于在后续聊天消息中使用，每个 ID 仅可使用一次。
@@ -240,8 +240,8 @@ paths:
                   description: IM 消息 ID
   /p/messages:
     get:
-      tags: [MESSAGE]
-      security: [AccessToken:[]]
+      tags: [ MESSAGE ]
+      security: [ AccessToken: [ ] ]
       summary: 获取指定时间以后的消息
       description: |
         如果返回的消息数组的长度小于 `limit` 请求查询参数值，则代表服务端没有更多的消息不需要继续查询，反之则
@@ -281,8 +281,8 @@ paths:
                   $ref: "#/components/schemas/Message"
   /p/messages/send/user:
     post:
-      tags: [MESSAGE]
-      security: [AccessToken:[]]
+      tags: [ MESSAGE ]
+      security: [ AccessToken: [ ] ]
       summary: 发送用户消息
       requestBody:
         content:
@@ -305,7 +305,7 @@ paths:
                   type: integer
                   format: int32
                   default: 0
-                  enum: [0, 1, 2, 3]
+                  enum: [ 0, 1, 2, 3 ]
                   description: |
                     消息内容类型
                     - `0` 普通文本消息
@@ -332,8 +332,8 @@ paths:
                     example: 7K7KJKK56K23OMY
   /p/messages/send/group:
     post:
-      tags: [MESSAGE]
-      security: [AccessToken:[]]
+      tags: [ MESSAGE ]
+      security: [ AccessToken: [ ] ]
       summary: 发送群组消息
       requestBody:
         content:
@@ -356,7 +356,7 @@ paths:
                   type: integer
                   format: int32
                   default: 0
-                  enum: [0, 1, 2, 3]
+                  enum: [ 0, 1, 2, 3 ]
                   description: |
                     消息内容类型
                     - `0` 普通文本消息
@@ -383,8 +383,8 @@ paths:
                     example: 7K7KJKK56K23OMY
   /p/messages/read:
     put:
-      tags: [MESSAGE]
-      security: [AccessToken:[]]
+      tags: [ MESSAGE ]
+      security: [ AccessToken: [ ] ]
       summary: 批量更新消息已读状态
       requestBody:
         content:
@@ -441,7 +441,7 @@ components:
           description: 消息接收群组 ID
         kind:
           type: integer
-          enum: [0, 1]
+          enum: [ 0, 1 ]
           default: 0
           description: |
             消息类型
@@ -454,7 +454,7 @@ components:
           type: integer
           format: int32
           default: 0
-          enum: [0, 1, 2, 3]
+          enum: [ 0, 1, 2, 3 ]
           description: |
             消息内容类型
             - `0` 普通文本消息
@@ -467,7 +467,7 @@ components:
         unread:
           type: integer
           default: 0
-          enum: [0, 1]
+          enum: [ 0, 1 ]
           description: |
             消息是否未读
             - `0` 已读

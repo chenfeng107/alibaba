@@ -18,16 +18,11 @@ package cool.houge.domain.service.user;
 import lombok.Builder;
 import lombok.Value;
 
-/**
- * 创建用户.
- */
+/** 创建用户. */
 @Value
 @Builder
-public
-class CreateUserResult {
+public class CreateUserResult {
 
-  /**
-   * 用户ID.
-   */
+  /** 用户ID. */
   private Long uid;
 }

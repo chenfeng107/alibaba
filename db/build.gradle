@@ -17,7 +17,7 @@ task buildImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
   group "docker"
   inputDir = projectDir
   images.addAll(
-    "kevin70/${rootProject.name}-db-migration:latest".toString(),
-    "kevin70/${rootProject.name}-db-migration:${version}".toString()
+      "kevin70/${rootProject.name}-db-migration:latest".toString(),
+      "kevin70/${rootProject.name}-db-migration:${version}".toString()
   )
 }

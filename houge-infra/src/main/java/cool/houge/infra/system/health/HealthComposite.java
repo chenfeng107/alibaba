@@ -34,8 +34,7 @@ import lombok.ToString;
 public class HealthComposite {
 
   /** 应用健康状况. */
-  @JsonUnwrapped
-  private HealthStatus status;
+  @JsonUnwrapped private HealthStatus status;
   /** 应用所有组件健康状况. */
   private Collection<Health> components;
 }

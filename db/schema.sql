@@ -1,1 +1,2 @@
-create database houge;
+create
+database houge;

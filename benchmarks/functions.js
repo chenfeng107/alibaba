@@ -1,4 +1,4 @@
-module.exports = { createTestMessage };
+module.exports = {createTestMessage};
 
 function createTestMessage(userContext, events, done) {
   // const to = Math.floor(Math.random() * 100000) + 1;

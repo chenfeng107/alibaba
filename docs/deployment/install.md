@@ -31,6 +31,7 @@ docker-compose up -d
 ```
 
 ### 查看日志
+
 ```
 $ docker logs tethys-server-logic
 exec java -XX:+ExitOnOutOfMemoryError -cp . -jar /app/app.jar
@@ -58,6 +59,5 @@ exec java -XX:+ExitOnOutOfMemoryError -cp . -jar /app/app.jar
 
 07:01:05.520 [main] INFO  WsServer 70 - WS服务启动成功 [/0.0.0.0:11010]
 ```
-
 
 使用 `docker logs` 命令查看 Houge 服务日志，当有上面的日志打印时代表 Houge 服务已启动成功。

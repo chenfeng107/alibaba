@@ -29,7 +29,7 @@
     </Console>
 
     <RollingRandomAccessFile name="InfoFile" fileName="${logDir}/info.log"
-      filePattern="${logDir}/info-%d{yyyyMMdd}-%i.gz">
+        filePattern="${logDir}/info-%d{yyyyMMdd}-%i.gz">
       <PatternLayout pattern="${pattern}"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="${logFileMaxSize}"/>
@@ -49,7 +49,7 @@
     </RollingRandomAccessFile>
 
     <RollingRandomAccessFile name="ErrorFile" fileName="${logDir}/error.log"
-      filePattern="${logDir}/error-%d{yyyyMMdd}-%i.gz">
+        filePattern="${logDir}/error-%d{yyyyMMdd}-%i.gz">
       <PatternLayout pattern="${pattern}"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="${logFileMaxSize}"/>

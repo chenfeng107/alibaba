@@ -31,13 +31,12 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
   @Override
   public Flux<Message> queryByUser(UserMessageQuery q, Paging paging) {
     Flux.from(
-        dsl.select(MESSAGE.fields())
-          .from(USER_MESSAGE)
-          .leftJoin(MESSAGE)
-          .on(USER_MESSAGE.MESSAGE_ID.eq(MESSAGE.ID))
-          .where(USER_MESSAGE.UID.eq(q.getUid()))
-      )
-      .map(r -> r.into(MESSAGE));
+            dsl.select(MESSAGE.fields())
+                .from(USER_MESSAGE)
+                .leftJoin(MESSAGE)
+                .on(USER_MESSAGE.MESSAGE_ID.eq(MESSAGE.ID))
+                .where(USER_MESSAGE.UID.eq(q.getUid())))
+        .map(r -> r.into(MESSAGE));
     return null;
   }
 

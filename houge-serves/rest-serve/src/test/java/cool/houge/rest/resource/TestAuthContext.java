@@ -36,5 +36,4 @@ public class TestAuthContext implements AuthContext {
   public String token() {
     return Long.toHexString(uid);
   }
-
 }

@@ -1,4 +1,4 @@
-///*
+/// *
 // * Copyright 2019-2021 the original author or authors
 // *
 // * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,25 +13,25 @@
 // * See the License for the specific language governing permissions and
 // * limitations under the License.
 // */
-//package cool.houge.rest.controller.group;
+// package cool.houge.rest.controller.group;
 //
-//import cool.houge.rest.controller.Interceptors;
-//import cool.houge.rest.controller.RoutingService;
-//import cool.houge.rest.http.AbstractRestSupport;
-//import cool.houge.service.group.CreateGroupInput;
-//import cool.houge.service.group.GroupService;
-//import javax.inject.Inject;
-//import reactor.core.publisher.Mono;
-//import reactor.netty.http.server.HttpServerRequest;
-//import reactor.netty.http.server.HttpServerResponse;
-//import reactor.netty.http.server.HttpServerRoutes;
+// import cool.houge.rest.controller.Interceptors;
+// import cool.houge.rest.controller.RoutingService;
+// import cool.houge.rest.http.AbstractRestSupport;
+// import cool.houge.service.group.CreateGroupInput;
+// import cool.houge.service.group.GroupService;
+// import javax.inject.Inject;
+// import reactor.core.publisher.Mono;
+// import reactor.netty.http.server.HttpServerRequest;
+// import reactor.netty.http.server.HttpServerResponse;
+// import reactor.netty.http.server.HttpServerRoutes;
 //
-///**
+/// **
 // * 群组 REST 接口.
 // *
 // * @author KK (kzou227@qq.com)
 // */
-//public class GroupController extends AbstractRestSupport implements RoutingService {
+// public class GroupController extends AbstractRestSupport implements RoutingService {
 //
 //  /** Path 参数名称. */
 //  private static final String GROUP_ID_PN = "groupId";
@@ -123,4 +123,4 @@
 //              return Mono.empty();
 //            });
 //  }
-//}
+// }
