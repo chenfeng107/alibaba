@@ -88,6 +88,10 @@ jooq {
                     transform = "PASCAL"
                     expression = '$1'
                   }
+                  recordClass {
+                    transform = "PASCAL"
+                    expression = '$1_RECORD'
+                  }
                 }
               }
             }
