@@ -2,12 +2,11 @@ package cool.houge.infra.repository.jwt;
 
 import cool.houge.domain.model.JwtSecret;
 import cool.houge.infra.db.tables.records.JwtSecretRecord;
-import java.util.Arrays;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-08-27T16:49:54+0800",
+    date = "2022-01-07T18:37:54+0800",
     comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 11.0.8 (Oracle Corporation)"
 )
 public class JwtSecretMapperImpl implements JwtSecretMapper {
@@ -22,10 +21,6 @@ public class JwtSecretMapperImpl implements JwtSecretMapper {
 
         jwtSecretRecord.setId( model.getId() );
         jwtSecretRecord.setAlgorithm( model.getAlgorithm() );
-        byte[] secretKey = model.getSecret();
-        if ( secretKey != null ) {
-            jwtSecretRecord.setSecretKey( Arrays.copyOf( secretKey, secretKey.length ) );
-        }
         jwtSecretRecord.setDeleted( model.getDeleted() );
 
         return jwtSecretRecord;
@@ -41,10 +36,6 @@ public class JwtSecretMapperImpl implements JwtSecretMapper {
 
         jwtSecret.setId( record.getId() );
         jwtSecret.setAlgorithm( record.getAlgorithm() );
-        byte[] secretKey = record.getSecretKey();
-        if ( secretKey != null ) {
-            jwtSecret.setSecret( Arrays.copyOf( secretKey, secretKey.length ) );
-        }
         if ( record.getDeleted() != null ) {
             jwtSecret.setDeleted( record.getDeleted() );
         }

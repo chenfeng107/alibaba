@@ -16,7 +16,6 @@
 package cool.houge.infra.service.user;
 
 import cool.houge.Nil;
-import cool.houge.domain.model.User;
 import cool.houge.domain.repository.user.UserQueryRepository;
 import cool.houge.domain.repository.user.UserRepository;
 import cool.houge.domain.service.user.CreateUserInput;
@@ -54,10 +53,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Mono<CreateUserResult> create(CreateUserInput in) {
-    return userRepository
-        .insert(new User().setId(in.getUid()).setOriginUid(in.getOriginUid()))
-        .doOnSuccess(id -> updateUidBits(id, true))
-        .map(id -> CreateUserResult.builder().uid(id).build());
+    //    return userRepository
+    //        .insert(new User().setId(in.getUid()).setOriginUid(in.getOriginUid()))
+    //        .doOnSuccess(id -> updateUidBits(id, true))
+    //        .map(id -> CreateUserResult.builder().uid(id).build());
+    return Mono.empty();
   }
 
   @Override

@@ -34,7 +34,6 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
             .setHostAddress("127.0.0.1")
             .setOsName("Linux")
             .setOsVersion("5.1")
-            .setOsArch("x86_64")
             .setOsUser("root")
             .setJavaVmName("OpenJDK")
             .setJavaVmVersion("11")
@@ -58,7 +57,6 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
             .setHostAddress("127.0.0.1")
             .setOsName("Linux")
             .setOsVersion("5.1")
-            .setOsArch("x86_64")
             .setOsUser("root")
             .setJavaVmName("OpenJDK")
             .setJavaVmVersion("11")
@@ -79,7 +77,6 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
             .setHostAddress("127.0.0.1")
             .setOsName("Linux")
             .setOsVersion("5.1")
-            .setOsArch("x86_64")
             .setOsUser("root")
             .setJavaVmName("OpenJDK")
             .setJavaVmVersion("11")
@@ -103,7 +100,6 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
             .setHostAddress("127.0.0.1")
             .setOsName("Linux")
             .setOsVersion("5.1")
-            .setOsArch("x86_64")
             .setOsUser("root")
             .setJavaVmName("OpenJDK")
             .setJavaVmVersion("11")
@@ -122,7 +118,6 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
                       s.assertThat(dbModel.getHostAddress()).isEqualTo(model.getHostAddress());
                       s.assertThat(dbModel.getOsName()).isEqualTo(model.getOsName());
                       s.assertThat(dbModel.getOsVersion()).isEqualTo(model.getOsVersion());
-                      s.assertThat(dbModel.getOsArch()).isEqualTo(model.getOsArch());
                       s.assertThat(dbModel.getOsUser()).isEqualTo(model.getOsUser());
                       s.assertThat(dbModel.getJavaVmName()).isEqualTo(model.getJavaVmName());
                       s.assertThat(dbModel.getJavaVmVersion()).isEqualTo(model.getJavaVmVersion());

@@ -16,7 +16,6 @@
 package cool.houge.infra.service.group;
 
 import cool.houge.Nil;
-import cool.houge.domain.model.Group;
 import cool.houge.domain.repository.group.GroupQueryRepository;
 import cool.houge.domain.repository.group.GroupRepository;
 import cool.houge.domain.service.group.CreateGroupInput;
@@ -58,17 +57,18 @@ public class GroupServiceImpl implements GroupService {
 
   @Override
   public Mono<CreateGroupResult> create(CreateGroupInput in) {
-    var entity =
-        new Group()
-            .setId(in.getGid())
-            // FIXME
-            //            .creatorId(in.getCreatorId())
-            //            .ownerId(in.getCreatorId())
-            .setMemberSize(1);
-    return groupRepository
-        .insert(entity)
-        .doOnSuccess(id -> this.updateGidBits(id, true))
-        .map(id -> CreateGroupResult.builder().gid(id).build());
+    return Mono.empty();
+    //    var entity =
+    //        new Group()
+    //            .setId(in.getGid())
+    //            // FIXME
+    //            //            .creatorId(in.getCreatorId())
+    //            //            .ownerId(in.getCreatorId())
+    //            .setMemberSize(1);
+    //    return groupRepository
+    //        .insert(entity)
+    //        .doOnSuccess(id -> this.updateGidBits(id, true))
+    //        .map(id -> CreateGroupResult.builder().gid(id).build());
   }
 
   @Override

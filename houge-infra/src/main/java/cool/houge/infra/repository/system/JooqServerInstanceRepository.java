@@ -49,7 +49,6 @@ public class JooqServerInstanceRepository implements ServerInstanceRepository {
             .setHostAddress(model.getHostAddress())
             .setOsName(model.getOsName())
             .setOsVersion(model.getOsVersion())
-            .setOsArch(model.getOsArch())
             .setOsUser(model.getOsUser())
             .setJavaVmName(model.getJavaVmName())
             .setJavaVmVersion(model.getJavaVmVersion())

@@ -15,11 +15,10 @@
  */
 package cool.houge.rest.controller.user;
 
-import cool.houge.rest.http.AbstractRestSupport;
+import cool.houge.domain.user.UserService;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
-import cool.houge.service.user.CreateUserInput;
-import cool.houge.service.user.UserService;
+import cool.houge.rest.http.AbstractRestSupport;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServerRequest;
@@ -58,7 +57,9 @@ public class UserController extends AbstractRestSupport implements RoutingServic
    * @return RS
    */
   Mono<Void> createUser(HttpServerRequest request, HttpServerResponse response) {
-    return json(request, CreateUserInput.class)
-        .flatMap(vo -> userService.create(vo).flatMap(dto -> json(response, dto)));
+    // FIXME
+    //    return json(request, CreateUserInput.class)
+    //        .flatMap(vo -> userService.create(vo).flatMap(dto -> json(response, dto)));
+    return Mono.empty();
   }
 }

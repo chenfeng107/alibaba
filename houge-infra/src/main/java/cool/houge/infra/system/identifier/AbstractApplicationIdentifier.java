@@ -159,7 +159,6 @@ public abstract class AbstractApplicationIdentifier implements ApplicationIdenti
     e.setHostAddress(inetAddress.getHostAddress());
     e.setOsName(System.getProperty("os.name"));
     e.setOsVersion(System.getProperty("os.version"));
-    e.setOsArch(System.getProperty("os.arch"));
     e.setOsUser(System.getProperty("user.name"));
     e.setJavaVmName(System.getProperty("java.vm.name"));
     e.setJavaVmVersion(System.getProperty("java.vm.version"));

@@ -6,7 +6,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-08-27T16:49:53+0800",
+    date = "2022-01-07T18:37:54+0800",
     comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 11.0.8 (Oracle Corporation)"
 )
 class UserRecordMapperImpl implements UserRecordMapper {
@@ -35,10 +35,11 @@ class UserRecordMapperImpl implements UserRecordMapper {
 
         User user = new User();
 
-        user.setId( userRecord.getId() );
+        if ( userRecord.getId() != null ) {
+            user.setId( userRecord.getId().intValue() );
+        }
         user.setOriginUid( userRecord.getOriginUid() );
         user.setCreateTime( userRecord.getCreateTime() );
-        user.setUpdateTime( userRecord.getUpdateTime() );
 
         return user;
     }

@@ -24,13 +24,14 @@ public class JooqUserRepository implements UserRepository, UserQueryRepository {
 
   @Override
   public Mono<Long> insert(User model) {
-    return Mono.just(model.getId())
-        .switchIfEmpty(nextId())
-        .flatMap(
-            id -> {
-              var record = UserRecordMapper.INSTANCE.toRecord(id, model);
-              return Mono.from(dsl.insertInto(USER).set(record)).thenReturn(id);
-            });
+    //    return Mono.just(model.getId())
+    //        .switchIfEmpty(nextId())
+    //        .flatMap(
+    //            id -> {
+    //              var record = UserRecordMapper.INSTANCE.toRecord(id, model);
+    //              return Mono.from(dsl.insertInto(USER).set(record)).thenReturn(id);
+    //            });
+    return Mono.empty();
   }
 
   @Override

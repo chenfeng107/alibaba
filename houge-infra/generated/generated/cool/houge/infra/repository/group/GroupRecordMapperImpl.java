@@ -7,7 +7,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-08-27T16:49:54+0800",
+    date = "2022-01-07T18:37:54+0800",
     comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 11.0.8 (Oracle Corporation)"
 )
 public class GroupRecordMapperImpl implements GroupRecordMapper {
@@ -22,7 +22,9 @@ public class GroupRecordMapperImpl implements GroupRecordMapper {
 
         group.setOwner( groupRecordToUser( record ) );
         group.setCreator( groupRecordToUser1( record ) );
-        group.setId( record.getId() );
+        if ( record.getId() != null ) {
+            group.setId( record.getId().intValue() );
+        }
         group.setMemberSize( record.getMemberSize() );
         group.setCreateTime( record.getCreateTime() );
         group.setUpdateTime( record.getUpdateTime() );
@@ -37,7 +39,9 @@ public class GroupRecordMapperImpl implements GroupRecordMapper {
 
         User user = new User();
 
-        user.setId( groupRecord.getOwnerId() );
+        if ( groupRecord.getOwnerId() != null ) {
+            user.setId( groupRecord.getOwnerId().intValue() );
+        }
 
         return user;
     }
@@ -49,7 +53,9 @@ public class GroupRecordMapperImpl implements GroupRecordMapper {
 
         User user = new User();
 
-        user.setId( groupRecord.getCreatorId() );
+        if ( groupRecord.getCreatorId() != null ) {
+            user.setId( groupRecord.getCreatorId().intValue() );
+        }
 
         return user;
     }

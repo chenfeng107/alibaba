@@ -8,8 +8,6 @@ import cool.houge.domain.model.Msg;
 import cool.houge.domain.repository.message.MessageQueryRepository;
 import cool.houge.domain.repository.message.MessageRepository;
 import cool.houge.domain.repository.message.UserMessageQuery;
-import cool.houge.infra.db.tables.records.MessageRecord;
-import cool.houge.infra.db.tables.records.UserMessageRecord;
 import java.util.List;
 import javax.inject.Inject;
 import org.jooq.DSLContext;
@@ -27,37 +25,39 @@ public class JooqMessageRepository implements MessageRepository, MessageQueryRep
 
   @Override
   public Mono<Void> insert(Msg entity, List<Long> uids) {
-    var record =
-        new MessageRecord()
-            .setId(entity.getId())
-            .setKind(entity.getKind().shortValue())
-            .setSenderId(entity.getSender().getId())
-            .setContent(entity.getContent())
-            .setContentType(entity.getContentType().shortValue())
-            .setExtraArgs(entity.getExtra());
-    if (entity.getReceiver() != null) {
-      record.setReceiverId(entity.getReceiver().getId());
-    }
-    if (entity.getGroup() != null) {
-      record.setGroupId(entity.getGroup().getId());
-    }
-
-    // 用户消息关联关系
-    var userMessageRecords = new UserMessageRecord[uids.size()];
-    for (int i = 0; i < uids.size(); i++) {
-      userMessageRecords[i] =
-          new UserMessageRecord().setUid(uids.get(i)).setMessageId(entity.getId());
-    }
-
-    return Mono.from(
-            dsl.insertInto(MESSAGE).set(record)
-            //
-            )
-        .then(
-            Mono.from(dsl.batchInsert(userMessageRecords))
-            //
-            )
-        .then();
+    //    var record =
+    //        new MessageRecord()
+    //            .setId(entity.getId())
+    //            .setKind(entity.getKind().shortValue())
+    //            .setSenderId(entity.getSender().getId())
+    //            .setContent(entity.getContent())
+    //            .setContentType(entity.getContentType().shortValue())
+    //            .setExtraArgs(entity.getExtra());
+    //    if (entity.getReceiver() != null) {
+    //      record.setReceiverId(entity.getReceiver().getId());
+    //    }
+    //    if (entity.getGroup() != null) {
+    //      record.setGroupId(entity.getGroup().getId());
+    //    }
+    //
+    //    // 用户消息关联关系
+    //    var userMessageRecords = new UserMessageRecord[uids.size()];
+    //    for (int i = 0; i < uids.size(); i++) {
+    //      userMessageRecords[i] =
+    //          new UserMessageRecord().setUid(uids.get(i)).setMessageId(entity.getId());
+    //    }
+    //
+    //    return Mono.from(
+    //            dsl.insertInto(MESSAGE).set(record)
+    //            //
+    //            )
+    //        .then(
+    //            Mono.from(dsl.batchInsert(userMessageRecords))
+    //            //
+    //            )
+    //        .then();
+    // FIXME
+    return Mono.empty();
   }
 
   @Override
