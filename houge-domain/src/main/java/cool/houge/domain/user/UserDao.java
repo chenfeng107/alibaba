@@ -17,4 +17,16 @@ public interface UserDao {
    * @return 用户 ID
    */
   Mono<Integer> insert(User m);
+
+  /**
+   * @param m
+   * @return
+   */
+  Mono<Integer> updateGroupIds(User m);
+
+  /**
+   * @param id
+   * @return
+   */
+  Mono<User> get(int id);
 }

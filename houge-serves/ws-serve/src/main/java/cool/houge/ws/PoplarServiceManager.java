@@ -57,7 +57,7 @@ public class PoplarServiceManager {
 
     for (String target : targetList) {
       workers.add(new Worker(target));
-      log.info("初始化Agent通道完成 target={}", target);
+      log.info("初始化Poplar gRPC通道完成 target={}", target);
     }
 
     this.runWorkers();
@@ -87,7 +87,7 @@ public class PoplarServiceManager {
         try {
           worker.run();
         } catch (Exception e) {
-          log.error("运行Worker异常 target={} channel={}", worker.target, worker.channel, e);
+          log.error("Poplar Worker运行异常 target={} channel={}", worker.target, worker.channel, e);
         }
       }
     }

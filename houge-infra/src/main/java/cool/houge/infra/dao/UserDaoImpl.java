@@ -18,6 +18,8 @@ import top.yein.chaos.biz.StacklessBizCodeException;
 public class UserDaoImpl implements UserDao, UserQueryDao {
 
   private final String INSERT_SQL = "INSERT INTO t_user(origin_uid) VALUES($1)";
+  private final String UPDATE_GROUP_IDS_SQL =
+      "UPDATE t_user SET group_ids=$1,ver=ver+1 WHERE id=$2 AND ver=$3";
   private final String GET_SQL = "SELECT * FROM t_user WHERE id=$1";
   private final String EXISTS_SQL = "SELECT 1 FROM t_user WHERE id=$1";
 
@@ -40,7 +42,7 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
             R2dbcDataIntegrityViolationException.class,
             e -> {
               // origin_uid 唯一索引冲突
-              if ("23000".equals(e.getSqlState())) {
+              if ("23505".equals(e.getSqlState())) {
                 return new StacklessBizCodeException(BizCodes.C3000, e.getMessage());
               }
               return e;
@@ -49,7 +51,21 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
   }
 
   @Override
+  public Mono<Integer> updateGroupIds(User m) {
+    return rc.use(
+            spec -> {
+              return spec.sql(UPDATE_GROUP_IDS_SQL)
+                  .bind("$1", m.getGroupIds().toArray(new Integer[] {}))
+                  .bind("$2", m.getId())
+                  .bind("$3", m.getVer())
+                  .rowsUpdated();
+            })
+        .single();
+  }
+
+  @Override
   public Mono<User> get(int id) {
+    // FIXME 是否必须返回？
     return rc.use(spec -> spec.sql(GET_SQL).bind("$1", id).fetch(this::map)).singleOrEmpty();
   }
 
