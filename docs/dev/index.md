@@ -38,3 +38,20 @@ $ git clone https://gitee.com/kk70/houge.git
 
 ![](images/20210413093243.png)
 
+### 安装 PostgreSQL
+
+1. 创建数据卷
+```
+docker volume create pg-data
+```
+
+2. 启动 PostgreSQL 容器
+```
+docker run -d \
+  --name postgres \
+  -e POSTGRES_PASSWORD=123456 \
+  -e PGDATA=/var/lib/postgresql/data/pgdata \
+  -v pg-data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres
+```
