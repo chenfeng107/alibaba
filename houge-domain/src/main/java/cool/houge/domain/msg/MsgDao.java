@@ -1,8 +1,8 @@
 package cool.houge.domain.msg;
 
-import cool.houge.domain.model.Msg;
+import cool.houge.domain.model.GroupMsg;
+import cool.houge.domain.model.UserMsg;
 import java.util.List;
-import java.util.Set;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -10,14 +10,19 @@ public interface MsgDao {
 
   /**
    * @param msg
-   * @param uids
    * @return
    */
-  Mono<Void> insert(Msg msg, Set<Integer> uids);
+  Mono<Integer> insert(UserMsg msg);
+
+  /**
+   * @param msg
+   * @return
+   */
+  Mono<Integer> insert(GroupMsg msg);
 
   /**
    * @param ids
    * @return
    */
-  Mono<Integer> updateUnread(List<String> ids);
+  Mono<Integer> updateUserMsgUnread(List<String> ids);
 }

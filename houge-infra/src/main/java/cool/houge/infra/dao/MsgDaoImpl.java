@@ -1,17 +1,22 @@
 package cool.houge.infra.dao;
 
-import com.google.common.base.Joiner;
-import cool.houge.domain.model.Msg;
+import cool.houge.domain.model.GroupMsg;
+import cool.houge.domain.model.UserMsg;
 import cool.houge.domain.msg.MsgDao;
 import cool.houge.infra.r2dbc.R2dbcClient;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
 public class MsgDaoImpl implements MsgDao {
+
+  private final String INSERT_USER_MSG_SQL =
+      "INSERT INTO t_user_msg(id,send_uid,rec_uid,content,content_type,extra) VALUES($1,$2,$3,$4,$5,$6)";
+  private final String INSERT_GROUP_MSG_SQL =
+      "INSERT INTO t_group_msg(id,send_uid,group_id,content,content_type,extra) VALUES($1,$2,$3,$4,$5,$6)";
+  private final String UPDATE_USER_MSG_UNREAD_SQL =
+      "UPDATE t_user_msg SET unread=$1,update_time=NOW() WHERE id IN ($2)";
 
   private final R2dbcClient rc;
 
@@ -20,62 +25,40 @@ public class MsgDaoImpl implements MsgDao {
   }
 
   @Override
-  public Mono<Void> insert(Msg msg, Set<Integer> uids) {
-    // TIPS: 使用 Mono.when 存在BUG https://github.com/mirromutth/r2dbc-mysql/issues/226
-    // return Mono.when(insert(msg), insertUserMsg(msg.getId(), uids));
-    return insert(msg).then(insertUserMsg(msg.getId(), uids)).then();
+  public Mono<Integer> insert(UserMsg msg) {
+    return rc.use(
+            spec ->
+                spec.sql(INSERT_USER_MSG_SQL)
+                    .bind("$1", msg.getId())
+                    .bind("$2", msg.getSend().getId())
+                    .bind("$3", msg.getRec().getId())
+                    .bind("$4", msg.getContent())
+                    .bind("$5", msg.getContentType())
+                    .bind("$6", msg.getExtra(), String.class)
+                    .rowsUpdated())
+        .single();
   }
 
   @Override
-  public Mono<Integer> updateUnread(List<String> ids) {
+  public Mono<Integer> insert(GroupMsg msg) {
     return rc.use(
             spec ->
-                spec.sql("UPDATE t_msg SET unread=?unread,update_time=NOW() WHERE id IN (?ids)")
-                    .bind("unread", 1)
-                    .bind("ids", Joiner.on(',').join(ids))
+                spec.sql(INSERT_GROUP_MSG_SQL)
+                    .bind("$1", msg.getId())
+                    .bind("$2", msg.getSend().getId())
+                    .bind("$3", msg.getGroup().getId())
+                    .bind("$4", msg.getContent())
+                    .bind("$5", msg.getContentType())
+                    .bind("$6", msg.getExtra(), String.class)
                     .rowsUpdated())
         .single();
   }
 
-  Mono<Integer> insert(Msg m) {
+  @Override
+  public Mono<Integer> updateUserMsgUnread(List<String> ids) {
     return rc.use(
             spec ->
-                spec.sql(
-                        "INSERT INTO t_msg(id,sender_id,receiver_id,group_id,kind,content,content_type,extra)"
-                            + " values(?id,?sender_id,?receiver_id,?group_id,?kind,?content,?content_type,?extra)")
-                    .bind("id", m.getId())
-                    .bind("sender_id", m.getSender().getId())
-                    .bind(
-                        "receiver_id",
-                        m.getReceiver() != null ? m.getReceiver().getId() : null,
-                        Integer.class)
-                    .bind(
-                        "group_id",
-                        m.getGroup() != null ? m.getGroup().getId() : null,
-                        Integer.class)
-                    .bind("kind", m.getKind())
-                    .bind("content", m.getContent())
-                    .bind("content_type", m.getContentType())
-                    .bind("extra", m.getExtra())
-                    .rowsUpdated())
+                spec.sql(UPDATE_USER_MSG_UNREAD_SQL).bind("$1", 1).bind("$2", ids).rowsUpdated())
         .single();
-  }
-
-  Mono<Integer> insertUserMsg(String id, Set<Integer> uids) {
-    var sql = new StringBuilder(128 * uids.size());
-    for (Integer uid : uids) {
-      if (uid == null) {
-        throw new IllegalArgumentException(
-            "正将消息[id:" + id + "]与NULL关联 - uids: " + Arrays.toString(uids.toArray()));
-      }
-
-      sql.append("INSERT INTO user_t_msg(uid,msg_id) VALUES(")
-          .append(uid)
-          .append(",'")
-          .append(uid)
-          .append("'")
-          .append(");");
-    }
-    return rc.use(spec -> spec.sql(sql.toString()).rowsUpdated()).single();
   }
 }
