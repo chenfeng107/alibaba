@@ -47,14 +47,13 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
             spec ->
                 spec.sql("SELECT * FROM jwt_secrets WHERE id=?id")
                     .bind("id", id)
-                    .map(this::mapEntity)
-                    .one())
+                    .fetch(this::mapEntity))
         .singleOrEmpty();
   }
 
   @Override
   public Flux<JwtSecret> findAll() {
-    return rc.use(spec -> spec.sql("SELECT * FROM jwt_secrets").map(this::mapEntity).all());
+    return rc.use(spec -> spec.sql("SELECT * FROM jwt_secrets").fetch(this::mapEntity));
   }
 
   private JwtSecret mapEntity(Row row) {

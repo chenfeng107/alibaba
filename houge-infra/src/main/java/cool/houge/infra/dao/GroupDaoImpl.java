@@ -24,8 +24,7 @@ public class GroupDaoImpl implements GroupDao {
                     .bind("creator_id", m.getCreator().getId())
                     .bind("owner_id", m.getOwner().getId())
                     .returnGeneratedValues("id")
-                    .map(row -> row.get("id", Integer.class))
-                    .one())
+                    .fetch(row -> row.get("id", Integer.class)))
         .single()
         .flatMap(gid -> insertMember0(gid, m.getOwner().getId()).thenReturn(gid));
   }

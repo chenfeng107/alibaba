@@ -62,8 +62,7 @@ public class AppInstDaoImpl implements AppInstDao {
             spec ->
                 spec.sql("select * from app_insts where id=?id")
                     .bind("id", id)
-                    .map(this::mapEntity)
-                    .one())
+                    .fetch(this::mapEntity))
         .singleOrEmpty();
   }
 

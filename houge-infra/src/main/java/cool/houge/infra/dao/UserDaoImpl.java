@@ -21,8 +21,7 @@ public class UserDaoImpl implements UserDao {
                 spec.sql("INSERT INTO users(origin_uid) values(?origin_id)")
                     .bind("origin_id", m.getOriginUid(), String.class)
                     .returnGeneratedValues("id")
-                    .map(row -> row.get("id", Integer.class))
-                    .one())
+                    .fetch(row -> row.get("id", Integer.class)))
         .single();
   }
 }
