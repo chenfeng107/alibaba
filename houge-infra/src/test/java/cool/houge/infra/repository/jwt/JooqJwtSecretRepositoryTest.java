@@ -10,6 +10,7 @@ import cool.houge.infra.repository.JooqTestBase;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import org.jooq.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -116,13 +117,16 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
       record.setSecretKey(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
       records.add(record);
     }
+
     // 插入数据
+    var batchInserts = new ArrayList<Query>();
     for (JwtSecretRecord record : records) {
-      StepVerifier.create(dsl.insertInto(JWT_SECRET).set(record))
-          .expectNext(1)
-          .expectComplete()
-          .verify();
+      batchInserts.add(dsl.insertInto(JWT_SECRET).set(record));
     }
+    StepVerifier.create(dsl.batch(batchInserts))
+        .thenConsumeWhile(unused -> true)
+        .expectComplete()
+        .verify();
 
     // 查询所有数据
     var p = repos.findAll().collectList();
