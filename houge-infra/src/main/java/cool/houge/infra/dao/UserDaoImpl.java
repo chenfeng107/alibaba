@@ -1,5 +1,6 @@
 package cool.houge.infra.dao;
 
+import cool.houge.Nil;
 import cool.houge.domain.model.User;
 import cool.houge.domain.user.UserDao;
 import cool.houge.domain.user.UserQueryDao;
@@ -34,6 +35,13 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
     return rc.use(
             spec -> spec.sql("SELECT * FROM t_user WHERE id=?id").bind("id", id).fetch(this::map))
         .single();
+  }
+
+  @Override
+  public Mono<Nil> exists(int uid) {
+    return rc.use(spec -> spec.sql("SELECT 1 FROM t_user WHERE id=?id").bind("id", uid).fetch())
+        .singleOrEmpty()
+        .map(unused -> Nil.INSTANCE);
   }
 
   User map(Row row) {

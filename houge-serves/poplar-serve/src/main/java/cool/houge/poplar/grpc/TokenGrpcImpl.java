@@ -1,6 +1,8 @@
 package cool.houge.poplar.grpc;
 
 import cool.houge.domain.system.TokenService;
+import cool.houge.grpc.CreateTokenRequest;
+import cool.houge.grpc.CreateTokenResponse;
 import cool.houge.grpc.ReactorTokenGrpc;
 import cool.houge.grpc.VerifyTokenRequest;
 import cool.houge.grpc.VerifyTokenResponse;
@@ -14,6 +16,13 @@ public class TokenGrpcImpl extends ReactorTokenGrpc.TokenImplBase {
 
   public @Inject TokenGrpcImpl(TokenService tokenService) {
     this.tokenService = tokenService;
+  }
+
+  @Override
+  public Mono<CreateTokenResponse> create(Mono<CreateTokenRequest> request) {
+    return request
+        .flatMap(req -> tokenService.generateToken(req.getUid()))
+        .map(token -> CreateTokenResponse.newBuilder().setToken(token).build());
   }
 
   @Override

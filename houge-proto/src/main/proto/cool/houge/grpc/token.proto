@@ -2,6 +2,14 @@ syntax = "proto3";
 option java_package = "cool.houge.grpc";
 option java_multiple_files = true;
 
+message CreateTokenRequest {
+  int32 uid = 1;
+}
+
+message CreateTokenResponse {
+  string token = 1;
+}
+
 message VerifyTokenRequest {
   string token = 1;
 }
@@ -10,10 +18,11 @@ message VerifyTokenResponse {
   int32 uid = 1;
 }
 
-//
-//
 service Token {
 
-  //
+  // 创建访问令牌
+  rpc Create(CreateTokenRequest) returns(CreateTokenResponse) {}
+
+  // 验证访问令牌
   rpc Verify(VerifyTokenRequest) returns(VerifyTokenResponse) {}
 }

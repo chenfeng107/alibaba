@@ -19,13 +19,25 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
+import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import cool.houge.ConfigKeys;
+import cool.houge.grpc.ReactorTokenGrpc;
+import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
+import cool.houge.grpc.ReactorUserGrpc;
+import cool.houge.grpc.ReactorUserGrpc.ReactorUserStub;
+import cool.houge.rest.controller.msg.MsgController;
+import cool.houge.rest.controller.token.TokenController;
+import cool.houge.rest.controller.user.UserController;
 import cool.houge.rest.interceptor.AkskInterceptor;
 import cool.houge.rest.interceptor.Interceptors;
 import cool.houge.rest.interceptor.TokenInterceptor;
+import cool.houge.rest.web.RoutingService;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 
 /**
@@ -48,8 +60,19 @@ public class RestModule extends AbstractModule {
 
   @Override
   protected void configure() {
+    bind(Config.class).toInstance(config);
+    bind(RestServer.class).in(Scopes.SINGLETON);
+
     // 绑定 Web 访问资源对象
     bind(TokenInterceptor.class).in(Scopes.SINGLETON);
+
+    // 控制器注册
+    var multibinder = Multibinder.newSetBinder(binder(), RoutingService.class);
+    multibinder.addBinding().to(TokenController.class).in(Scopes.SINGLETON);
+    multibinder.addBinding().to(MsgController.class).in(Scopes.SINGLETON);
+    multibinder.addBinding().to(UserController.class).in(Scopes.SINGLETON);
+
+    // gRPC 注册
   }
 
   @Provides
@@ -58,6 +81,7 @@ public class RestModule extends AbstractModule {
     return new Interceptors(tokenInterceptor::handle, akskInterceptor()::handle);
   }
 
+  // ======================= FIXME 完善aksk认证逻辑 =======================
   private AkskInterceptor akskInterceptor() {
     var basicUsersBuilder = ImmutableMap.<String, String>builder();
     if (config.hasPath(ConfigKeys.SERVICE_AUTH_BASIC)) {
@@ -67,5 +91,32 @@ public class RestModule extends AbstractModule {
       }
     }
     return new AkskInterceptor(basicUsersBuilder.build());
+  }
+
+  @Singleton
+  @Provides
+  public ManagedChannel managedChannel() {
+    var target = config.getString("rest.poplar.grpc-target");
+    var managedChannel =
+        ManagedChannelBuilder.forTarget(target)
+            .enableRetry()
+            .usePlaintext()
+            .maxRetryAttempts(3)
+            .idleTimeout(5, TimeUnit.MINUTES)
+            .keepAliveWithoutCalls(true)
+            .build();
+    return managedChannel;
+  }
+
+  @Singleton
+  @Provides
+  public ReactorTokenStub tokenSub(ManagedChannel managedChannel) {
+    return ReactorTokenGrpc.newReactorStub(managedChannel);
+  }
+
+  @Singleton
+  @Provides
+  public ReactorUserStub userSub(ManagedChannel managedChannel) {
+    return ReactorUserGrpc.newReactorStub(managedChannel);
   }
 }

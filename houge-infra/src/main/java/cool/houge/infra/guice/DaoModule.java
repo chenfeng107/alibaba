@@ -5,12 +5,14 @@ import static io.r2dbc.spi.ConnectionFactoryOptions.STATEMENT_TIMEOUT;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.typesafe.config.Config;
 import cool.houge.domain.group.GroupDao;
 import cool.houge.domain.msg.MsgDao;
 import cool.houge.domain.shared.JwtSecretDao;
 import cool.houge.domain.system.AppInstDao;
 import cool.houge.domain.user.UserDao;
+import cool.houge.domain.user.UserQueryDao;
 import cool.houge.infra.dao.AppInstDaoImpl;
 import cool.houge.infra.dao.GroupDaoImpl;
 import cool.houge.infra.dao.JwtSecretDaoImpl;
@@ -36,7 +38,11 @@ public class DaoModule extends AbstractModule {
   protected void configure() {
     bind(JwtSecretDao.class).to(JwtSecretDaoImpl.class).asEagerSingleton();
     bind(AppInstDao.class).to(AppInstDaoImpl.class).asEagerSingleton();
-    bind(UserDao.class).to(UserDaoImpl.class).asEagerSingleton();
+
+    bind(UserDaoImpl.class).in(Scopes.SINGLETON);
+    bind(UserDao.class).to(UserDaoImpl.class);
+    bind(UserQueryDao.class).to(UserDaoImpl.class);
+
     bind(GroupDao.class).to(GroupDaoImpl.class).asEagerSingleton();
     bind(MsgDao.class).to(MsgDaoImpl.class).asEagerSingleton();
   }

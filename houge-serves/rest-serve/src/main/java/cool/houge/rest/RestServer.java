@@ -16,16 +16,18 @@
 package cool.houge.rest;
 
 import com.google.common.net.HostAndPort;
+import com.typesafe.config.Config;
+import cool.houge.Env;
+import cool.houge.rest.interceptor.Interceptors;
+import cool.houge.rest.web.HttpServerRoutesWrapper;
 import cool.houge.rest.web.RoutingService;
 import java.time.Duration;
-import java.util.List;
+import java.util.Set;
+import javax.inject.Inject;
 import lombok.extern.log4j.Log4j2;
 import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
 import reactor.netty.http.server.HttpServerRoutes;
-import cool.houge.Env;
-import cool.houge.rest.web.HttpServerRoutesWrapper;
-import cool.houge.rest.interceptor.Interceptors;
 
 /**
  * REST 服务.
@@ -39,20 +41,21 @@ public class RestServer {
 
   private final String addr;
   private final Interceptors interceptors;
-  private final List<RoutingService> routingServices;
+  private final Set<RoutingService> routingServices;
 
   private DisposableServer disposableServer;
 
   /**
    * 构造函数.
    *
-   * @param addr 服务访问 IP 及地址
+   * @param config 配置
    * @param interceptors
    * @param routingServices
    * @see HostAndPort
    */
-  public RestServer(String addr, Interceptors interceptors, List<RoutingService> routingServices) {
-    this.addr = addr;
+  public @Inject RestServer(
+      Config config, Interceptors interceptors, Set<RoutingService> routingServices) {
+    this.addr = config.getString("rest.server.addr");
     this.interceptors = interceptors;
     this.routingServices = routingServices;
   }
@@ -62,8 +65,8 @@ public class RestServer {
     var hap = HostAndPort.fromString(addr);
     var routes = HttpServerRoutes.newRoutes();
     for (RoutingService routingService : routingServices) {
-      log.info("更新 Routes [resource={}]", routingService);
       routingService.update(routes, interceptors);
+      log.info("注册路由 rest={}", routingService);
     }
 
     this.disposableServer =
@@ -74,7 +77,7 @@ public class RestServer {
             .idleTimeout(Duration.ofSeconds(IDLE_TIMEOUT_SECS))
             .handle(new HttpServerRoutesWrapper(routes))
             .bindNow();
-    log.info("REST Server 启动完成 - {}", hap);
+    log.info("houge-rest 服务 - {}", hap);
   }
 
   /** 停止 REST 服务. */

@@ -10,12 +10,16 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.typesafe.config.Config;
 import cool.houge.domain.BizCodes;
-import cool.houge.domain.system.TokenInfo;
-import cool.houge.domain.system.TokenService;
 import cool.houge.domain.model.JwtSecret;
 import cool.houge.domain.shared.JwtSecretDao;
+import cool.houge.domain.system.TokenInfo;
+import cool.houge.domain.system.TokenService;
+import cool.houge.domain.user.UserQueryDao;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -33,23 +37,32 @@ import top.yein.chaos.biz.StacklessBizCodeException;
 public class TokenServiceImpl implements TokenService {
 
   private static final Logger log = LogManager.getLogger();
+  private final UserQueryDao userQueryDao;
   private final JwtSecretDao jwtSecretDao;
   private final AsyncCache<String, CachedJwtSecret> jwtSecretCache;
+  private final Duration jwtExpiresIn;
 
-  public @Inject TokenServiceImpl(JwtSecretDao jwtSecretDao) {
+  public @Inject TokenServiceImpl(
+      Config config, UserQueryDao userQueryDao, JwtSecretDao jwtSecretDao) {
+    this.userQueryDao = userQueryDao;
     this.jwtSecretDao = jwtSecretDao;
-
     this.jwtSecretCache =
         Caffeine.newBuilder()
             .maximumSize(100)
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .buildAsync(this::loadJwtSecret);
+
+    // JWT 访问令牌过期时间
+    this.jwtExpiresIn = config.getDuration("jwt.expires-in");
   }
 
   @Override
   public Mono<String> generateToken(int uid) {
-    return generateToken0(uid);
+    return userQueryDao
+        .exists(uid)
+        .switchIfEmpty(Mono.error(() -> new StacklessBizCodeException(BizCodes.C404, "用户不存在")))
+        .flatMap(unused -> generateToken0(uid));
   }
 
   @Override
@@ -86,11 +99,14 @@ public class TokenServiceImpl implements TokenService {
         .single()
         .map(
             cjs -> {
-              // FIXME 设置令牌的过期时间，增加令牌其它参数
+              // JWT 令牌的过期时间
+              var expiresAt = Date.from(ZonedDateTime.now().plus(jwtExpiresIn).toInstant());
               var token =
                   JWT.create()
                       .withKeyId(cjs.kid)
                       .withJWTId(String.valueOf(uid))
+                      .withIssuedAt(new Date())
+                      .withExpiresAt(expiresAt)
                       .sign(cjs.algorithm);
               log.info("生成访问令牌 [kid={}, uid={}]", cjs.kid, uid);
               return token;

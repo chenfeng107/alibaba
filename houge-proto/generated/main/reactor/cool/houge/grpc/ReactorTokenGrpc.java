@@ -17,10 +17,6 @@ public final class ReactorTokenGrpc {
         return new ReactorTokenStub(channel);
     }
 
-    /**
-     * <pre>
-     * </pre>
-     */
     public static final class ReactorTokenStub extends io.grpc.stub.AbstractStub<ReactorTokenStub> {
         private TokenGrpc.TokenStub delegateStub;
 
@@ -39,28 +35,58 @@ public final class ReactorTokenGrpc {
             return new ReactorTokenStub(channel, callOptions);
         }
 
+        public reactor.core.publisher.Mono<cool.houge.grpc.CreateTokenResponse> create(reactor.core.publisher.Mono<cool.houge.grpc.CreateTokenRequest> reactorRequest) {
+            return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactorRequest, delegateStub::create, getCallOptions());
+        }
+
+        /**
+         * <pre>
+         *  验证访问令牌
+         * </pre>
+         */
         public reactor.core.publisher.Mono<cool.houge.grpc.VerifyTokenResponse> verify(reactor.core.publisher.Mono<cool.houge.grpc.VerifyTokenRequest> reactorRequest) {
             return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactorRequest, delegateStub::verify, getCallOptions());
         }
 
+        public reactor.core.publisher.Mono<cool.houge.grpc.CreateTokenResponse> create(cool.houge.grpc.CreateTokenRequest reactorRequest) {
+           return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactor.core.publisher.Mono.just(reactorRequest), delegateStub::create, getCallOptions());
+        }
+
+        /**
+         * <pre>
+         *  验证访问令牌
+         * </pre>
+         */
         public reactor.core.publisher.Mono<cool.houge.grpc.VerifyTokenResponse> verify(cool.houge.grpc.VerifyTokenRequest reactorRequest) {
            return com.salesforce.reactorgrpc.stub.ClientCalls.oneToOne(reactor.core.publisher.Mono.just(reactorRequest), delegateStub::verify, getCallOptions());
         }
 
     }
 
-    /**
-     * <pre>
-     * </pre>
-     */
     public static abstract class TokenImplBase implements io.grpc.BindableService {
 
+        public reactor.core.publisher.Mono<cool.houge.grpc.CreateTokenResponse> create(reactor.core.publisher.Mono<cool.houge.grpc.CreateTokenRequest> request) {
+            throw new io.grpc.StatusRuntimeException(io.grpc.Status.UNIMPLEMENTED);
+        }
+
+        /**
+         * <pre>
+         *  验证访问令牌
+         * </pre>
+         */
         public reactor.core.publisher.Mono<cool.houge.grpc.VerifyTokenResponse> verify(reactor.core.publisher.Mono<cool.houge.grpc.VerifyTokenRequest> request) {
             throw new io.grpc.StatusRuntimeException(io.grpc.Status.UNIMPLEMENTED);
         }
 
         @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
             return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+                    .addMethod(
+                            cool.houge.grpc.TokenGrpc.getCreateMethod(),
+                            asyncUnaryCall(
+                                    new MethodHandlers<
+                                            cool.houge.grpc.CreateTokenRequest,
+                                            cool.houge.grpc.CreateTokenResponse>(
+                                            this, METHODID_CREATE)))
                     .addMethod(
                             cool.houge.grpc.TokenGrpc.getVerifyMethod(),
                             asyncUnaryCall(
@@ -77,7 +103,8 @@ public final class ReactorTokenGrpc {
 
     }
 
-    public static final int METHODID_VERIFY = 0;
+    public static final int METHODID_CREATE = 0;
+    public static final int METHODID_VERIFY = 1;
 
     private static final class MethodHandlers<Req, Resp> implements
             io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -96,6 +123,11 @@ public final class ReactorTokenGrpc {
         @java.lang.SuppressWarnings("unchecked")
         public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
             switch (methodId) {
+                case METHODID_CREATE:
+                    com.salesforce.reactorgrpc.stub.ServerCalls.oneToOne((cool.houge.grpc.CreateTokenRequest) request,
+                            (io.grpc.stub.StreamObserver<cool.houge.grpc.CreateTokenResponse>) responseObserver,
+                            serviceImpl::create);
+                    break;
                 case METHODID_VERIFY:
                     com.salesforce.reactorgrpc.stub.ServerCalls.oneToOne((cool.houge.grpc.VerifyTokenRequest) request,
                             (io.grpc.stub.StreamObserver<cool.houge.grpc.VerifyTokenResponse>) responseObserver,

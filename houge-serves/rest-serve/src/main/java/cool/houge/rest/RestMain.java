@@ -16,14 +16,9 @@
 package cool.houge.rest;
 
 import com.google.inject.Guice;
-import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cool.houge.ConfigKeys;
-import cool.houge.rest.interceptor.Interceptors;
-import cool.houge.rest.web.RoutingService;
 import cool.houge.util.AppShutdownHelper;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,24 +44,19 @@ public class RestMain implements Runnable {
 
   @Override
   public void run() {
-    // 初始化配置
-    final var config = loadConfig();
-    // 初始化 Guice
-    final var injector = Guice.createInjector(new RestModule(config));
+    // 1. 初始化配置
+    var config = loadConfig();
 
-    // 启动 REST 服务
-    var restServer =
-        new RestServer(
-            config.getString(ConfigKeys.REST_SERVER_ADDR),
-            injector.getInstance(Interceptors.class),
-            injector.findBindingsByType(TypeLiteral.get(RoutingService.class)).stream()
-                .map(b -> b.getProvider().get())
-                .collect(Collectors.toList()));
+    // 2. 初始化 Guice
+    var injector = Guice.createInjector(new RestModule(config));
 
-    restServer.start();
+    // 3. 启动 REST 服务
+    var server = injector.getInstance(RestServer.class);
+
+    server.start();
     log.info("houge-rest 服务启动成功");
 
-    shutdownHelper.addCallback(restServer::stop).await();
+    shutdownHelper.addCallback(server::stop).await();
     log.info("houge-rest 服务停止完成");
   }
 

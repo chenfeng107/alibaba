@@ -15,6 +15,37 @@ public final class TokenGrpc {
   public static final String SERVICE_NAME = "Token";
 
   // Static method descriptors that strictly reflect the proto.
+  private static volatile io.grpc.MethodDescriptor<cool.houge.grpc.CreateTokenRequest,
+      cool.houge.grpc.CreateTokenResponse> getCreateMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Create",
+      requestType = cool.houge.grpc.CreateTokenRequest.class,
+      responseType = cool.houge.grpc.CreateTokenResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<cool.houge.grpc.CreateTokenRequest,
+      cool.houge.grpc.CreateTokenResponse> getCreateMethod() {
+    io.grpc.MethodDescriptor<cool.houge.grpc.CreateTokenRequest, cool.houge.grpc.CreateTokenResponse> getCreateMethod;
+    if ((getCreateMethod = TokenGrpc.getCreateMethod) == null) {
+      synchronized (TokenGrpc.class) {
+        if ((getCreateMethod = TokenGrpc.getCreateMethod) == null) {
+          TokenGrpc.getCreateMethod = getCreateMethod =
+              io.grpc.MethodDescriptor.<cool.houge.grpc.CreateTokenRequest, cool.houge.grpc.CreateTokenResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Create"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  cool.houge.grpc.CreateTokenRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  cool.houge.grpc.CreateTokenResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new TokenMethodDescriptorSupplier("Create"))
+              .build();
+        }
+      }
+    }
+    return getCreateMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<cool.houge.grpc.VerifyTokenRequest,
       cool.houge.grpc.VerifyTokenResponse> getVerifyMethod;
 
@@ -95,6 +126,19 @@ public final class TokenGrpc {
   public static abstract class TokenImplBase implements io.grpc.BindableService {
 
     /**
+     * <pre>
+     * 创建访问令牌
+     * </pre>
+     */
+    public void create(cool.houge.grpc.CreateTokenRequest request,
+        io.grpc.stub.StreamObserver<cool.houge.grpc.CreateTokenResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 验证访问令牌
+     * </pre>
      */
     public void verify(cool.houge.grpc.VerifyTokenRequest request,
         io.grpc.stub.StreamObserver<cool.houge.grpc.VerifyTokenResponse> responseObserver) {
@@ -103,6 +147,13 @@ public final class TokenGrpc {
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            getCreateMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                cool.houge.grpc.CreateTokenRequest,
+                cool.houge.grpc.CreateTokenResponse>(
+                  this, METHODID_CREATE)))
           .addMethod(
             getVerifyMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -129,6 +180,20 @@ public final class TokenGrpc {
     }
 
     /**
+     * <pre>
+     * 创建访问令牌
+     * </pre>
+     */
+    public void create(cool.houge.grpc.CreateTokenRequest request,
+        io.grpc.stub.StreamObserver<cool.houge.grpc.CreateTokenResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getCreateMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * 验证访问令牌
+     * </pre>
      */
     public void verify(cool.houge.grpc.VerifyTokenRequest request,
         io.grpc.stub.StreamObserver<cool.houge.grpc.VerifyTokenResponse> responseObserver) {
@@ -152,6 +217,19 @@ public final class TokenGrpc {
     }
 
     /**
+     * <pre>
+     * 创建访问令牌
+     * </pre>
+     */
+    public cool.houge.grpc.CreateTokenResponse create(cool.houge.grpc.CreateTokenRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * 验证访问令牌
+     * </pre>
      */
     public cool.houge.grpc.VerifyTokenResponse verify(cool.houge.grpc.VerifyTokenRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -174,6 +252,20 @@ public final class TokenGrpc {
     }
 
     /**
+     * <pre>
+     * 创建访问令牌
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<cool.houge.grpc.CreateTokenResponse> create(
+        cool.houge.grpc.CreateTokenRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getCreateMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * 验证访问令牌
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<cool.houge.grpc.VerifyTokenResponse> verify(
         cool.houge.grpc.VerifyTokenRequest request) {
@@ -182,7 +274,8 @@ public final class TokenGrpc {
     }
   }
 
-  private static final int METHODID_VERIFY = 0;
+  private static final int METHODID_CREATE = 0;
+  private static final int METHODID_VERIFY = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -201,6 +294,10 @@ public final class TokenGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_CREATE:
+          serviceImpl.create((cool.houge.grpc.CreateTokenRequest) request,
+              (io.grpc.stub.StreamObserver<cool.houge.grpc.CreateTokenResponse>) responseObserver);
+          break;
         case METHODID_VERIFY:
           serviceImpl.verify((cool.houge.grpc.VerifyTokenRequest) request,
               (io.grpc.stub.StreamObserver<cool.houge.grpc.VerifyTokenResponse>) responseObserver);
@@ -266,6 +363,7 @@ public final class TokenGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new TokenFileDescriptorSupplier())
+              .addMethod(getCreateMethod())
               .addMethod(getVerifyMethod())
               .build();
         }
