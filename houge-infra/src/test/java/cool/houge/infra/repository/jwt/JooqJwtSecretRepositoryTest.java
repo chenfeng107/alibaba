@@ -33,9 +33,9 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
   @Test
   void insert() {
     var model = new JwtSecret();
-    model.setId("TEST-" + faker.random().hex(3));
+    model.setId("TEST-" + FAKER_CN.random().hex(3));
     model.setAlgorithm("HS512");
-    model.setSecret(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
+    model.setSecret(FAKER_CN.random().hex(128).getBytes(StandardCharsets.UTF_8));
 
     var p = repos.insert(model);
     StepVerifier.create(p).expectComplete().verify();
@@ -47,9 +47,9 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
   @Test
   void delete() {
     var record = new JwtSecretRecord();
-    record.setId("TEST-" + faker.random().hex(3));
+    record.setId("TEST-" + FAKER_CN.random().hex(3));
     record.setAlgorithm("HS512");
-    record.setSecretKey(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
+    record.setSecretKey(FAKER_CN.random().hex(128).getBytes(StandardCharsets.UTF_8));
 
     // 插入数据
     StepVerifier.create(dsl.insertInto(JWT_SECRET).set(record))
@@ -76,9 +76,9 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
   @Test
   void findById() {
     var record = new JwtSecretRecord();
-    record.setId("TEST-" + faker.random().hex(3));
+    record.setId("TEST-" + FAKER_CN.random().hex(3));
     record.setAlgorithm("HS512");
-    record.setSecretKey(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
+    record.setSecretKey(FAKER_CN.random().hex(128).getBytes(StandardCharsets.UTF_8));
 
     // 插入数据
     StepVerifier.create(dsl.insertInto(JWT_SECRET).set(record))
@@ -110,11 +110,11 @@ class JooqJwtSecretRepositoryTest extends JooqTestBase {
   @Test
   void findAll() {
     var records = new ArrayList<JwtSecretRecord>();
-    for (int i = 0; i < faker.random().nextInt(5) + 1; i++) {
+    for (int i = 0; i < FAKER_CN.random().nextInt(5) + 1; i++) {
       var record = new JwtSecretRecord();
-      record.setId("TEST-" + faker.random().hex(3));
+      record.setId("TEST-" + FAKER_CN.random().hex(3));
       record.setAlgorithm("HS512");
-      record.setSecretKey(faker.random().hex(128).getBytes(StandardCharsets.UTF_8));
+      record.setSecretKey(FAKER_CN.random().hex(128).getBytes(StandardCharsets.UTF_8));
       records.add(record);
     }
 

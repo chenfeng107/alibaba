@@ -28,7 +28,7 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
   void insert() {
     var model =
         new AppInst()
-            .setId((int) faker.random().nextLong())
+            .setId((int) FAKER_CN.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
             .setHostAddress("127.0.0.1")
@@ -51,7 +51,7 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
   void delete() {
     var model =
         new AppInst()
-            .setId((int) faker.random().nextLong())
+            .setId((int) FAKER_CN.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
             .setHostAddress("127.0.0.1")
@@ -71,7 +71,7 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
   void updateCheckTime() {
     var model =
         new AppInst()
-            .setId((int) faker.random().nextLong())
+            .setId((int) FAKER_CN.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
             .setHostAddress("127.0.0.1")
@@ -94,7 +94,7 @@ class JooqAppInstRepositoryTest extends JooqTestBase {
   void findById() {
     var model =
         new AppInst()
-            .setId((int) faker.random().nextLong())
+            .setId((int) FAKER_CN.random().nextLong())
             .setAppName("JUnit-Test")
             .setHostName("local")
             .setHostAddress("127.0.0.1")

@@ -1,31 +1,31 @@
 package cool.houge.infra.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cool.houge.domain.model.User;
-import cool.houge.infra.tx.TxOps;
-import io.r2dbc.spi.ConnectionFactories;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
 /** @author KK (kzou227@qq.com) */
-class UserDaoImplTest {
+class UserDaoImplTest extends AbstractTestDao {
+
+  UserDaoImpl userDao;
+
+  @BeforeEach
+  void setup() {
+    this.userDao = new UserDaoImpl();
+  }
 
   @Test
   void insert() {
-    var connectionFactory =
-        ConnectionFactories.get("r2dbc:mysql://root:7MumshL!4eiK_hK@139.196.11.144:3306/houge");
-
-    var txOps = new TxOps(connectionFactory);
-
-    var userDao = new UserDaoImpl();
     var user = new User();
-    user.setOriginUid("hello");
+    user.setOriginUid(FAKER_CN.idNumber().valid());
 
-    var rs = txOps.tx(userDao.insert(user));
-    StepVerifier.create(rs)
-        .consumeNextWith(
-            id -> {
-              System.out.println("ID: " + id);
-            })
+    txOps
+        .tx(userDao.insert(user))
+        .as(StepVerifier::create)
+        .assertNext(id -> assertThat(id).as("用户ID必须大于1").isGreaterThan(1))
         .expectComplete()
         .verify();
   }

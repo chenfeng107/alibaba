@@ -6,7 +6,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-01-07T18:37:54+0800",
+    date = "2022-01-10T10:34:24+0800",
     comments = "version: 1.5.0.Beta1, compiler: javac, environment: Java 11.0.8 (Oracle Corporation)"
 )
 public class ServerInstanceMapperImpl implements ServerInstanceMapper {

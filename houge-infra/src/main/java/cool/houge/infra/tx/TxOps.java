@@ -2,6 +2,7 @@ package cool.houge.infra.tx;
 
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
@@ -10,10 +11,15 @@ import reactor.util.context.Context;
 public class TxOps {
 
   private final ConnectionFactory connectionFactory;
+  private final boolean rollbackOnly;
 
-  /** @param connectionFactory */
-  public TxOps(ConnectionFactory connectionFactory) {
+  /**
+   * @param connectionFactory
+   * @param rollbackOnly
+   */
+  public TxOps(ConnectionFactory connectionFactory, boolean rollbackOnly) {
     this.connectionFactory = connectionFactory;
+    this.rollbackOnly = rollbackOnly;
   }
 
   /**
@@ -22,20 +28,7 @@ public class TxOps {
    * @return
    */
   public <T> Mono<T> tx(Mono<T> p) {
-    return Mono.usingWhen(
-        connectionFactory.create(),
-        conn -> {
-          // 事务管理
-          return Mono.usingWhen(
-                  Mono.just(conn),
-                  connection -> p,
-                  Connection::commitTransaction,
-                  (connection, err) -> Mono.empty(),
-                  Connection::rollbackTransaction)
-              .onErrorResume(t -> Mono.from(conn.rollbackTransaction()).then(Mono.error(t)))
-              .contextWrite(Context.of(Connection.class, conn));
-        },
-        Connection::close);
+    return tx(Flux.from(p)).singleOrEmpty();
   }
 
   /**
@@ -48,12 +41,11 @@ public class TxOps {
         connectionFactory.create(),
         conn -> {
           // 事务管理
-          return Flux.usingWhen(
-                  Mono.just(conn),
-                  connection -> p,
-                  Connection::commitTransaction,
-                  (connection, err) -> Mono.empty(),
-                  Connection::rollbackTransaction)
+          return Flux.from(conn.beginTransaction())
+              .thenMany(p)
+              .concatWith(
+                  (Publisher<? extends T>)
+                      (rollbackOnly ? conn.rollbackTransaction() : conn.commitTransaction()))
               .onErrorResume(t -> Mono.from(conn.rollbackTransaction()).then(Mono.error(t)))
               .contextWrite(Context.of(Connection.class, conn));
         },

@@ -90,7 +90,6 @@ allprojects {
 
   dependencyManagement {
     imports {
-      mavenBom("io.projectreactor:reactor-bom:2020.0.14")
       mavenBom("io.netty:netty-bom:4.1.72.Final")
       mavenBom("org.apache.logging.log4j:log4j-bom:2.17.1")
       mavenBom("com.fasterxml.jackson:jackson-bom:2.13.1")
@@ -100,6 +99,7 @@ allprojects {
       mavenBom("io.grpc:grpc-bom:1.43.2")
       mavenBom("com.salesforce.servicelibs:reactive-grpc:1.2.3")
       mavenBom("io.micrometer:micrometer-bom:1.7.3")
+      mavenBom("io.projectreactor:reactor-bom:2020.0.14")
 
       // 测试工具
       mavenBom("org.testcontainers:testcontainers-bom:1.16.2")
@@ -118,6 +118,7 @@ allprojects {
       dependency("com.auth0:java-jwt:3.18.1")
       dependency("org.roaringbitmap:RoaringBitmap:0.9.16")
       dependency("dev.miku:r2dbc-mysql:0.9.0.BUILD-SNAPSHOT")
+      dependency("io.r2dbc:r2dbc-spi:0.9.0.RELEASE")
 
       // 测试工具
       dependency("com.github.javafaker:javafaker:1.0.2")
@@ -154,6 +155,8 @@ allprojects {
     testImplementation("com.github.javafaker:javafaker") {
       exclude module: "snakeyaml"
     }
+    testImplementation("org.yaml:snakeyaml:1.30")
+
     jmh("org.openjdk.jmh:jmh-core")
     jmh("org.openjdk.jmh:jmh-generator-annprocess")
   }
