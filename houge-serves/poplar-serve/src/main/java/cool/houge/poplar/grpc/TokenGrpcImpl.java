@@ -22,7 +22,8 @@ public class TokenGrpcImpl extends ReactorTokenGrpc.TokenImplBase {
   public Mono<CreateTokenResponse> create(Mono<CreateTokenRequest> request) {
     return request
         .flatMap(req -> tokenService.generateToken(req.getUid()))
-        .map(token -> CreateTokenResponse.newBuilder().setToken(token).build());
+        .map(token -> CreateTokenResponse.newBuilder().setToken(token).build())
+        .onErrorMap(ErrorMaps::map);
   }
 
   @Override

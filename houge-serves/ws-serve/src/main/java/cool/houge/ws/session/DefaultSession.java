@@ -15,9 +15,13 @@
  */
 package cool.houge.ws.session;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import cool.houge.ws.packet.Packet;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Objects;
@@ -41,6 +45,7 @@ public final class DefaultSession implements Session {
 
   final WebsocketInbound inbound;
   final WebsocketOutbound outbound;
+  final ObjectWriter objectWriter;
   final int uid;
   final String token;
   final long sessionId;
@@ -54,13 +59,19 @@ public final class DefaultSession implements Session {
    *
    * @param inbound WS输入流
    * @param outbound WS输出流
+   * @param objectWriter
    * @param uid 认证用户ID
    * @param token 访问令牌
    */
   public DefaultSession(
-      WebsocketInbound inbound, WebsocketOutbound outbound, int uid, String token) {
+      WebsocketInbound inbound,
+      WebsocketOutbound outbound,
+      ObjectWriter objectWriter,
+      int uid,
+      String token) {
     this.inbound = inbound;
     this.outbound = outbound;
+    this.objectWriter = objectWriter;
     this.uid = uid;
     this.token = token;
     this.sessionId = SESSION_ID_SEQ.incrementAndGet();
@@ -96,8 +107,14 @@ public final class DefaultSession implements Session {
 
   @Override
   public Mono<Void> send(Packet packet) {
-    // FIXME 完善
-    return null;
+    var buf = outbound.alloc().buffer();
+    OutputStream os = new ByteBufOutputStream(buf);
+    try {
+      objectWriter.writeValue(os, packet);
+    } catch (IOException e) {
+      throw new RuntimeException("序列化Packet错误", e);
+    }
+    return outbound.sendObject(new TextWebSocketFrame(buf)).then();
   }
 
   @Override

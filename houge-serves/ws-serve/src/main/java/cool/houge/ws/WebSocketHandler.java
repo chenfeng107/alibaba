@@ -178,7 +178,7 @@ public class WebSocketHandler {
         .<Session>map(
             uid -> {
               log.info("认证成功 uid={}");
-              return new DefaultSession(in, out, uid, token);
+              return new DefaultSession(in, out, objectWriter, uid, token);
             });
   }
 
