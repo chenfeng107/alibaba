@@ -83,31 +83,31 @@ class AbstractRestSupportTest {
     assertThat(resource.queryParam(request, "q1", "55")).isEqualTo("K");
     assertThat(resource.queryParam(request, "q_string_no", "55")).isEqualTo("55");
     assertThatExceptionOfType(BizCodeException.class)
-        .isThrownBy(() -> resource.requiredQueryParam(request, "q_string_required"))
+        .isThrownBy(() -> resource.requireQueryParam(request, "q_string_required"))
         .matches(e -> e.getBizCode() == BizCodes.C912);
 
     assertThat(resource.queryInt(request, "q_int", 55)).isEqualTo(5);
     assertThat(resource.queryInt(request, "q_int_no", 55)).isEqualTo(55);
     assertThatExceptionOfType(BizCodeException.class)
-        .isThrownBy(() -> resource.requiredQueryInt(request, "q_int_no"))
+        .isThrownBy(() -> resource.requireQueryInt(request, "q_int_no"))
         .matches(e -> e.getBizCode() == BizCodes.C912);
     assertThatExceptionOfType(BizCodeException.class)
         .isThrownBy(() -> resource.queryInt(request, "q_int_invalid", 55))
         .matches(e -> e.getBizCode() == BizCodes.C910);
     assertThatExceptionOfType(BizCodeException.class)
-        .isThrownBy(() -> resource.requiredQueryInt(request, "q_int_invalid"))
+        .isThrownBy(() -> resource.requireQueryInt(request, "q_int_invalid"))
         .matches(e -> e.getBizCode() == BizCodes.C910);
 
     assertThat(resource.queryLong(request, "q_long", 55)).isEqualTo(54);
     assertThat(resource.queryLong(request, "q_long_no", 55)).isEqualTo(55);
     assertThatExceptionOfType(BizCodeException.class)
-        .isThrownBy(() -> resource.requiredQueryLong(request, "q_long_no"))
+        .isThrownBy(() -> resource.requireQueryLong(request, "q_long_no"))
         .matches(e -> e.getBizCode() == BizCodes.C912);
     assertThatExceptionOfType(BizCodeException.class)
         .isThrownBy(() -> resource.queryLong(request, "q_long_invalid", 55))
         .matches(e -> e.getBizCode() == BizCodes.C910);
     assertThatExceptionOfType(BizCodeException.class)
-        .isThrownBy(() -> resource.requiredQueryLong(request, "q_long_invalid"))
+        .isThrownBy(() -> resource.requireQueryLong(request, "q_long_invalid"))
         .matches(e -> e.getBizCode() == BizCodes.C910);
 
     var now = LocalDateTime.now();

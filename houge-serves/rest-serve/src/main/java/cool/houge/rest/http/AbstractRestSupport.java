@@ -22,6 +22,7 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +31,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.server.HttpServerRequest;
@@ -48,14 +50,16 @@ import cool.houge.util.ReactorHttpServerUtils;
 @Log4j2
 public abstract class AbstractRestSupport {
 
-  /** 认证上下文存储的键值. */
+  /**
+   * 认证上下文存储的键值.
+   */
   public static final Class<AuthContext> AUTH_CONTEXT_KEY = AuthContext.class;
 
   /**
    * 获取 {@link HttpServerRequest} 路径参数值.
    *
    * @param request HTTP 请求对象
-   * @param name 路径参数名称
+   * @param name    路径参数名称
    * @return 路径参数值
    */
   protected String pathString(HttpServerRequest request, String name) {
@@ -70,7 +74,7 @@ public abstract class AbstractRestSupport {
    * 获取 {@link HttpServerRequest} 路径参数值.
    *
    * @param request HTTP 请求对象
-   * @param name 路径参数名称
+   * @param name    路径参数名称
    * @return 路径参数值
    */
   protected long pathLong(HttpServerRequest request, String name) {
@@ -79,7 +83,7 @@ public abstract class AbstractRestSupport {
       return Long.parseLong(value);
     } catch (NumberFormatException e) {
       throw new BizCodeException(
-          BizCode.C910, Strings.lenientFormat("PATH参数[%s=%s]的值不是一个有效的Long值", name, value));
+          BizCode.C910, Strings.lenientFormat("PATH参数[%s=%s]的值不是一个有效的int64值", name, value));
     }
   }
 
@@ -87,7 +91,7 @@ public abstract class AbstractRestSupport {
    * 获取 {@link HttpServerRequest} 路径参数值.
    *
    * @param request HTTP 请求对象
-   * @param name 路径参数名称
+   * @param name    路径参数名称
    * @return 路径参数值
    */
   protected int pathInt(HttpServerRequest request, String name) {
@@ -96,7 +100,7 @@ public abstract class AbstractRestSupport {
       return Integer.parseInt(value);
     } catch (NumberFormatException e) {
       throw new BizCodeException(
-          BizCode.C910, Strings.lenientFormat("PATH参数[%s=%s]的值不是一个有效的Integer值", name, value));
+          BizCode.C910, Strings.lenientFormat("PATH参数[%s=%s]的值不是一个有效的int32值", name, value));
     }
   }
 
@@ -104,7 +108,7 @@ public abstract class AbstractRestSupport {
    * 获取 {@link HttpServerRequest} 查询参数值.
    *
    * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param name    查询参数名称
    * @return 查询参数值
    */
   protected String queryParam(HttpServerRequest request, String name) {
@@ -116,8 +120,8 @@ public abstract class AbstractRestSupport {
    *
    * <p>如果参数{@code name}值为{@code null}, 则返回{@code defaultValue}.
    *
-   * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param request      HTTP 请求对象
+   * @param name         查询参数名称
    * @param defaultValue 默认值
    * @return 查询参数值
    */
@@ -135,10 +139,10 @@ public abstract class AbstractRestSupport {
    * <p>如果参数{@code name}值为{@code null}时将会抛出{@link BizCode#C912}的业务异常.
    *
    * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param name    查询参数名称
    * @return 查询参数值
    */
-  protected String requiredQueryParam(HttpServerRequest request, String name) {
+  protected String requireQueryParam(HttpServerRequest request, String name) {
     var value = queryParam(request, name);
     if (Strings.isNullOrEmpty(value)) {
       throw new BizCodeException(BizCode.C912, Strings.lenientFormat("缺少必须的QUERY参数[%s]", name));
@@ -150,7 +154,7 @@ public abstract class AbstractRestSupport {
    * 获取 {@link HttpServerRequest} 查询参数值列表.
    *
    * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param name    查询参数名称
    * @return 查询参数值列表
    */
   protected List<String> queryParams(HttpServerRequest request, String name) {
@@ -172,8 +176,8 @@ public abstract class AbstractRestSupport {
    *
    * <p>如果参数{@code name}值为{@code null}, 则返回{@code defaultValue}.
    *
-   * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param request      HTTP 请求对象
+   * @param name         查询参数名称
    * @param defaultValue 默认值
    * @return 查询参数值
    */
@@ -186,7 +190,7 @@ public abstract class AbstractRestSupport {
       return Integer.parseInt(value);
     } catch (NumberFormatException e) {
       throw new BizCodeException(
-          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的Integer值", name, value));
+          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的int32值", name, value));
     }
   }
 
@@ -196,16 +200,16 @@ public abstract class AbstractRestSupport {
    * <p>如果参数{@code name}值为{@code null}时将会抛出{@link BizCode#C912}的业务异常.
    *
    * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param name    查询参数名称
    * @return 查询参数值
    */
-  protected int requiredQueryInt(HttpServerRequest request, String name) {
-    var value = requiredQueryParam(request, name);
+  protected int requireQueryInt(HttpServerRequest request, String name) {
+    var value = requireQueryParam(request, name);
     try {
       return Integer.parseInt(value);
     } catch (NumberFormatException e) {
       throw new BizCodeException(
-          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的Integer值", name, value));
+          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的int32值", name, value));
     }
   }
 
@@ -214,8 +218,8 @@ public abstract class AbstractRestSupport {
    *
    * <p>如果参数{@code name}值为{@code null}, 则返回{@code defaultValue}.
    *
-   * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param request      HTTP 请求对象
+   * @param name         查询参数名称
    * @param defaultValue 默认值
    * @return 查询参数值
    */
@@ -228,7 +232,7 @@ public abstract class AbstractRestSupport {
       return Long.parseLong(value);
     } catch (NumberFormatException e) {
       throw new BizCodeException(
-          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的Long值", name, value));
+          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的int64值", name, value));
     }
   }
 
@@ -238,24 +242,24 @@ public abstract class AbstractRestSupport {
    * <p>如果参数{@code name}值为{@code null}时将会抛出{@link BizCode#C912}的业务异常.
    *
    * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param name    查询参数名称
    * @return 查询参数值
    */
-  protected long requiredQueryLong(HttpServerRequest request, String name) {
-    var value = requiredQueryParam(request, name);
+  protected long requireQueryLong(HttpServerRequest request, String name) {
+    var value = requireQueryParam(request, name);
     try {
       return Long.parseLong(value);
     } catch (NumberFormatException e) {
       throw new BizCodeException(
-          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的Long值", name, value));
+          BizCode.C910, Strings.lenientFormat("QUERY参数[%s=%s]的值不是一个有效的int64值", name, value));
     }
   }
 
   /**
    * 获取{@link HttpServerRequest}查询参数.
    *
-   * @param request HTTP 请求对象
-   * @param name 查询参数名称
+   * @param request    HTTP 请求对象
+   * @param name       查询参数名称
    * @param dvSupplier 默认值回调
    * @return 查询参数值
    */
@@ -278,8 +282,8 @@ public abstract class AbstractRestSupport {
    * 解析 HTTP 请求 JSON BODY.
    *
    * @param request HTTP 请求对象
-   * @param clazz body class
-   * @param <T> 泛型
+   * @param clazz   body class
+   * @param <T>     泛型
    * @return RS
    */
   protected <T> Mono<T> json(HttpServerRequest request, Class<T> clazz) {
@@ -310,7 +314,7 @@ public abstract class AbstractRestSupport {
    * 输入 HTTP 响应 JSON BODY.
    *
    * @param response HTTP 响应对象
-   * @param value 响应 BODY 对象
+   * @param value    响应 BODY 对象
    * @return RS
    */
   protected Mono<Void> json(HttpServerResponse response, Object value) {
