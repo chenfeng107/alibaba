@@ -16,10 +16,7 @@
 package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * IM 用户信息表.
@@ -27,9 +24,6 @@ import lombok.NoArgsConstructor;
  * @author KK (kzou227@qq.com)
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
   /** 用户 ID. */

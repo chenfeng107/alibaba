@@ -16,16 +16,12 @@
 package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /** 群组成员关系. */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class GroupMember {
 
   /** 群组. */

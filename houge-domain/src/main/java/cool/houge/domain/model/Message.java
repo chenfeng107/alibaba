@@ -17,10 +17,7 @@ package cool.houge.domain.model;
 
 import cool.houge.domain.constants.MessageReadStatus;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * {@code t_message} 消息表.
@@ -28,9 +25,6 @@ import lombok.NoArgsConstructor;
  * @author KK (kzou227@qq.com)
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Message {
 
   /** 系统消息类型. */
