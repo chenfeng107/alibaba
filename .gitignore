@@ -13,6 +13,7 @@ out
 logs
 
 # Houge 开发配置
+gradle-local.properties
 houge.conf
 flyway.conf
 test-tokens.txt
