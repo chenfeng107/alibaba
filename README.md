@@ -34,8 +34,8 @@ Houge 是一款开源免费的**实时消息推送服务**，采用 [Spring Reac
 ## 功能
 
 - [x] 用户认证
-- [x] 私人聊天
-- [x] 群组聊天
+- [x] 单人消息
+- [x] 多人消息
 - [x] 消息存储
 - [x] 容器部署
 - [x] 好友关系
@@ -55,11 +55,7 @@ Houge 是一款开源免费的**实时消息推送服务**，采用 [Spring Reac
 
 ## 演示
 
-### 私人消息
-
-<video src="https://www.bilibili.com/video/BV1Cq4y1c7bN?share_source=copy_web" controls="controls"></video>
-
-<iframe src="//player.bilibili.com/player.html?aid=550842070&bvid=BV1Cq4y1c7bN&cid=489274054&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+- [单人消息](https://www.bilibili.com/video/BV1Cq4y1c7bN?share_source=copy_web)
 
 ![Alipay](docs/images/alipay_qrcode.png)
 ![Wechat](docs/images/wechat_qrcode.png)
