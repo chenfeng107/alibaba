@@ -118,6 +118,7 @@ allprojects {
       dependency("org.roaringbitmap:RoaringBitmap:0.9.16")
       dependency("dev.miku:r2dbc-mysql:0.9.0.BUILD-SNAPSHOT")
       dependency("io.r2dbc:r2dbc-spi:0.9.0.RELEASE")
+      dependency("am.ik.yavi:yavi:0.10.0")
 
       // 测试工具
       dependency("com.github.javafaker:javafaker:1.0.2")

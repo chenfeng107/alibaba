@@ -46,6 +46,7 @@ dependencies {
   implementation(project(":houge-proto"))
   implementation("com.google.guava:guava")
   implementation("io.projectreactor.netty:reactor-netty")
+  implementation("am.ik.yavi:yavi")
 
   // gRPC
   implementation("io.grpc:grpc-protobuf")
