@@ -19,20 +19,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import cool.houge.grpc.ReactorHybridGrpc;
 import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
 import cool.houge.ws.PivotServiceConfig;
-import cool.houge.ws.PivotStreamServiceConfig;
-import cool.houge.ws.pivot.CommandProcessor;
-import cool.houge.ws.pivot.PacketProcessor;
-import cool.houge.ws.pivot.PivotStreamServiceManager;
-import cool.houge.ws.pivot.command.CommandHandler;
-import cool.houge.ws.pivot.command.SubGroupCommandHandler;
-import cool.houge.ws.pivot.internal.CommandProcessorImpl;
-import cool.houge.ws.pivot.internal.PacketProcessorImpl;
 import cool.houge.ws.server.WebSocketHandler;
 import cool.houge.ws.server.WsServer;
 import cool.houge.ws.server.WsServerConfig;
@@ -67,10 +58,6 @@ public class WsModule extends AbstractModule {
     bind(SessionManager.class).to(DefaultSessionManager.class).in(Scopes.SINGLETON);
     bind(SessionGroupManager.class).to(DefaultSessionGroupManager.class).in(Scopes.SINGLETON);
 
-    bind(PacketProcessor.class).to(PacketProcessorImpl.class).in(Scopes.SINGLETON);
-    bind(CommandProcessor.class).to(CommandProcessorImpl.class).in(Scopes.SINGLETON);
-
-    this.bindCommandHandlers();
     this.bindGrpcStub();
   }
 
@@ -80,16 +67,6 @@ public class WsModule extends AbstractModule {
     var serverConfig =
         ConfigBeanFactory.create(config.getConfig("ws-server"), WsServerConfig.class);
     return new WsServer(serverConfig, webSocketHandler);
-  }
-
-  @Provides
-  @Singleton
-  public PivotStreamServiceManager clientAgentManager(
-      PacketProcessor packetProcessor, CommandProcessor commandProcessor) {
-    var agentConfig =
-        ConfigBeanFactory.create(
-            config.getConfig("pivot-stream-service"), PivotStreamServiceConfig.class);
-    return new PivotStreamServiceManager(agentConfig, packetProcessor, commandProcessor);
   }
 
   private void bindGrpcStub() {
@@ -106,11 +83,5 @@ public class WsModule extends AbstractModule {
 
     // gRPC 存根对象注册
     bind(ReactorHybridStub.class).toInstance(ReactorHybridGrpc.newReactorStub(managedChannel));
-  }
-
-  private void bindCommandHandlers() {
-    var binder = Multibinder.newSetBinder(binder(), CommandHandler.class);
-    binder.addBinding().to(SubGroupCommandHandler.class).in(Scopes.SINGLETON);
-    //    binder.addBinding().to(UnsubGroupCommandHandler.class).in(Scopes.SINGLETON);
   }
 }

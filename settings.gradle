@@ -7,6 +7,6 @@ include ":houge-core"
 include ":houge-domain"
 include ":houge-infra"
 
-include ":houge-serves:pivot-serve"
+include ":houge-serves:poplar-serve"
 include ":houge-serves:rest-serve"
 include ":houge-serves:ws-serve"

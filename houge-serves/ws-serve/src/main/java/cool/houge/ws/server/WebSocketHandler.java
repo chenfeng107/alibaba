@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.google.common.annotations.VisibleForTesting;
 import cool.houge.grpc.AuthRequest;
-import cool.houge.grpc.HybridPb;
+import cool.houge.grpc.ListGidsRequest;
 import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
 import cool.houge.grpc.SendMsgRequest;
 import cool.houge.grpc.SendMsgResponse;
@@ -184,7 +184,7 @@ public class WebSocketHandler {
 
   @VisibleForTesting
   Mono<List<Integer>> loadGids(int uid) {
-    var request = HybridPb.ListGidsRequest.newBuilder().setUid(uid).build();
+    var request = ListGidsRequest.newBuilder().setUid(uid).build();
     return hybridStub.listGids(request).map(response -> response.getGidsList());
   }
 
