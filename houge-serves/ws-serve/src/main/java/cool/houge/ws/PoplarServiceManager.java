@@ -66,7 +66,7 @@ public class PoplarServiceManager {
   }
 
   void keepWorkers() {
-    Flux.interval(Duration.ofMinutes(1))
+    Flux.interval(Duration.ofSeconds(10))
         .doOnNext(
             n -> {
               this.runWorkers();
@@ -110,7 +110,10 @@ public class PoplarServiceManager {
                 running.set(false);
               })
           .subscribe(
-              resp -> {},
+              resp -> {
+                System.out.println("响应数据");
+                System.out.println(resp);
+              },
               e -> {
                 if (!channel.isShutdown()) {
                   log.error("Poplar 消息监听出现异常 target={}", target, e);

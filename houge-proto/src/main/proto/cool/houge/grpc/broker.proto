@@ -18,7 +18,7 @@ message BrokerMsg {
   // 消息内容类型
   MsgContentType content_type = 6;
   // 扩展参数会原样转发给客户端
-  string extra = 9;
+  optional string extra = 9;
 }
 
 message BrokerCommand {
