@@ -1,0 +1,47 @@
+syntax = "proto3";
+option java_package = "cool.houge.grpc.agent";
+option java_outer_classname = "PolygonPb";
+
+message AgentAuthRequest {
+  // 访问令牌
+  string token = 1;
+}
+
+message AgentAuthResponse {
+  // 用户ID
+  int64 uid = 1;
+}
+
+message AgentListGidsRequest {
+  int64 uid = 1;
+}
+
+message AgentListGidsResponse {
+  repeated int64 gid = 1;
+}
+
+message AgentPacketRequest {
+  // 发起请求的用户ID
+  int64 request_uid = 1;
+  // Packet数据
+  bytes data_bytes = 2;
+  // 过滤终端的标识
+  string filter = 9;
+}
+
+message AgentPacketResponse {
+  // 响应结果数据
+  bytes data_bytes = 1;
+}
+
+service Polygon {
+
+  // JWT 用户认证
+  rpc Auth(AgentAuthRequest) returns(AgentAuthResponse) {}
+
+  // 查询用户的群组ID列表
+  rpc ListGids(AgentListGidsRequest) returns(AgentListGidsResponse) {}
+
+  // 处理 Packet
+  rpc ProcessPacket(AgentPacketRequest) returns(AgentPacketResponse) {}
+}

@@ -17,9 +17,10 @@ package cool.houge.ws.agent;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.ConfigException;
-import cool.houge.grpc.AgentGrpc;
-import cool.houge.grpc.AgentGrpc.AgentStub;
-import cool.houge.grpc.AgentPb;
+import cool.houge.grpc.agent.AgentGrpc;
+import cool.houge.grpc.agent.AgentGrpc.AgentStub;
+import cool.houge.grpc.agent.AgentPb;
+import cool.houge.grpc.agent.AgentPb.AttachRequest;
 import cool.houge.ws.AgentServiceConfig;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -29,8 +30,6 @@ import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.ClientCallStreamObserver;
 import io.grpc.stub.ClientResponseObserver;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -49,7 +48,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class ClientAgentManager {
+public class AgentServiceManager {
 
   private static final Logger log = LogManager.getLogger();
   /** 跳过重复错误日志的限制. */
@@ -71,7 +70,7 @@ public class ClientAgentManager {
    * @param commandProcessor Command处理器
    */
   @Inject
-  public ClientAgentManager(
+  public AgentServiceManager(
       AgentServiceConfig agentServiceConfig,
       PacketProcessor packetProcessor,
       CommandProcessor commandProcessor) {
@@ -109,14 +108,14 @@ public class ClientAgentManager {
       channels.add(channel);
       log.info("初始化Agent通道完成 target={}", target, channel);
 
-      new LinkHelper(target, channel).run();
+      new Helper(target, channel).run();
     }
   }
 
   /** 停止监控管理器. */
   public void stop() {
     if (!RUN.compareAndSet(true, false)) {
-      throw new IllegalStateException("已停止的 WatchManager");
+      throw new IllegalStateException("已停止的 AgentServiceManager");
     }
 
     for (ManagedChannel channel : channels) {
@@ -124,7 +123,7 @@ public class ClientAgentManager {
     }
   }
 
-  class LinkHelper {
+  class Helper {
 
     private final String target;
     private final ManagedChannel channel;
@@ -132,7 +131,7 @@ public class ClientAgentManager {
     private final AtomicInteger retryCount;
     private final AtomicReference<Status.Code> lastStatusCodeRef;
 
-    LinkHelper(String target, ManagedChannel channel) {
+    Helper(String target, ManagedChannel channel) {
       this.target = target;
       this.channel = channel;
       this.agentStub = AgentGrpc.newStub(channel);
@@ -141,28 +140,28 @@ public class ClientAgentManager {
     }
 
     void run() {
-      var request =
-          AgentPb.LinkRequest.newBuilder().setName(name).setHostName(getHostName()).build();
+      var request = AgentPb.AttachRequest.newBuilder().setId(name).build();
       if (retryCount.get() > 0) {
         log.info("请求连接Agent name={} target={} retryCount={}", name, target, retryCount.get());
       } else {
         log.info("请求连接Agent name={} target={}", name, target);
       }
-      this.agentStub.link(request, response());
+
+      this.agentStub.attach(request, response());
     }
 
-    private ClientResponseObserver<AgentPb.LinkRequest, AgentPb.LinkResponse> response() {
+    private ClientResponseObserver<AgentPb.AttachRequest, AgentPb.AttachResponse> response() {
       return new ClientResponseObserver<>() {
 
-        ClientCallStreamObserver<AgentPb.LinkRequest> requestStream;
+        ClientCallStreamObserver<AttachRequest> requestStream;
 
         @Override
-        public void beforeStart(ClientCallStreamObserver<AgentPb.LinkRequest> requestStream) {
+        public void beforeStart(ClientCallStreamObserver<AgentPb.AttachRequest> requestStream) {
           this.requestStream = requestStream;
         }
 
         @Override
-        public void onNext(AgentPb.LinkResponse response) {
+        public void onNext(AgentPb.AttachResponse response) {
           if (retryCount.get() > 0) {
             retryCount.set(0);
             lastStatusCodeRef.set(Code.OK);
@@ -187,13 +186,14 @@ public class ClientAgentManager {
           } else if (t instanceof StatusException) {
             status = ((StatusException) t).getStatus();
           }
+
           if (status != null) {
             // 如果最新的响应状态码与上次的一致，则根据错误次数判断是否需要打印日志，减少重复的错误日志打印
-            if (status.getCode() != LinkHelper.this.lastStatusCodeRef.get()
+            if (status.getCode() != Helper.this.lastStatusCodeRef.get()
                 || retryCount.getAndIncrement() == 0) {
               log.error("Agent响应错误 target={} status_code={}", target, status.getCode());
             }
-            LinkHelper.this.lastStatusCodeRef.set(status.getCode());
+            Helper.this.lastStatusCodeRef.set(status.getCode());
           } else {
             log.error("Agent响应预期之外的错误 channel={}", channel, t);
           }
@@ -212,14 +212,6 @@ public class ClientAgentManager {
           log.info("完成 target={}", target);
         }
       };
-    }
-
-    private String getHostName() {
-      try {
-        return InetAddress.getLocalHost().getHostName();
-      } catch (UnknownHostException e) {
-        return "UnknownHost";
-      }
     }
   }
 }

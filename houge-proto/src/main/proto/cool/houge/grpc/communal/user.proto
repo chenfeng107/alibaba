@@ -15,7 +15,7 @@
 //
 
 syntax = "proto3";
-option java_package = "cool.houge.grpc";
+option java_package = "cool.houge.grpc.communal";
 option java_outer_classname = "UserPb";
 
 message CreateUserRequest {

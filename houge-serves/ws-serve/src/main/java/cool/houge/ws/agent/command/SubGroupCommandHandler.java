@@ -15,13 +15,13 @@
  */
 package cool.houge.ws.agent.command;
 
+import cool.houge.grpc.agent.AgentPb;
+import cool.houge.ws.session.SessionGroupManager;
+import cool.houge.ws.session.SessionManager;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
-import cool.houge.grpc.AgentPb;
-import cool.houge.ws.session.SessionGroupManager;
-import cool.houge.ws.session.SessionManager;
 
 /**
  * 订阅群组消息命令处理器.
@@ -49,18 +49,19 @@ public class SubGroupCommandHandler implements CommandHandler {
 
   @Override
   public Mono<Void> handle(AgentPb.Command command) {
-    if (!command.hasSubGroup()) {
-      return Mono.empty();
-    }
+    //    if (!command.) {
+    //      return Mono.empty();
+    //    }
 
-    var sg = command.getSubGroup();
-    return sessionManager
-        .findByUid(sg.getUid())
-        .flatMap(
-            session -> {
-              log.debug("会话 {} 订阅群组消息 {}", session, sg.getGidsList());
-              return sessionGroupManager.subGroups(session, sg.getGidsList());
-            })
-        .then();
+    //    var sg = command.
+    //    return sessionManager
+    //        .findByUid(sg.getUid())
+    //        .flatMap(
+    //            session -> {
+    //              log.debug("会话 {} 订阅群组消息 {}", session, sg.getGidsList());
+    //              return sessionGroupManager.subGroups(session, sg.getGidsList());
+    //            })
+    //        .then();
+    return Mono.empty();
   }
 }

@@ -1,0 +1,52 @@
+syntax = "proto3";
+option java_package = "cool.houge.grpc.agent";
+option java_outer_classname = "AgentPb";
+
+// =========================
+message AttachRequest {
+  string id = 1;
+}
+
+message AttachResponse {
+  oneof kind {
+    Command command = 1;
+    PacketMixin packet_mixin = 2;
+  }
+}
+
+message Command {
+
+  message SubUnsubGroup {
+    int64 uid = 1;
+    repeated int64 gids = 2;
+    // 值为 true 时解除用户与群组的订阅关系
+    bool unsub = 9;
+  }
+}
+
+// Packet混合转发类型
+enum PacketMixinType {
+  // 将Packet发送给指定的用户
+  USER = 0;
+  // 将Packet发送给指定的群组
+  GROUP = 1;
+  // 将Packet发送给所有在线用户
+  ALL = 9;
+}
+
+// Packet
+message PacketMixin {
+  // 转发的类型
+  PacketMixinType type = 1;
+  // 接收者
+  repeated int64 to = 2;
+  // 转发的数据
+  bytes data_bytes = 3;
+  // 过滤终端的标识
+  string filter = 9;
+}
+
+service Agent {
+  //
+  rpc Attach(AttachRequest) returns(stream AttachResponse) {}
+}

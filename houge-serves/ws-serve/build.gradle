@@ -18,6 +18,9 @@ sourceSets {
       srcDir "${grpcGeneratedFilesBaseDir}/main/grpc"
       srcDir "${grpcGeneratedFilesBaseDir}/main/reactor"
     }
+    proto {
+      include "cool/houge/grpc/agent/*.proto"
+    }
   }
 }
 

@@ -15,7 +15,7 @@
  */
 package cool.houge.ws.agent;
 
-import cool.houge.grpc.AgentPb;
+import cool.houge.grpc.agent.AgentPb;
 
 /** @author KK (kzou227@qq.com) */
 public interface CommandProcessor {

@@ -18,13 +18,10 @@ package cool.houge.ws.server;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.UnsafeByteOperations;
-import cool.houge.grpc.AuthPb.AuthRequest;
-import cool.houge.grpc.PacketPb.PacketRequest;
-import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
-import cool.houge.grpc.ReactorPacketGrpc.ReactorPacketStub;
-import cool.houge.grpc.ReactorUserGroupGrpc.ReactorUserGroupStub;
-import cool.houge.grpc.UserGroupPb.ListGidsRequest;
+import cool.houge.grpc.agent.PolygonPb;
+import cool.houge.grpc.agent.ReactorPolygonGrpc.ReactorPolygonStub;
 import cool.houge.util.SocketExceptionUtils;
+import cool.houge.ws.session.DefaultSession;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
@@ -58,29 +55,21 @@ public class WebSocketHandler {
   /** 认证令牌在 query 参数中的名称. */
   private static final String ACCESS_TOKEN_QUERY_NAME = "access_token";
 
-  private final ReactorAuthStub authStub;
-  private final ReactorPacketStub packetStub;
-  private final ReactorUserGroupStub userGroupStub;
+  private final ReactorPolygonStub polygonStub;
   private final SessionManager sessionManager;
   private final SessionGroupManager sessionGroupManager;
 
   /**
-   * @param authStub
-   * @param packetStub
-   * @param userGroupStub
+   * @param polygonStub
    * @param sessionManager
    * @param sessionGroupManager
    */
   @Inject
   public WebSocketHandler(
-      ReactorAuthStub authStub,
-      ReactorPacketStub packetStub,
-      ReactorUserGroupStub userGroupStub,
+      ReactorPolygonStub polygonStub,
       SessionManager sessionManager,
       SessionGroupManager sessionGroupManager) {
-    this.authStub = authStub;
-    this.packetStub = packetStub;
-    this.userGroupStub = userGroupStub;
+    this.polygonStub = polygonStub;
     this.sessionManager = sessionManager;
     this.sessionGroupManager = sessionGroupManager;
   }
@@ -133,29 +122,27 @@ public class WebSocketHandler {
   @VisibleForTesting
   void processPacket(WebSocketFrame frame, Session session) {
     var request =
-        PacketRequest.newBuilder()
+        PolygonPb.AgentPacketRequest.newBuilder()
             .setRequestUid(session.uid())
             .setDataBytes(UnsafeByteOperations.unsafeWrap(frame.content().nioBuffer()))
             .build();
-    packetStub
-        .process(request)
-        .doOnNext(
+    polygonStub
+        .processPacket(request)
+        .filter(response -> response.getDataBytes() != ByteString.EMPTY)
+        .flatMap(
             response -> {
-              if (response.getDataBytes() == ByteString.EMPTY) {
-                return;
-              }
               Supplier<ByteBuf> s =
                   () -> Unpooled.wrappedBuffer(response.getDataBytes().asReadOnlyByteBuffer());
-              session
+              return session
                   .send(Mono.fromSupplier(s))
-                  .doOnError(
+                  .onErrorResume(
                       ex -> {
                         if (!session.isClosed()) {
-                          session.close().subscribe();
+                          return session.close();
                         }
                         if (SocketExceptionUtils.ignoreLogException(ex)) {
                           log.debug("已忽略的网络异常", ex);
-                          return;
+                          return Mono.empty();
                         }
                         log.error(
                             "向用户发送消息异常 session={} data(base64)={}",
@@ -163,8 +150,8 @@ public class WebSocketHandler {
                             Base64.getEncoder()
                                 .encodeToString(response.getDataBytes().toByteArray()),
                             ex);
-                      })
-                  .subscribe();
+                        return Mono.empty();
+                      });
             })
         .doOnError(
             t -> {
@@ -180,8 +167,8 @@ public class WebSocketHandler {
 
   @VisibleForTesting
   Mono<List<Long>> loadGids(long uid) {
-    var request = ListGidsRequest.newBuilder().setUid(uid).build();
-    return userGroupStub.listGids(request).map(response -> response.getGidList());
+    var request = PolygonPb.AgentListGidsRequest.newBuilder().setUid(uid).build();
+    return polygonStub.listGids(request).map(response -> response.getGidList());
   }
 
   @VisibleForTesting
@@ -195,11 +182,14 @@ public class WebSocketHandler {
       return Mono.empty();
     }
 
-    var request = AuthRequest.newBuilder().setToken(token).build();
-    //    return streamObserver.asMono().map(resp -> new DefaultSession(in, out, resp.getUid(),
-    // token));
-    // FIXME 完善认证逻辑
-    return Mono.empty();
+    var request = PolygonPb.AgentAuthRequest.newBuilder().setToken(token).build();
+    return polygonStub
+        .auth(request)
+        .map(
+            response -> {
+              log.info("认证成功 uid={}", response.getUid());
+              return new DefaultSession(in, out, response.getUid(), token);
+            });
   }
 
   @VisibleForTesting

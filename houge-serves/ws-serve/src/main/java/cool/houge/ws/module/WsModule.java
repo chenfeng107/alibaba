@@ -22,20 +22,15 @@ import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
-import cool.houge.grpc.ReactorAuthGrpc;
-import cool.houge.grpc.ReactorAuthGrpc.ReactorAuthStub;
-import cool.houge.grpc.ReactorPacketGrpc;
-import cool.houge.grpc.ReactorPacketGrpc.ReactorPacketStub;
-import cool.houge.grpc.ReactorUserGroupGrpc;
-import cool.houge.grpc.ReactorUserGroupGrpc.ReactorUserGroupStub;
+import cool.houge.grpc.agent.ReactorPolygonGrpc;
+import cool.houge.grpc.agent.ReactorPolygonGrpc.ReactorPolygonStub;
 import cool.houge.ws.AgentServiceConfig;
 import cool.houge.ws.LogicServiceConfig;
-import cool.houge.ws.agent.ClientAgentManager;
+import cool.houge.ws.agent.AgentServiceManager;
 import cool.houge.ws.agent.CommandProcessor;
 import cool.houge.ws.agent.PacketProcessor;
 import cool.houge.ws.agent.command.CommandHandler;
 import cool.houge.ws.agent.command.SubGroupCommandHandler;
-import cool.houge.ws.agent.command.UnsubGroupCommandHandler;
 import cool.houge.ws.agent.internal.CommandProcessorImpl;
 import cool.houge.ws.agent.internal.PacketProcessorImpl;
 import cool.houge.ws.server.WebSocketHandler;
@@ -89,11 +84,11 @@ public class WsModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ClientAgentManager clientAgentManager(
+  public AgentServiceManager clientAgentManager(
       PacketProcessor packetProcessor, CommandProcessor commandProcessor) {
     var agentConfig =
         ConfigBeanFactory.create(config.getConfig("agent-service"), AgentServiceConfig.class);
-    return new ClientAgentManager(agentConfig, packetProcessor, commandProcessor);
+    return new AgentServiceManager(agentConfig, packetProcessor, commandProcessor);
   }
 
   private void bindGrpcStub() {
@@ -109,15 +104,12 @@ public class WsModule extends AbstractModule {
     bind(ManagedChannel.class).toInstance(managedChannel);
 
     // gRPC 存根对象注册
-    bind(ReactorAuthStub.class).toInstance(ReactorAuthGrpc.newReactorStub(managedChannel));
-    bind(ReactorPacketStub.class).toInstance(ReactorPacketGrpc.newReactorStub(managedChannel));
-    bind(ReactorUserGroupStub.class)
-        .toInstance(ReactorUserGroupGrpc.newReactorStub(managedChannel));
+    bind(ReactorPolygonStub.class).toInstance(ReactorPolygonGrpc.newReactorStub(managedChannel));
   }
 
   private void bindCommandHandlers() {
     var binder = Multibinder.newSetBinder(binder(), CommandHandler.class);
     binder.addBinding().to(SubGroupCommandHandler.class).in(Scopes.SINGLETON);
-    binder.addBinding().to(UnsubGroupCommandHandler.class).in(Scopes.SINGLETON);
+    //    binder.addBinding().to(UnsubGroupCommandHandler.class).in(Scopes.SINGLETON);
   }
 }

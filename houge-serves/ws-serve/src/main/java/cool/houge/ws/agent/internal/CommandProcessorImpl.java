@@ -15,6 +15,8 @@
  */
 package cool.houge.ws.agent.internal;
 
+import cool.houge.grpc.agent.AgentPb;
+import cool.houge.ws.agent.CommandProcessor;
 import cool.houge.ws.agent.command.CommandHandler;
 import java.util.Objects;
 import java.util.Set;
@@ -22,8 +24,6 @@ import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
-import cool.houge.grpc.AgentPb;
-import cool.houge.ws.agent.CommandProcessor;
 
 /**
  * Agent 命令处理器实现类.

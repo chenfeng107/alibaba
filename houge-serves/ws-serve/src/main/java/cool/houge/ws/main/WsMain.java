@@ -18,12 +18,12 @@ package cool.houge.ws.main;
 import com.google.inject.Guice;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cool.houge.util.AppShutdownHelper;
+import cool.houge.ws.agent.AgentServiceManager;
 import cool.houge.ws.module.WsModule;
 import cool.houge.ws.server.WsServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import cool.houge.util.AppShutdownHelper;
-import cool.houge.ws.agent.ClientAgentManager;
 
 /**
  * 程序入口.
@@ -44,16 +44,19 @@ public class WsMain implements Runnable {
   public void run() {
     var config = this.loadConfig();
     var injector = Guice.createInjector(new WsModule(config));
+    // 启动 Agent 管理器
+    var agentServiceManager = injector.getInstance(AgentServiceManager.class);
+    agentServiceManager.start();
+
+    // 启动 WebSocket 服务
     var wsServer = injector.getInstance(WsServer.class);
     wsServer.start();
 
-    // 启动 Agent 管理器
-    var clientAgentManager = injector.getInstance(ClientAgentManager.class);
-    clientAgentManager.start();
     shutdownHelper
-        .addCallback(clientAgentManager::stop)
         // 停止 WS 服务
         .addCallback(wsServer::stop)
+        // 停止 Agent 服务管理器
+        .addCallback(agentServiceManager::stop)
         .run();
   }
 
