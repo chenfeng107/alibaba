@@ -11,6 +11,13 @@ import reactor.core.publisher.Mono;
 /** @author KK (kzou227@qq.com) */
 public class AppInstDaoImpl implements AppInstDao {
 
+  private final String INSERT_SQL =
+      "INSERT INTO t_app_inst(id,app_name,host_name,host_address,os_name,os_version,os_user,java_vm_name,java_vm_version,java_vm_vendor,work_dir,pid)"
+          + "VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
+  private final String DELETE_SQL = "DELETE FROM t_app_inst WHERE id=$1";
+  private final String UPDATE_CHECK_TIME_SQL = "UPDATE t_app_inst SET check_time=now() WHERE id=$1";
+  private final String GET_SQL = "SELECT * FROM t_app_inst WHERE id=$1";
+
   private final R2dbcClient rc;
 
   public @Inject AppInstDaoImpl(R2dbcClient rc) {
@@ -21,50 +28,36 @@ public class AppInstDaoImpl implements AppInstDao {
   public Mono<Integer> insert(AppInst m) {
     return rc.use(
             spec ->
-                spec.sql(
-                        "INSERT INTO t_app_inst(id,app_name,host_name,host_address,os_name,os_version,os_user,java_vm_name,java_vm_version,java_vm_vendor,work_dir,pid)"
-                            + "values(?id,?app_name,?host_name,?host_address,?os_name,?os_version,?os_user,?java_vm_name,?java_vm_version,?java_vm_vendor,?work_dir,?pid)")
-                    .bind("id", m.getId())
-                    .bind("app_name", m.getAppName())
-                    .bind("host_name", m.getHostName())
-                    .bind("host_address", m.getHostAddress())
-                    .bind("os_name", m.getOsName())
-                    .bind("os_version", m.getOsVersion())
-                    .bind("os_user", m.getOsUser())
-                    .bind("java_vm_name", m.getJavaVmName())
-                    .bind("java_vm_version", m.getJavaVmVersion())
-                    .bind("java_vm_vendor", m.getJavaVmVendor())
-                    .bind("work_dir", m.getWorkDir())
-                    .bind("pid", m.getPid())
+                spec.sql(INSERT_SQL)
+                    .bind("$1", m.getId())
+                    .bind("$2", m.getAppName())
+                    .bind("$3", m.getHostName())
+                    .bind("$4", m.getHostAddress())
+                    .bind("$5", m.getOsName())
+                    .bind("$6", m.getOsVersion())
+                    .bind("$7", m.getOsUser())
+                    .bind("$8", m.getJavaVmName())
+                    .bind("$9", m.getJavaVmVersion())
+                    .bind("$10", m.getJavaVmVendor())
+                    .bind("$11", m.getWorkDir())
+                    .bind("$12", m.getPid())
                     .rowsUpdated())
         .single();
   }
 
   @Override
   public Mono<Integer> delete(int id) {
-    return rc.use(
-            spec -> spec.sql("delete from t_app_inst where id=?id").bind("id", id).rowsUpdated())
-        .single();
+    return rc.use(spec -> spec.sql(DELETE_SQL).bind("$1", id).rowsUpdated()).single();
   }
 
   @Override
   public Mono<Integer> updateCheckTime(int id) {
-    return rc.use(
-            spec ->
-                spec.sql("update t_app_inst set check_time=now() where id=?id")
-                    .bind("id", id)
-                    .rowsUpdated())
-        .singleOrEmpty();
+    return rc.use(spec -> spec.sql(UPDATE_CHECK_TIME_SQL).bind("$1", id).rowsUpdated()).single();
   }
 
   @Override
-  public Mono<AppInst> findById(int id) {
-    return rc.use(
-            spec ->
-                spec.sql("select * from t_app_inst where id=?id")
-                    .bind("id", id)
-                    .fetch(this::mapEntity))
-        .singleOrEmpty();
+  public Mono<AppInst> get(int id) {
+    return rc.use(spec -> spec.sql(GET_SQL).bind("$1", id).fetch(this::mapEntity)).singleOrEmpty();
   }
 
   private AppInst mapEntity(Row row) {

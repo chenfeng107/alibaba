@@ -10,6 +10,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.typesafe.config.Config;
 import cool.houge.domain.group.GroupDao;
+import cool.houge.domain.msg.GroupMsgDao;
 import cool.houge.domain.msg.UserMsgDao;
 import cool.houge.domain.shared.JwtSecretDao;
 import cool.houge.domain.system.AppInstDao;
@@ -17,9 +18,10 @@ import cool.houge.domain.user.UserDao;
 import cool.houge.domain.user.UserQueryDao;
 import cool.houge.infra.dao.AppInstDaoImpl;
 import cool.houge.infra.dao.GroupDaoImpl;
+import cool.houge.infra.dao.GroupMsgDaoImpl;
 import cool.houge.infra.dao.JwtSecretDaoImpl;
-import cool.houge.infra.dao.UserMsgDaoImpl;
 import cool.houge.infra.dao.UserDaoImpl;
+import cool.houge.infra.dao.UserMsgDaoImpl;
 import cool.houge.infra.r2dbc.DefaultR2dbcClient;
 import cool.houge.infra.r2dbc.R2dbcClient;
 import cool.houge.infra.tx.TxOps;
@@ -38,15 +40,16 @@ public class DaoModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(JwtSecretDao.class).to(JwtSecretDaoImpl.class).asEagerSingleton();
-    bind(AppInstDao.class).to(AppInstDaoImpl.class).asEagerSingleton();
+    bind(JwtSecretDao.class).to(JwtSecretDaoImpl.class).in(Scopes.SINGLETON);
+    bind(AppInstDao.class).to(AppInstDaoImpl.class).in(Scopes.SINGLETON);
 
     bind(UserDaoImpl.class).in(Scopes.SINGLETON);
     bind(UserDao.class).to(UserDaoImpl.class);
     bind(UserQueryDao.class).to(UserDaoImpl.class);
 
-    bind(GroupDao.class).to(GroupDaoImpl.class).asEagerSingleton();
-    bind(UserMsgDao.class).to(UserMsgDaoImpl.class).asEagerSingleton();
+    bind(GroupDao.class).to(GroupDaoImpl.class).in(Scopes.SINGLETON);
+    bind(UserMsgDao.class).to(UserMsgDaoImpl.class).in(Scopes.SINGLETON);
+    bind(GroupMsgDao.class).to(GroupMsgDaoImpl.class).in(Scopes.SINGLETON);
   }
 
   @Provides

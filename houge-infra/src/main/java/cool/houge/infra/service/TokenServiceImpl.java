@@ -2,10 +2,8 @@ package cool.houge.infra.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.benmanes.caffeine.cache.AsyncCache;
@@ -116,7 +114,7 @@ public class TokenServiceImpl implements TokenService {
 
   Flux<CachedJwtSecret> loadAll() {
     return jwtSecretDao
-        .findAll()
+        .getAll()
         .map(this::toCachedJwtSecret)
         // .switchIfEmpty(Flux.error(() -> new BizCodeException(BizCodes.C3310)))
         .doOnNext(
@@ -133,10 +131,6 @@ public class TokenServiceImpl implements TokenService {
       verifier.verify(jwt);
     } catch (TokenExpiredException e) {
       throw new BizCodeException(BizCodes.C3301, e);
-    } catch (InvalidClaimException e) {
-      throw new BizCodeException(BizCodes.C3302, e);
-    } catch (SignatureVerificationException e) {
-      throw new BizCodeException(BizCodes.C3305, e);
     } catch (JWTVerificationException e) {
       throw new BizCodeException(BizCodes.C3300, e);
     }
@@ -151,7 +145,7 @@ public class TokenServiceImpl implements TokenService {
   }
 
   Mono<CachedJwtSecret> findJwtSecret(String id) {
-    return jwtSecretDao.findById(id).map(this::toCachedJwtSecret);
+    return jwtSecretDao.get(id).map(this::toCachedJwtSecret);
   }
 
   CachedJwtSecret toCachedJwtSecret(JwtSecret jwtSecret) {
@@ -176,6 +170,6 @@ public class TokenServiceImpl implements TokenService {
 
     String kid;
     Algorithm algorithm;
-    int deleted;
+    long deleted;
   }
 }

@@ -73,7 +73,7 @@ class AppInstDaoImplTest extends AbstractTestDao {
   void findById() {
     var m = newModel();
     txOps
-        .tx(appInstDao.insert(m).then(appInstDao.findById(m.getId())))
+        .tx(appInstDao.insert(m).then(appInstDao.get(m.getId())))
         .as(StepVerifier::create)
         .assertNext(
             o ->
@@ -106,7 +106,7 @@ class AppInstDaoImplTest extends AbstractTestDao {
 
   @Test
   void findByIdNonexistentData() {
-    appInstDao.findById(Integer.MIN_VALUE).as(StepVerifier::create).expectComplete().verify();
+    appInstDao.get(Integer.MIN_VALUE).as(StepVerifier::create).expectComplete().verify();
   }
 
   AppInst newModel() {

@@ -9,12 +9,17 @@ import cool.houge.infra.r2dbc.R2dbcClient;
 import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
 import io.r2dbc.spi.Row;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 import top.yein.chaos.biz.StacklessBizCodeException;
 
 /** @author KK (kzou227@qq.com) */
 public class UserDaoImpl implements UserDao, UserQueryDao {
+
+  private final String INSERT_SQL = "INSERT INTO t_user(origin_uid) VALUES($1)";
+  private final String GET_SQL = "SELECT * FROM t_user WHERE id=$1";
+  private final String EXISTS_SQL = "SELECT 1 FROM t_user WHERE id=$1";
 
   private final R2dbcClient rc;
 
@@ -25,11 +30,12 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
   @Override
   public Mono<Integer> insert(User m) {
     return rc.use(
-            spec ->
-                spec.sql("INSERT INTO t_user(origin_uid) values(?origin_id)")
-                    .bind("origin_id", m.getOriginUid(), String.class)
-                    .returnGeneratedValues("id")
-                    .fetch(row -> row.get("id", Integer.class)))
+            spec -> {
+              return spec.sql(INSERT_SQL)
+                  .bind("$1", m.getOriginUid(), String.class)
+                  .returnGeneratedValues("id")
+                  .fetch(row -> row.get("id", Integer.class));
+            })
         .onErrorMap(
             R2dbcDataIntegrityViolationException.class,
             e -> {
@@ -43,15 +49,13 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
   }
 
   @Override
-  public Mono<User> queryById(int id) {
-    return rc.use(
-            spec -> spec.sql("SELECT * FROM t_user WHERE id=?id").bind("id", id).fetch(this::map))
-        .single();
+  public Mono<User> get(int id) {
+    return rc.use(spec -> spec.sql(GET_SQL).bind("$1", id).fetch(this::map)).singleOrEmpty();
   }
 
   @Override
   public Mono<Nil> exists(int uid) {
-    return rc.use(spec -> spec.sql("SELECT 1 FROM t_user WHERE id=?id").bind("id", uid).fetch())
+    return rc.use(spec -> spec.sql(EXISTS_SQL).bind("$1", uid).fetch())
         .singleOrEmpty()
         .map(unused -> Nil.INSTANCE);
   }
@@ -60,7 +64,13 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
     var m = new User();
     m.setId(row.get("id", Integer.class));
     m.setOriginUid(row.get("origin_uid", String.class));
+    var groupIds = row.get("group_ids", Integer[].class);
+    if (groupIds != null) {
+      m.setGroupIds(Arrays.asList(groupIds));
+    }
+    m.setVer(row.get("ver", Integer.class));
     m.setCreateTime(row.get("create_time", LocalDateTime.class));
+    m.setUpdateTime(row.get("update_time", LocalDateTime.class));
     return m;
   }
 }

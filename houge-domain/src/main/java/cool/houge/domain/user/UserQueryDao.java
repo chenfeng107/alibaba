@@ -13,7 +13,7 @@ public interface UserQueryDao {
    * @param id 用户 ID
    * @return 用户信息
    */
-  Mono<User> queryById(int id);
+  Mono<User> get(int id);
 
   /**
    * 判断指定用户是否存在.

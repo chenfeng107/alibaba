@@ -40,5 +40,5 @@ public interface AppInstDao {
    * @param id 应用 ID
    * @return 实体
    */
-  Mono<AppInst> findById(int id);
+  Mono<AppInst> get(int id);
 }
