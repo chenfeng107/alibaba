@@ -16,23 +16,67 @@
     limitations under the License.
 
 -->
-<Configuration status="warn">
+<Configuration status="WARN">
+  <Properties>
+    <Property name="appName">houge-pivot</Property>
+    <Property name="logDir">${sys:user.dir}/logs</Property>
+    <Property name="pattern">%d{ISO8601} %level{length=1} [%t] %c{5} %L; %msg%n</Property>
+    <Property name="logFileMaxSize">1G</Property>
+  </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{36} %L - %msg%n"/>
+      <PatternLayout pattern="${pattern}"/>
     </Console>
+
+    <RollingRandomAccessFile name="Info" fileName="${logDir}/${appName}.log"
+        filePattern="${logDir}/${appName}-%d{yyyyMMdd}-%i.gz">
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="${logFileMaxSize}"/>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="INFO" onMismatch="NEUTRAL"/>
+      </Filters>
+      <!-- max=1天之内最多产生的日志文件数 -->
+      <DefaultRolloverStrategy max="9">
+        <!-- 将超过保留期限的 INFO 日志删除 -->
+        <Delete basePath="${logDir}" maxDepth="1">
+          <IfFileName glob="info-*.gz"/>
+          <IfLastModified age="3d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+
+    <RollingRandomAccessFile name="Error" fileName="${logDir}/error.log"
+        filePattern="${logDir}/error-%d{yyyyMMdd}-%i.gz">
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="${logFileMaxSize}"/>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="WARN" onMatch="NEUTRAL"/>
+      </Filters>
+      <DefaultRolloverStrategy>
+        <!-- 将超过保留期限的 ERROR 日志删除 -->
+        <Delete basePath="${logDir}" maxDepth="1">
+          <IfFileName glob="error-*.gz"/>
+          <IfLastModified age="7d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
   </Appenders>
   <Loggers>
-    <Logger name="io.netty" level="info"/>
-    <Logger name="io.netty.buffer.PooledByteBufAllocator" level="debug"/>
-
-    <Logger name="reactor.netty" level="info"/>
-    <Logger name="reactor.pool" level="info"/>
-    <Logger name="io.r2dbc" level="info"/>
-    <Logger name="io.grpc" level="info"/>
-
-    <Root level="debug">
+    <Logger name="reactor" level="INFO"/>
+    <Logger name="io.netty" level="INFO"/>
+    <Logger name="io.netty.buffer.PooledByteBufAllocator" level="DEBUG"/>
+    <Logger name="io.r2dbc" level="INFO"/>
+    <Logger name="io.lettuce" level="INFO"/>
+    <Root level="INFO">
       <AppenderRef ref="Console"/>
+      <AppenderRef ref="Info"/>
+      <AppenderRef ref="Error"/>
     </Root>
   </Loggers>
 </Configuration>
