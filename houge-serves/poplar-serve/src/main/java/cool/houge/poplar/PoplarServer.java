@@ -48,7 +48,7 @@ public class PoplarServer {
    */
   public @Inject PoplarServer(Config config, Set<BindableService> grpcServices) {
     this.grpcServices = grpcServices;
-    this.addr = config.getString("poplar-server.addr");
+    this.addr = config.getString("poplar.server.addr");
   }
 
   /** 启动逻辑服务. */
@@ -63,7 +63,7 @@ public class PoplarServer {
     this.server = builder.build();
     try {
       this.server.start();
-      log.info("Logic gRPC服务启动成功 {}", this.server.getListenSockets());
+      log.info("gRPC服务启动成功 {}", this.server.getListenSockets());
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
@@ -73,11 +73,11 @@ public class PoplarServer {
   public void stop() {
     if (this.server != null) {
       if (this.server.isShutdown()) {
-        log.warn("Logic gRPC服务已停止，正在重复停止Logic gRPC服务");
+        log.warn("gRPC服务已停止，正在重复停止Logic gRPC服务");
         return;
       }
       this.server.shutdownNow();
-      log.info("Logic gRPC服务停止完成");
+      log.info("gRPC服务停止完成");
     }
   }
 }

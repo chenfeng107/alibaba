@@ -18,7 +18,7 @@
 -->
 <Configuration status="WARN">
   <Properties>
-    <Property name="appName">houge-pivot</Property>
+    <Property name="appName">houge-poplar</Property>
     <Property name="logDir">${sys:user.dir}/logs</Property>
     <Property name="pattern">%d{ISO8601} %level{length=1} [%t] %c{5} %L; %msg%n</Property>
     <Property name="logFileMaxSize">1G</Property>

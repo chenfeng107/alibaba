@@ -43,7 +43,7 @@ public class DaoModule extends AbstractModule {
 
   @Provides
   public ConnectionFactory connectionFactory(Config config) {
-    var url = config.getString("houge.r2dbc.url");
+    var url = config.getString("poplar.r2dbc.url");
     var options =
         ConnectionFactoryOptions.parse(url)
             .mutate()
