@@ -31,14 +31,14 @@ public interface SessionGroupManager {
    *
    * @param groupIds 群组 IDs
    */
-  Mono<Void> subGroups(Session session, Collection<Long> groupIds);
+  Mono<Void> subGroups(Session session, Collection<Integer> groupIds);
 
   /**
    * 会话取消订阅群组.
    *
    * @param groupIds 群组 IDs
    */
-  Mono<Void> unsubGroups(Session session, Collection<Long> groupIds);
+  Mono<Void> unsubGroups(Session session, Collection<Integer> groupIds);
 
   /**
    * 查询群组下订阅的所有会话.
@@ -46,5 +46,5 @@ public interface SessionGroupManager {
    * @param groupId 群组 ID
    * @return 已订阅群组的会话
    */
-  Flux<Session> findByGroupId(long groupId);
+  Flux<Session> findByGroupId(Integer groupId);
 }

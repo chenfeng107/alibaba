@@ -18,8 +18,9 @@ package cool.houge.ws.server;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.UnsafeByteOperations;
-import cool.houge.grpc.broker.PolygonPb;
-import cool.houge.grpc.broker.ReactorPolygonGrpc.ReactorPolygonStub;
+import cool.houge.grpc.AuthPb;
+import cool.houge.grpc.HybridPb;
+import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
 import cool.houge.util.SocketExceptionUtils;
 import cool.houge.ws.session.DefaultSession;
 import cool.houge.ws.session.Session;
@@ -55,23 +56,23 @@ public class WebSocketHandler {
   /** 认证令牌在 query 参数中的名称. */
   private static final String ACCESS_TOKEN_QUERY_NAME = "access_token";
 
-  private final ReactorPolygonStub polygonStub;
   private final SessionManager sessionManager;
   private final SessionGroupManager sessionGroupManager;
+  private final ReactorHybridStub hybridStub;
 
   /**
-   * @param polygonStub
+   * @param hybridStub
    * @param sessionManager
    * @param sessionGroupManager
    */
   @Inject
   public WebSocketHandler(
-      ReactorPolygonStub polygonStub,
       SessionManager sessionManager,
-      SessionGroupManager sessionGroupManager) {
-    this.polygonStub = polygonStub;
+      SessionGroupManager sessionGroupManager,
+      ReactorHybridStub hybridStub) {
     this.sessionManager = sessionManager;
     this.sessionGroupManager = sessionGroupManager;
+    this.hybridStub = hybridStub;
   }
 
   /**
@@ -122,11 +123,11 @@ public class WebSocketHandler {
   @VisibleForTesting
   void processPacket(WebSocketFrame frame, Session session) {
     var request =
-        PolygonPb.BrokerPacketRequest.newBuilder()
+        HybridPb.newBuilder()
             .setRequestUid(session.uid())
             .setDataBytes(UnsafeByteOperations.unsafeWrap(frame.content().nioBuffer()))
             .build();
-    polygonStub
+    hybridStub
         .processPacket(request)
         .filter(response -> response.getDataBytes() != ByteString.EMPTY)
         .flatMap(
@@ -166,9 +167,9 @@ public class WebSocketHandler {
   }
 
   @VisibleForTesting
-  Mono<List<Long>> loadGids(long uid) {
-    var request = PolygonPb.BrokerListGidsRequest.newBuilder().setUid(uid).build();
-    return polygonStub.listGids(request).map(response -> response.getGidList());
+  Mono<List<Integer>> loadGids(int uid) {
+    var request = HybridPb.ListGidsRequest.newBuilder().setUid(uid).build();
+    return hybridStub.listGids(request).map(response -> response.getGidsList());
   }
 
   @VisibleForTesting
@@ -182,8 +183,8 @@ public class WebSocketHandler {
       return Mono.empty();
     }
 
-    var request = PolygonPb.BrokerAuthRequest.newBuilder().setToken(token).build();
-    return polygonStub
+    var request = AuthPb.AuthRequest.newBuilder().setToken(token).build();
+    return hybridStub
         .auth(request)
         .map(
             response -> {

@@ -16,7 +16,7 @@
 
 syntax = "proto3";
 option java_package = "cool.houge.grpc";
-option java_outer_classname = "UserPb";
+option java_multiple_files = true;
 
 message CreateUserRequest {
   // 用户ID.

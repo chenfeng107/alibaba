@@ -72,7 +72,7 @@ public final class DefaultSession implements Session {
   }
 
   @Override
-  public long uid() {
+  public int uid() {
     return this.uid;
   }
 
@@ -82,7 +82,7 @@ public final class DefaultSession implements Session {
   }
 
   @Override
-  public Set<Long> subGroupIds() {
+  public Set<Integer> subGroupIds() {
     return this.subGroupIds;
   }
 

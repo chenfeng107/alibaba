@@ -1,9 +1,10 @@
 syntax = "proto3";
 option java_package = "cool.houge.grpc";
-option java_outer_classname = "HybridPb";
+option java_multiple_files = true;
 
 import "cool/houge/grpc/auth.proto";
 import "cool/houge/grpc/msg.proto";
+import "cool/houge/protos/msg_enums.proto";
 
 message ListGidsRequest {
   int32 uid = 1;
@@ -32,15 +33,23 @@ message AttachResponse {
     }
   }
 
-  message Packet {
-    // 转发的数据
-    bytes data_bytes = 3;
-    // 消息过滤器
-    repeated string filters = 9;
+  message Msg {
+    // 消息类型
+    MsgKind kind = 1;
+    // 消息发送者
+    fixed32 from = 2;
+    // 消息接收者
+    fixed32 to = 3;
+    // 消息内容
+    string content = 4;
+    // 消息内容类型
+    MsgContentType content_type = 5;
+    // 扩展参数会原样转发给客户端
+    string extra = 9;
   }
 
   oneof kind {
-    Packet packet = 1;
+    Msg msg = 1;
     Command command = 9;
   }
 }

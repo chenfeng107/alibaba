@@ -38,7 +38,7 @@ public class DefaultSessionManager implements SessionManager {
   // 会话缓存
   private final AsyncCache<Long, Session> sessionCache = Caffeine.newBuilder().buildAsync();
   // 用户->会话缓存
-  private final AsyncCache<Long, CopyOnWriteArrayList<Session>> uidSessionCache =
+  private final AsyncCache<Integer, CopyOnWriteArrayList<Session>> uidSessionCache =
       Caffeine.newBuilder().buildAsync();
 
   @Override

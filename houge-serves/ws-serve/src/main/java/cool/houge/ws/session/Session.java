@@ -38,7 +38,7 @@ public interface Session {
    *
    * @return 用户ID
    */
-  long uid();
+  int uid();
 
   /**
    * 返回户认证的令牌.
@@ -52,7 +52,7 @@ public interface Session {
    *
    * @return 订阅群组 IDs
    */
-  Set<Long> subGroupIds();
+  Set<Integer> subGroupIds();
 
   /**
    * 会话是否关闭.

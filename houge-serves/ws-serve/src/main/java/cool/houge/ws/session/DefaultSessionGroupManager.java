@@ -31,11 +31,11 @@ import reactor.core.scheduler.Schedulers;
 public class DefaultSessionGroupManager implements SessionGroupManager {
 
   // 缓存组 Session
-  private final AsyncCache<Long, CopyOnWriteArrayList<Session>> groupSessions =
+  private final AsyncCache<Integer, CopyOnWriteArrayList<Session>> groupSessions =
       Caffeine.newBuilder().buildAsync();
 
   @Override
-  public Mono<Void> subGroups(Session session, Collection<Long> groupIds) {
+  public Mono<Void> subGroups(Session session, Collection<Integer> groupIds) {
     if (groupIds == null || groupIds.isEmpty()) {
       return Mono.empty();
     }
@@ -55,7 +55,7 @@ public class DefaultSessionGroupManager implements SessionGroupManager {
   }
 
   @Override
-  public Mono<Void> unsubGroups(Session session, Collection<Long> gids) {
+  public Mono<Void> unsubGroups(Session session, Collection<Integer> gids) {
     if (gids == null || gids.isEmpty()) {
       return Mono.empty();
     }
@@ -85,7 +85,7 @@ public class DefaultSessionGroupManager implements SessionGroupManager {
   }
 
   @Override
-  public Flux<Session> findByGroupId(long groupId) {
+  public Flux<Session> findByGroupId(Integer groupId) {
     return Flux.defer(
         () -> {
           var cf = groupSessions.getIfPresent(groupId);
