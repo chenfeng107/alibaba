@@ -1,7 +1,7 @@
 package cool.houge.rest.controller.user;
 
-import cool.houge.grpc.CreateUserRequest;
-import cool.houge.grpc.ReactorUserGrpc.ReactorUserStub;
+import cool.houge.rest.facade.user.UserFacade;
+import cool.houge.rest.facade.user.UserInput;
 import cool.houge.rest.interceptor.Interceptors;
 import cool.houge.rest.web.AbstractRestSupport;
 import cool.houge.rest.web.RoutingService;
@@ -18,10 +18,10 @@ import reactor.netty.http.server.HttpServerRoutes;
  */
 public class UserController extends AbstractRestSupport implements RoutingService {
 
-  private final ReactorUserStub userStub;
+  private final UserFacade userFacade;
 
-  public @Inject UserController(ReactorUserStub userStub) {
-    this.userStub = userStub;
+  public @Inject UserController(UserFacade userFacade) {
+    this.userFacade = userFacade;
   }
 
   @Override
@@ -29,16 +29,14 @@ public class UserController extends AbstractRestSupport implements RoutingServic
     routes.post("/s/users", this::create);
   }
 
+  /**
+   * @param request
+   * @param response
+   * @return
+   */
   Mono<Void> create(HttpServerRequest request, HttpServerResponse response) {
-    return json(request, UserForm.class)
-        .flatMap(
-            form -> {
-              var builder = CreateUserRequest.newBuilder();
-              if (form.getOriginUid() != null) {
-                builder.setOriginUid(form.getOriginUid());
-              }
-              return userStub.create(builder.build());
-            })
+    return json(request, UserInput.class)
+        .flatMap(input -> userFacade.create(input))
         .flatMap(o -> json(response, o));
   }
 }

@@ -26,6 +26,12 @@ public interface ErrorInfoOrBuilder extends
       getMessageBytes();
 
   /**
+   * <code>int32 httpStatus = 3;</code>
+   * @return The httpStatus.
+   */
+  int getHttpStatus();
+
+  /**
    * <code>map&lt;string, .google.protobuf.Value&gt; details = 9;</code>
    */
   int getDetailsCount();

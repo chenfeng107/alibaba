@@ -61,6 +61,11 @@ private static final long serialVersionUID = 0L;
             message_ = s;
             break;
           }
+          case 24: {
+
+            httpStatus_ = input.readInt32();
+            break;
+          }
           case 74: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
               details_ = com.google.protobuf.MapField.newMapField(
@@ -167,6 +172,17 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int HTTPSTATUS_FIELD_NUMBER = 3;
+  private int httpStatus_;
+  /**
+   * <code>int32 httpStatus = 3;</code>
+   * @return The httpStatus.
+   */
+  @java.lang.Override
+  public int getHttpStatus() {
+    return httpStatus_;
+  }
+
   public static final int DETAILS_FIELD_NUMBER = 9;
   private static final class DetailsDefaultEntryHolder {
     static final com.google.protobuf.MapEntry<
@@ -268,6 +284,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
     }
+    if (httpStatus_ != 0) {
+      output.writeInt32(3, httpStatus_);
+    }
     com.google.protobuf.GeneratedMessageV3
       .serializeStringMapTo(
         output,
@@ -289,6 +308,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
+    }
+    if (httpStatus_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, httpStatus_);
     }
     for (java.util.Map.Entry<java.lang.String, com.google.protobuf.Value> entry
          : internalGetDetails().getMap().entrySet()) {
@@ -319,6 +342,8 @@ private static final long serialVersionUID = 0L;
         != other.getCode()) return false;
     if (!getMessage()
         .equals(other.getMessage())) return false;
+    if (getHttpStatus()
+        != other.getHttpStatus()) return false;
     if (!internalGetDetails().equals(
         other.internalGetDetails())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
@@ -336,6 +361,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getCode();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
+    hash = (37 * hash) + HTTPSTATUS_FIELD_NUMBER;
+    hash = (53 * hash) + getHttpStatus();
     if (!internalGetDetails().getMap().isEmpty()) {
       hash = (37 * hash) + DETAILS_FIELD_NUMBER;
       hash = (53 * hash) + internalGetDetails().hashCode();
@@ -499,6 +526,8 @@ private static final long serialVersionUID = 0L;
 
       message_ = "";
 
+      httpStatus_ = 0;
+
       internalGetMutableDetails().clear();
       return this;
     }
@@ -529,6 +558,7 @@ private static final long serialVersionUID = 0L;
       int from_bitField0_ = bitField0_;
       result.code_ = code_;
       result.message_ = message_;
+      result.httpStatus_ = httpStatus_;
       result.details_ = internalGetDetails();
       result.details_.makeImmutable();
       onBuilt();
@@ -585,6 +615,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getMessage().isEmpty()) {
         message_ = other.message_;
         onChanged();
+      }
+      if (other.getHttpStatus() != 0) {
+        setHttpStatus(other.getHttpStatus());
       }
       internalGetMutableDetails().mergeFrom(
           other.internalGetDetails());
@@ -721,6 +754,37 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       message_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int httpStatus_ ;
+    /**
+     * <code>int32 httpStatus = 3;</code>
+     * @return The httpStatus.
+     */
+    @java.lang.Override
+    public int getHttpStatus() {
+      return httpStatus_;
+    }
+    /**
+     * <code>int32 httpStatus = 3;</code>
+     * @param value The httpStatus to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHttpStatus(int value) {
+      
+      httpStatus_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 httpStatus = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearHttpStatus() {
+      
+      httpStatus_ = 0;
       onChanged();
       return this;
     }

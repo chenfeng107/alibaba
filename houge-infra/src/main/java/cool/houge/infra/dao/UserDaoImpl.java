@@ -1,14 +1,17 @@
 package cool.houge.infra.dao;
 
 import cool.houge.Nil;
+import cool.houge.domain.BizCodes;
 import cool.houge.domain.model.User;
 import cool.houge.domain.user.UserDao;
 import cool.houge.domain.user.UserQueryDao;
 import cool.houge.infra.r2dbc.R2dbcClient;
+import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
 import io.r2dbc.spi.Row;
 import java.time.LocalDateTime;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;
+import top.yein.chaos.biz.StacklessBizCodeException;
 
 /** @author KK (kzou227@qq.com) */
 public class UserDaoImpl implements UserDao, UserQueryDao {
@@ -27,6 +30,15 @@ public class UserDaoImpl implements UserDao, UserQueryDao {
                     .bind("origin_id", m.getOriginUid(), String.class)
                     .returnGeneratedValues("id")
                     .fetch(row -> row.get("id", Integer.class)))
+        .onErrorMap(
+            R2dbcDataIntegrityViolationException.class,
+            e -> {
+              // origin_uid 唯一索引冲突
+              if ("23000".equals(e.getSqlState())) {
+                return new StacklessBizCodeException(BizCodes.C3000, e.getMessage());
+              }
+              return e;
+            })
         .single();
   }
 

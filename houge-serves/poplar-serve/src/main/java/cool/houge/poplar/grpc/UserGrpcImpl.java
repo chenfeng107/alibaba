@@ -26,6 +26,7 @@ public class UserGrpcImpl extends ReactorUserGrpc.UserImplBase {
     return request
         .map(req -> new User().setOriginUid(req.getOriginUid()))
         .flatMap(userService::create)
-        .map(uid -> CreateUserResponse.newBuilder().setUid(uid).build());
+        .map(uid -> CreateUserResponse.newBuilder().setUid(uid).build())
+        .onErrorMap(ErrorMaps::map);
   }
 }

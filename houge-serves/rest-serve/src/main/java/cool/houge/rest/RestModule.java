@@ -30,6 +30,8 @@ import cool.houge.grpc.ReactorUserGrpc.ReactorUserStub;
 import cool.houge.rest.controller.msg.MsgController;
 import cool.houge.rest.controller.token.TokenController;
 import cool.houge.rest.controller.user.UserController;
+import cool.houge.rest.facade.token.TokenFacade;
+import cool.houge.rest.facade.user.UserFacade;
 import cool.houge.rest.interceptor.AkskInterceptor;
 import cool.houge.rest.interceptor.Interceptors;
 import cool.houge.rest.interceptor.TokenInterceptor;
@@ -63,16 +65,17 @@ public class RestModule extends AbstractModule {
     bind(Config.class).toInstance(config);
     bind(RestServer.class).in(Scopes.SINGLETON);
 
+    // Facade
+    bind(TokenFacade.class).in(Scopes.SINGLETON);
+    bind(UserFacade.class).in(Scopes.SINGLETON);
+
     // 绑定 Web 访问资源对象
     bind(TokenInterceptor.class).in(Scopes.SINGLETON);
-
     // 控制器注册
     var multibinder = Multibinder.newSetBinder(binder(), RoutingService.class);
     multibinder.addBinding().to(TokenController.class).in(Scopes.SINGLETON);
     multibinder.addBinding().to(MsgController.class).in(Scopes.SINGLETON);
     multibinder.addBinding().to(UserController.class).in(Scopes.SINGLETON);
-
-    // gRPC 注册
   }
 
   @Provides
@@ -110,13 +113,13 @@ public class RestModule extends AbstractModule {
 
   @Singleton
   @Provides
-  public ReactorTokenStub tokenSub(ManagedChannel managedChannel) {
+  public ReactorTokenStub tokenStub(ManagedChannel managedChannel) {
     return ReactorTokenGrpc.newReactorStub(managedChannel);
   }
 
   @Singleton
   @Provides
-  public ReactorUserStub userSub(ManagedChannel managedChannel) {
+  public ReactorUserStub userStub(ManagedChannel managedChannel) {
     return ReactorUserGrpc.newReactorStub(managedChannel);
   }
 }

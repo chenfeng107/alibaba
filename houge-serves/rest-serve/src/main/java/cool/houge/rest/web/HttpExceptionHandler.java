@@ -15,14 +15,17 @@
  */
 package cool.houge.rest.web;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.protobuf.InvalidProtocolBufferException;
 import cool.houge.Env;
-import cool.houge.domain.Problem;
+import cool.houge.protos.ErrorInfo;
+import io.grpc.Metadata;
+import io.grpc.Metadata.Key;
+import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Optional;
+import java.util.Base64;
 import java.util.stream.Stream;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
@@ -37,6 +40,9 @@ import top.yein.chaos.biz.BizCodeException;
  */
 @Log4j2
 public class HttpExceptionHandler extends AbstractRestSupport {
+
+  private static final Key<byte[]> GRPC_ERROR_INFO_KEY =
+      Key.of("error-info-bin", Metadata.BINARY_BYTE_MARSHALLER);
 
   /** 是否为调试模式. */
   private final boolean debug;
@@ -68,36 +74,36 @@ public class HttpExceptionHandler extends AbstractRestSupport {
    * @return RS
    */
   public Mono<Void> apply(HttpServerRequest request, HttpServerResponse response, Throwable t) {
-    var problemBuilder = Problem.builder();
-    var propertiesBuilder = ImmutableMap.<String, Object>builder();
-    boolean errorLog;
+    var builder = ErrorResult.Error.builder();
+    boolean errorLog = false;
     if (t instanceof BizCodeException) {
       var ex = (BizCodeException) t;
       var bc = ex.getBizCode();
-      problemBuilder
-          .status(bc.getHttpStatus())
+      builder
           .code(bc.getCode())
-          .title(ex.getRawMessage())
-          .detail(
-              Optional.ofNullable(ex.getCause())
-                  .map(Throwable::getMessage)
-                  .orElseGet(() -> ex.getRawMessage()));
+          .status(bc.getHttpStatus())
+          .message(bc.getMessage())
+          .developerMessage(ex.getMessage());
 
       var contextEntries = ex.getContextEntries();
       if (!contextEntries.isEmpty()) {
-        propertiesBuilder.put("context_values", ex.getContextEntries());
+        builder.details(contextEntries);
       }
       errorLog = bc.getHttpStatus() >= HttpResponseStatus.INTERNAL_SERVER_ERROR.code();
-    } else if (t instanceof StatusRuntimeException) {
+    } else if (t instanceof StatusException) { // gRPC
+      var ex = (StatusException) t;
+      if (!perform(ex.getTrailers(), builder)) {
+        builder.code(500).status(500).message("gRPC错误").developerMessage(ex.getMessage());
+        errorLog = true;
+      }
+    } else if (t instanceof StatusRuntimeException) { // gRPC
       var ex = (StatusRuntimeException) t;
-      problemBuilder
-          .status(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-          .title("gRPC 服务调用错误")
-          .detail(ex.getMessage());
-      propertiesBuilder.put("grpc_status_code", ex.getStatus().getCode());
-      errorLog = true;
+      if (!perform(ex.getTrailers(), builder)) {
+        builder.code(500).status(500).message("gRPC错误").developerMessage(ex.getMessage());
+        errorLog = true;
+      }
     } else {
-      problemBuilder.status(HttpResponseStatus.INTERNAL_SERVER_ERROR.code()).title(t.getMessage());
+      builder.status(500).code(500).message("服务器错误").developerMessage(t.getMessage());
       errorLog = true;
     }
 
@@ -113,18 +119,37 @@ public class HttpExceptionHandler extends AbstractRestSupport {
 
     if (debugEnabled) {
       // debug 模式下将异常堆栈输出至客户端
-      propertiesBuilder.put("stacktrace", getStackTrace(t));
+      builder.stacktrace(getStackTrace(t));
     }
 
-    var properties = propertiesBuilder.build();
-    if (!properties.isEmpty()) {
-      problemBuilder.properties(properties);
-    }
-    var problem = problemBuilder.build();
-
+    // 错误响应
+    var error = builder.build();
     // 设置 HTTP 错误状态码
-    response.status(problem.getStatus());
-    return json(response, problem);
+    response.status(error.getStatus());
+    return json(response, new ErrorResult(error));
+  }
+
+  private boolean perform(Metadata trailers, ErrorResult.Error.ErrorBuilder builder) {
+    if (trailers == null) {
+      return false;
+    }
+
+    var bytes = trailers.get(GRPC_ERROR_INFO_KEY);
+    if (bytes == null) {
+      return false;
+    }
+
+    ErrorInfo info;
+    try {
+      info = ErrorInfo.parseFrom(bytes);
+    } catch (InvalidProtocolBufferException e) {
+      log.error("解析gRPC错误信息错误 >>> {}", Base64.getEncoder().encodeToString(bytes), e);
+      builder.code(-1).status(500).message("解析gRPC错误信息错误").developerMessage(e.getMessage());
+      return true;
+    }
+
+    builder.code(info.getCode()).status(info.getHttpStatus()).message(info.getMessage());
+    return true;
   }
 
   private Stream<String> getStackTrace(Throwable t) {

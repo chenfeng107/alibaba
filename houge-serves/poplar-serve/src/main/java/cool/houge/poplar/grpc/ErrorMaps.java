@@ -27,7 +27,11 @@ final class ErrorMaps {
       var status = Status.fromCodeValue(code.getGrpcStatus());
 
       var data = new Metadata();
-      var builder = ErrorInfo.newBuilder().setCode(code.getCode()).setMessage(code.getMessage());
+      var builder =
+          ErrorInfo.newBuilder()
+              .setCode(code.getCode())
+              .setHttpStatus(code.getHttpStatus())
+              .setMessage(code.getMessage());
 
       data.put(ERROR_INFO_KEY, builder.build().toByteArray());
       return status.asRuntimeException(data);
