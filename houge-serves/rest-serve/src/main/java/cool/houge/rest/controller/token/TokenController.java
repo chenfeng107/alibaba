@@ -16,9 +16,9 @@
 package cool.houge.rest.controller.token;
 
 import cool.houge.domain.auth.TokenService;
-import cool.houge.rest.http.AbstractRestSupport;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
+import cool.houge.rest.http.AbstractRestSupport;
 import java.util.Map;
 import javax.inject.Inject;
 import reactor.core.publisher.Mono;
@@ -58,7 +58,7 @@ public class TokenController extends AbstractRestSupport implements RoutingServi
    * @return RS
    */
   Mono<Void> generateToken(HttpServerRequest request, HttpServerResponse response) {
-    var uid = pathLong(request, "uid");
+    var uid = pathInt(request, "uid");
     return tokenService
         .generateToken(uid)
         .flatMap(accessToken -> json(response, Map.of("access_token", accessToken)));

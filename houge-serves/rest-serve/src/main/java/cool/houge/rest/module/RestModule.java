@@ -23,24 +23,10 @@ import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import cool.houge.ConfigKeys;
-import cool.houge.domain.auth.AuthService;
 import cool.houge.domain.auth.TokenService;
-import cool.houge.infra.service.auth.JwsAuthService;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
-import cool.houge.rest.RestAppIdentifier;
-import cool.houge.rest.controller.Interceptors;
-import cool.houge.rest.controller.RoutingService;
-import cool.houge.rest.controller.ServerAuthInterceptor;
-import cool.houge.rest.controller.UserAuthInterceptor;
-import cool.houge.rest.controller.group.GroupController;
-import cool.houge.rest.controller.health.HealthController;
-import cool.houge.rest.controller.info.InfoController;
-import cool.houge.rest.controller.message.MessageController;
-import cool.houge.rest.controller.message.MessageIdController;
-import cool.houge.rest.controller.message.SendMessageController;
-import cool.houge.rest.controller.token.TokenController;
-import cool.houge.rest.controller.user.UserController;
+import cool.houge.infra.service.TokenServiceImpl;
 import cool.houge.infra.system.health.HealthIndicator;
 import cool.houge.infra.system.health.HealthService;
 import cool.houge.infra.system.health.HealthServiceImpl;
@@ -51,6 +37,18 @@ import cool.houge.infra.system.info.InfoContributor;
 import cool.houge.infra.system.info.InfoService;
 import cool.houge.infra.system.info.InfoServiceImpl;
 import cool.houge.infra.system.info.JavaInfoContributor;
+import cool.houge.rest.RestAppIdentifier;
+import cool.houge.rest.controller.Interceptors;
+import cool.houge.rest.controller.RoutingService;
+import cool.houge.rest.controller.ServerAuthInterceptor;
+import cool.houge.rest.controller.UserAuthInterceptor;
+import cool.houge.rest.controller.health.HealthController;
+import cool.houge.rest.controller.info.InfoController;
+import cool.houge.rest.controller.message.MessageController;
+import cool.houge.rest.controller.message.MessageIdController;
+import cool.houge.rest.controller.message.SendMessageController;
+import cool.houge.rest.controller.token.TokenController;
+import cool.houge.rest.controller.user.UserController;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 import javax.inject.Singleton;
@@ -80,10 +78,8 @@ public class RestModule extends AbstractModule {
     // 消息 ID 生成器
     bind(MessageIdGenerator.class).to(YeinGidMessageIdGenerator.class).in(Scopes.SINGLETON);
 
-    // 访问认证及访问令牌
-    bind(JwsAuthService.class).in(Scopes.SINGLETON);
-    bind(AuthService.class).to(JwsAuthService.class).in(Scopes.SINGLETON);
-    bind(TokenService.class).to(JwsAuthService.class).in(Scopes.SINGLETON);
+    // 令牌服务
+    bind(TokenService.class).to(TokenServiceImpl.class).in(Scopes.SINGLETON);
 
     // 绑定 Web 访问资源对象
     bind(UserAuthInterceptor.class).in(Scopes.SINGLETON);
@@ -128,7 +124,7 @@ public class RestModule extends AbstractModule {
     b.accept(MessageController.class);
     b.accept(SendMessageController.class);
 
-    b.accept(GroupController.class);
+    //    b.accept(GroupController.class);
     b.accept(UserController.class);
     b.accept(TokenController.class);
   }

@@ -15,8 +15,8 @@
  */
 package cool.houge.rest.resource;
 
-import java.security.SecureRandom;
 import cool.houge.domain.auth.AuthContext;
+import java.security.SecureRandom;
 
 /**
  * 测试专用的 AuthContext.
@@ -25,10 +25,10 @@ import cool.houge.domain.auth.AuthContext;
  */
 public class TestAuthContext implements AuthContext {
 
-  final long uid = new SecureRandom().nextLong();
+  final int uid = new SecureRandom().nextInt();
 
   @Override
-  public long uid() {
+  public int uid() {
     return uid;
   }
 

@@ -30,5 +30,11 @@ public interface TokenService {
    * @param uid 用户 ID
    * @return 访问令牌
    */
-  Mono<String> generateToken(long uid);
+  Mono<String> generateToken(int uid);
+
+  /**
+   * @param token
+   * @return
+   */
+  Mono<TokenInfo> verify(String token);
 }
