@@ -1,6 +1,5 @@
 package cool.houge.domain.msg;
 
-import cool.houge.domain.Paging;
 import cool.houge.domain.model.Msg;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,8 +19,7 @@ public interface MsgQueryDao {
    * 分页查询符合用户指定条件的消息.
    *
    * @param q 指定的查询条件
-   * @param paging 分页
    * @return
    */
-  Flux<Msg> queryByUser(MsgQuery q, Paging paging);
+  Flux<Msg> queryByUser(MsgQuery q);
 }

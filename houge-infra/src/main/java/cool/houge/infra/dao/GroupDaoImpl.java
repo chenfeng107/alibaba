@@ -1,13 +1,17 @@
 package cool.houge.infra.dao;
 
 import cool.houge.domain.group.GroupDao;
+import cool.houge.domain.group.GroupQueryDao;
 import cool.houge.domain.model.Group;
+import cool.houge.domain.model.User;
 import cool.houge.infra.r2dbc.R2dbcClient;
+import java.time.LocalDateTime;
 import javax.inject.Inject;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
-public class GroupDaoImpl implements GroupDao {
+public class GroupDaoImpl implements GroupDao, GroupQueryDao {
 
   private final R2dbcClient rc;
 
@@ -50,6 +54,44 @@ public class GroupDaoImpl implements GroupDao {
               }
               return this.incMemberSize(gid, -1);
             });
+  }
+
+  @Override
+  public Mono<Group> queryById(int id) {
+    return rc.use(
+            spec ->
+                spec.sql("SELECT * FROM t_group WHERE id=?id")
+                    .bind("id", id)
+                    .fetch(
+                        row -> {
+                          var m = new Group();
+                          m.setId(id);
+                          m.setCreator(new User().setId(row.get("creator_id", Integer.class)));
+                          m.setOwner(new User().setId(row.get("owner_id", Integer.class)));
+                          m.setMemberSize(row.get("member_size", Integer.class));
+                          m.setCreateTime(row.get("create_time", LocalDateTime.class));
+                          m.setUpdateTime(row.get("update_time", LocalDateTime.class));
+                          return m;
+                        }))
+        .single();
+  }
+
+  @Override
+  public Flux<Integer> queryUidByGid(int gid) {
+    return rc.use(
+        spec ->
+            spec.sql("SELECT uid FROM t_group_member WHERE gid=?gid")
+                .bind("gid", gid)
+                .fetch(row -> row.get("uid", Integer.class)));
+  }
+
+  @Override
+  public Flux<Integer> queryGidByUid(int uid) {
+    return rc.use(
+        spec ->
+            spec.sql("SELECT gid FROM t_group_member WHERE uid=?uid")
+                .bind("uid", uid)
+                .fetch(row -> row.get("gid", Integer.class)));
   }
 
   Mono<Integer> incMemberSize(int id, int delta) {
