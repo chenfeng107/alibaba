@@ -9,6 +9,7 @@ sourceSets {
       srcDir "${grpcGeneratedFilesBaseDir}/main/java"
       srcDir "${grpcGeneratedFilesBaseDir}/main/grpc"
       srcDir "${grpcGeneratedFilesBaseDir}/main/reactor"
+      srcDir "${grpcGeneratedFilesBaseDir}/main/jooq"
     }
   }
 }
@@ -18,9 +19,9 @@ protobuf {
   protoc {
     artifact = "com.google.protobuf:protoc:3.17.3"
   }
-  clean {
-    delete protobuf.generatedFilesBaseDir
-  }
+  //  clean {
+  //     delete protobuf.generatedFilesBaseDir
+  //  }
   plugins {
     grpc {
       artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
@@ -54,7 +55,6 @@ jooq {
             name = "org.jooq.meta.postgres.PostgresDatabase"
             inputSchema = "public"
             includeSystemTables = false
-            includeSequences = false
             includePrimaryKeys = false
             includeUniqueKeys = false
             includeIndexes = false
@@ -64,7 +64,7 @@ jooq {
             """
           }
           generate {
-            fluentSetters = true
+            // fluentSetters = true
             generatedAnnotation = true
             generatedAnnotationType = "DETECT_FROM_JDK"
             generatedAnnotationDate = true
@@ -98,9 +98,8 @@ jooq {
           }
           target {
             packageName = "cool.houge.infra.db"
-            directory = "build/generated-src/jooq/main"  // default (can be omitted)
+            directory = "${grpcGeneratedFilesBaseDir}/main/jooq"
             encoding = "UTF-8"
-            clean = true
           }
           strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
         }

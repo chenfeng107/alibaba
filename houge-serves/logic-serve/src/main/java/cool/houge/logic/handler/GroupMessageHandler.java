@@ -16,16 +16,13 @@
 package cool.houge.logic.handler;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Strings;
 import cool.houge.domain.BizCodes;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.logic.agent.PacketSender;
-import cool.houge.logic.handler.internal.MessagePacketHelper;
 import cool.houge.logic.packet.MessagePacketBase;
 import cool.houge.service.message.MessageStorageService;
 import cool.houge.storage.query.GroupQueryDao;
 import cool.houge.util.YeinGid;
-import java.util.List;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,24 +76,26 @@ public class GroupMessageHandler implements PacketHandler<MessagePacketBase> {
       throw new StacklessBizCodeException(BizCodes.C3600, "[message_id]不能包含空白字符");
     }
     var gid = packet.getTo();
+    return Mono.empty();
 
-    return groupQueryDao
-        .existsById(gid)
-        .switchIfEmpty(
-            Mono.error(
-                () ->
-                    new StacklessBizCodeException(
-                        BizCodes.C3630, Strings.lenientFormat("群组不存在[gid=%s]", gid))))
-        .doOnNext(uids -> packetSender.sendToGroup(List.of(gid), packet))
-        .flatMapMany(unused -> groupQueryDao.queryUidByGid(gid))
-        .collectList()
-        .filter(uids -> !uids.isEmpty())
-        .flatMap(
-            uids -> {
-              // 存储消息
-              var entity = MessagePacketHelper.toMessageEntity(packet);
-              return messageStorageService.store(entity, uids);
-            })
-        .then();
+    // FIXME
+    //    return groupQueryDao
+    //        .existsById(gid)
+    //        .switchIfEmpty(
+    //            Mono.error(
+    //                () ->
+    //                    new StacklessBizCodeException(
+    //                        BizCodes.C3630, Strings.lenientFormat("群组不存在[gid=%s]", gid))))
+    //        .doOnNext(uids -> packetSender.sendToGroup(List.of(gid), packet))
+    //        .flatMapMany(unused -> groupQueryDao.queryUidByGid(gid))
+    //        .collectList()
+    //        .filter(uids -> !uids.isEmpty())
+    //        .flatMap(
+    //            uids -> {
+    //              // 存储消息
+    //              var entity = MessagePacketHelper.toMessageEntity(packet);
+    //              return messageStorageService.store(entity, uids);
+    //            })
+    //        .then();
   }
 }

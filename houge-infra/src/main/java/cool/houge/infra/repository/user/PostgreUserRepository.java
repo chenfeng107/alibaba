@@ -1,93 +1,51 @@
 package cool.houge.infra.repository.user;
 
+import static cool.houge.infra.db.Tables.USER;
+
 import cool.houge.Nil;
 import cool.houge.domain.model.User;
 import cool.houge.domain.repository.user.UserQueryRepository;
 import cool.houge.domain.repository.user.UserRepository;
-import cool.houge.infra.repository.PostgreSqlStates;
-import cool.houge.r2dbc.Parameter;
-import cool.houge.r2dbc.R2dbcClient;
-import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
-import io.r2dbc.spi.Row;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import cool.houge.infra.db.Sequences;
 import javax.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jooq.DSLContext;
+import org.jooq.Record1;
 import reactor.core.publisher.Mono;
-import top.yein.chaos.biz.BizCode;
-import top.yein.chaos.biz.StacklessBizCodeException;
 
+/** @author KK (kzou227@qq.com) */
 public class PostgreUserRepository implements UserRepository, UserQueryRepository {
 
-  private static final Logger log = LogManager.getLogger();
+  private final DSLContext dsl;
 
-  private static final String NEXT_ID_SQL = "SELECT NEXTVAL('users_id_seq')";
-  private static final String INSERT_SQL =
-      "INSERT INTO users(id,origin_uid,create_time,update_time) VALUES($1,$2,NOW(),NOW())";
-  private static final String QUERY_BY_ID_SQL = "SELECT * FROM users WHERE id=$1";
-  private static final String EXISTS_BY_ID_SQL = "SELECT COUNT(*) FROM users WHERE id=$1";
-
-  private final R2dbcClient rc;
-
-  /**
-   * 使用 R2DBC 客户端构造对象.
-   *
-   * @param rc R2DBC 客户端
-   */
   @Inject
-  public PostgreUserRepository(R2dbcClient rc) {
-    this.rc = rc;
+  public PostgreUserRepository(DSLContext dsl) {
+    this.dsl = dsl;
   }
 
   @Override
   public Mono<Long> insert(User entity) {
-    return Mono.justOrEmpty(entity.getId())
-        .switchIfEmpty(nextUserId())
+    return Mono.just(entity.getId())
+        .switchIfEmpty(nextId())
         .flatMap(
-            id ->
-                rc.sql(INSERT_SQL)
-                    .bind(
-                        new Object[] {
-                          id, Parameter.fromOrNull(entity.getOriginUid(), String.class)
-                        })
-                    .rowsUpdated()
-                    .thenReturn(id))
-        .onErrorMap(
-            R2dbcDataIntegrityViolationException.class,
-            ex -> {
-              log.debug("用户已存在 {} ~ {}", entity, ex.getMessage());
-              if (PostgreSqlStates.S23505.equals(ex.getSqlState())) {
-                return new StacklessBizCodeException(BizCode.C810, "用户已存在", ex);
-              }
-              return ex;
+            id -> {
+              var record = UserRecordMapper.INSTANCE.toRecord(id, entity);
+              return Mono.from(dsl.insertInto(USER).set(record)).thenReturn(id);
             });
   }
 
   @Override
   public Mono<User> queryById(long id) {
-    return rc.sql(QUERY_BY_ID_SQL).bind(0, id).map(this::mapToEntity).one();
+    return Mono.from(dsl.selectFrom(USER).where(USER.ID.eq(id)))
+        .map(UserRecordMapper.INSTANCE::toModel);
   }
 
   @Override
   public Mono<Nil> existsById(long id) {
-    return rc.sql(EXISTS_BY_ID_SQL)
-        .bind(0, id)
-        .map(row -> row.get(0, Integer.class))
-        .one()
-        .flatMap(count -> Objects.equals(count, 1) ? Nil.mono() : Mono.empty());
+    return Mono.from(dsl.selectCount().where(USER.ID.eq(id)))
+        .flatMap(r -> r.value1() > 0 ? Nil.mono() : Mono.empty());
   }
 
-  private User mapToEntity(Row row) {
-    var e = new User();
-    e.setId(row.get("id", Long.class));
-    e.setOriginUid(row.get("origin_uid", String.class));
-    e.setCreateTime(row.get("create_time", LocalDateTime.class));
-    e.setUpdateTime(row.get("update_time", LocalDateTime.class));
-    return e;
-  }
-
-  private Mono<Long> nextUserId() {
-    return Mono.defer(() -> rc.sql(NEXT_ID_SQL).map(row -> row.get(0, Long.class)).one());
+  private Mono<Long> nextId() {
+    return Mono.from(dsl.select(Sequences.USER_ID_SEQ.nextval())).map(Record1::value1);
   }
 }
