@@ -99,15 +99,15 @@ allprojects {
 
   dependencyManagement {
     imports {
-      mavenBom("io.projectreactor:reactor-bom:2020.0.10")
-      mavenBom("io.netty:netty-bom:4.1.67.Final")
+      mavenBom("io.projectreactor:reactor-bom:2020.0.12")
+      mavenBom("io.netty:netty-bom:4.1.69.Final")
       mavenBom("org.apache.logging.log4j:log4j-bom:2.14.1")
       mavenBom("com.fasterxml.jackson:jackson-bom:2.12.5")
       mavenBom("com.google.inject:guice-bom:5.0.1")
       mavenBom("io.r2dbc:r2dbc-bom:Arabba-SR10")
       mavenBom("org.jooq:jooq-parent:3.15.2")
-      mavenBom("io.grpc:grpc-bom:1.40.1")
-      mavenBom("com.salesforce.servicelibs:reactive-grpc:1.2.0")
+      mavenBom("io.grpc:grpc-bom:1.41.0")
+      mavenBom("com.salesforce.servicelibs:reactive-grpc:1.2.3")
       mavenBom("io.micrometer:micrometer-bom:1.7.3")
 
       // 测试工具
@@ -210,7 +210,7 @@ ext {
 def requireProperty(name) {
   def v = rootProject.findProperty(name)
   if (v == null || v.isEmpty()) {
-    throw new GradleException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
+    throw new IllegalArgumentException("缺少配置参数 [${name}]，请在 `${rootDir}/gradle-local.properties` 文件中配置")
   }
   return v
 }
