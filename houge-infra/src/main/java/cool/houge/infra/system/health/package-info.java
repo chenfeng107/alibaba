@@ -13,32 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.repository.user;
-
-import cool.houge.Nil;
-import cool.houge.domain.model.User;
-import reactor.core.publisher.Mono;
-
 /**
- * 用户查询数据访问接口.
+ * 应用程序健康检查的类.
  *
  * @author KK (kzou227@qq.com)
  */
-public interface UserQueryRepository {
-
-  /**
-   * 使用用户 ID 查询用户信息.
-   *
-   * @param id 用户 ID
-   * @return 用户信息
-   */
-  Mono<User> queryById(long id);
-
-  /**
-   * 使用用户 ID 查询用户是否存在.
-   *
-   * @param id 用户 ID
-   * @return true/false
-   */
-  Mono<Nil> existsById(long id);
-}
+package cool.houge.infra.system.health;

@@ -65,7 +65,7 @@ public class PostgreUserRepository implements UserRepository, UserQueryRepositor
   }
 
   @Override
-  public Mono<cool.houge.model.User> queryById(long id) {
+  public Mono<User> queryById(long id) {
     return rc.sql(QUERY_BY_ID_SQL).bind(0, id).map(this::mapToEntity).one();
   }
 
@@ -78,8 +78,8 @@ public class PostgreUserRepository implements UserRepository, UserQueryRepositor
         .flatMap(count -> Objects.equals(count, 1) ? Nil.mono() : Mono.empty());
   }
 
-  private cool.houge.model.User mapToEntity(Row row) {
-    var e = new cool.houge.model.User();
+  private User mapToEntity(Row row) {
+    var e = new User();
     e.setId(row.get("id", Long.class));
     e.setOriginUid(row.get("origin_uid", String.class));
     e.setCreateTime(row.get("create_time", LocalDateTime.class));

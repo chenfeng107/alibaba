@@ -19,7 +19,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import cool.houge.domain.BizCodes;
 import cool.houge.domain.constants.MessageContentType;
-import cool.houge.id.MessageIdGenerator;
+import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.logic.agent.PacketSender;
 import cool.houge.logic.handler.internal.MessagePacketHelper;
 import cool.houge.logic.packet.MessagePacketBase;

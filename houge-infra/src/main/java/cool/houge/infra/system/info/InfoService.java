@@ -13,31 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest;
+package cool.houge.infra.system.info;
 
-import cool.houge.infra.system.identifier.AbstractApplicationIdentifier;
-import cool.houge.infra.system.identifier.ServerInstanceRepository;
-import javax.inject.Inject;
+import reactor.core.publisher.Mono;
 
 /**
- * REST 应用程序标识接口的实现.
+ * 应用程序系统信息服务接口.
  *
  * @author KK (kzou227@qq.com)
  */
-public class RestApplicationIdentifier extends AbstractApplicationIdentifier {
+public interface InfoService {
 
   /**
-   * 使用应用实例数据访问对象构造 REST 应用标识对象.
+   * 返回应用程序信息.
    *
-   * @param serverInstanceRepository 应用实例数据访问对象
+   * @return
    */
-  @Inject
-  public RestApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
-    super(serverInstanceRepository);
-  }
-
-  @Override
-  public String applicationName() {
-    return "houge-rest";
-  }
+  Mono<Info> info();
 }

@@ -15,7 +15,7 @@
  */
 package cool.houge.rest.controller.message;
 
-import cool.houge.id.MessageIdGenerator;
+import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.http.AbstractRestSupport;

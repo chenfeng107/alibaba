@@ -27,8 +27,8 @@ import cool.houge.grpc.MessageGrpc;
 import cool.houge.grpc.PacketGrpc;
 import cool.houge.grpc.UserGroupGrpc;
 import cool.houge.grpc.UserGrpc;
-import cool.houge.id.MessageIdGenerator;
-import cool.houge.id.YeinGidMessageIdGenerator;
+import cool.houge.infra.id.MessageIdGenerator;
+import cool.houge.infra.id.YeinGidMessageIdGenerator;
 import cool.houge.logic.agent.PacketSender;
 import cool.houge.logic.agent.ServerAgentManager;
 import cool.houge.logic.agent.TediousServerAgentManager;
@@ -44,7 +44,7 @@ import cool.houge.logic.handler.PacketHandler;
 import cool.houge.logic.handler.PrivateMessageHandler;
 import cool.houge.logic.packet.Packet;
 import cool.houge.logic.support.LogicApplicationIdentifier;
-import cool.houge.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import io.grpc.BindableService;
 
 /**

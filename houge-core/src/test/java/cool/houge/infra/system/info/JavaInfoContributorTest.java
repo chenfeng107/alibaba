@@ -13,32 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.repository.user;
+package cool.houge.infra.system.info;
 
-import cool.houge.Nil;
-import cool.houge.domain.model.User;
-import reactor.core.publisher.Mono;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import reactor.test.StepVerifier;
 
 /**
- * 用户查询数据访问接口.
+ * {@link JavaInfoContributor} 单元测试.
  *
  * @author KK (kzou227@qq.com)
  */
-public interface UserQueryRepository {
+class JavaInfoContributorTest {
 
-  /**
-   * 使用用户 ID 查询用户信息.
-   *
-   * @param id 用户 ID
-   * @return 用户信息
-   */
-  Mono<User> queryById(long id);
+  @Test
+  void contribute() {
+    var contributor = new JavaInfoContributor();
+    var builder = new Info.Builder();
+    StepVerifier.create(contributor.contribute(builder)).expectComplete().verify();
 
-  /**
-   * 使用用户 ID 查询用户是否存在.
-   *
-   * @param id 用户 ID
-   * @return true/false
-   */
-  Mono<Nil> existsById(long id);
+    Map<String, Object> javaInfo = (Map<String, Object>) builder.build().getDetails().get("java");
+    assertThat(javaInfo).containsKeys("vm_name", "version", "vendor");
+  }
 }

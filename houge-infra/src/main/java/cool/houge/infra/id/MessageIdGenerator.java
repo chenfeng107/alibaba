@@ -13,31 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest;
+package cool.houge.infra.id;
 
-import cool.houge.infra.system.identifier.AbstractApplicationIdentifier;
-import cool.houge.infra.system.identifier.ServerInstanceRepository;
-import javax.inject.Inject;
+import reactor.core.publisher.Flux;
 
 /**
- * REST 应用程序标识接口的实现.
+ * 消息 ID 生成器.
  *
  * @author KK (kzou227@qq.com)
  */
-public class RestApplicationIdentifier extends AbstractApplicationIdentifier {
+public interface MessageIdGenerator {
+
+  /** 单次请求消息 ID 的返回的最大个数. */
+  int REQUEST_IDS_LIMIT = 100;
 
   /**
-   * 使用应用实例数据访问对象构造 REST 应用标识对象.
+   * 生成一个 ID.
    *
-   * @param serverInstanceRepository 应用实例数据访问对象
+   * @return ID
    */
-  @Inject
-  public RestApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
-    super(serverInstanceRepository);
-  }
+  String nextId();
 
-  @Override
-  public String applicationName() {
-    return "houge-rest";
-  }
+  /**
+   * 生成一批 IDs.
+   *
+   * <p>通过 {@link Flux#limitRequest(long)} 设置请求的 ID 数量，如果请求值超过 {@link #REQUEST_IDS_LIMIT} 则返回 {@link
+   * #REQUEST_IDS_LIMIT} 数量的 ID.
+   *
+   * @return IDs
+   */
+  Flux<String> nextIds();
 }

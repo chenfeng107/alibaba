@@ -15,8 +15,8 @@
  */
 package cool.houge.logic.support;
 
-import cool.houge.system.identifier.AbstractApplicationIdentifier;
-import cool.houge.system.identifier.ServerInstanceRepository;
+import cool.houge.infra.system.identifier.AbstractApplicationIdentifier;
+import cool.houge.infra.system.identifier.ServerInstanceRepository;
 import javax.inject.Inject;
 import lombok.extern.log4j.Log4j2;
 

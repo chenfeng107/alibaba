@@ -15,9 +15,9 @@
  */
 package cool.houge.infra.service.message;
 
-import cool.houge.model.Message;
-import cool.houge.service.message.MessageStorageService;
-import cool.houge.storage.MessageDao;
+import cool.houge.domain.model.Message;
+import cool.houge.domain.repository.message.MessageRepository;
+import cool.houge.domain.service.message.MessageStorageService;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.log4j.Log4j2;
@@ -31,14 +31,14 @@ import reactor.core.publisher.Mono;
 @Log4j2
 public class MessageStorageServiceImpl implements MessageStorageService {
 
-  private final MessageDao messageDao;
+  private final MessageRepository messageDao;
 
   /**
    * 可被 IoC 容器使用的构造函数.
    *
    * @param messageDao 消息数据访问对象
    */
-  public @Inject MessageStorageServiceImpl(MessageDao messageDao) {
+  public @Inject MessageStorageServiceImpl(MessageRepository messageDao) {
     this.messageDao = messageDao;
   }
 

@@ -19,7 +19,7 @@ import cool.houge.grpc.MessageGrpc;
 import cool.houge.grpc.MessagePb;
 import cool.houge.grpc.MessagePb.SendMessageRequest;
 import cool.houge.grpc.MessagePb.SendMessageResponse;
-import cool.houge.id.MessageIdGenerator;
+import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.logic.handler.GroupMessageHandler;
 import cool.houge.logic.handler.PrivateMessageHandler;
 import cool.houge.logic.packet.MessagePacketBase;

@@ -27,7 +27,7 @@ import cool.houge.rest.server.RestServer;
 import cool.houge.service.module.GrpcServiceModule;
 import cool.houge.service.module.ServiceModule;
 import cool.houge.storage.module.StorageModule;
-import cool.houge.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.util.AppShutdownHelper;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;

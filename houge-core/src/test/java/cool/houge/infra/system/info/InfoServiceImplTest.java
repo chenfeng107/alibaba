@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 the original author or authors
+ * Copyright 2019-2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.repository.user;
+package cool.houge.infra.system.info;
 
-import cool.houge.Nil;
-import cool.houge.domain.model.User;
-import reactor.core.publisher.Mono;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+import reactor.test.StepVerifier;
 
 /**
- * 用户查询数据访问接口.
+ * {@link InfoServiceImpl} 单元测试.
  *
  * @author KK (kzou227@qq.com)
  */
-public interface UserQueryRepository {
+class InfoServiceImplTest {
 
-  /**
-   * 使用用户 ID 查询用户信息.
-   *
-   * @param id 用户 ID
-   * @return 用户信息
-   */
-  Mono<User> queryById(long id);
-
-  /**
-   * 使用用户 ID 查询用户是否存在.
-   *
-   * @param id 用户 ID
-   * @return true/false
-   */
-  Mono<Nil> existsById(long id);
+  @Test
+  void info() {
+    var infoService = new InfoServiceImpl(Set.of());
+    StepVerifier.create(infoService.info())
+        .assertNext(info -> info.getDetails().isEmpty())
+        .expectComplete()
+        .verify();
+  }
 }

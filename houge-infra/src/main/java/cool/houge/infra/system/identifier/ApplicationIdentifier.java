@@ -13,31 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest;
-
-import cool.houge.infra.system.identifier.AbstractApplicationIdentifier;
-import cool.houge.infra.system.identifier.ServerInstanceRepository;
-import javax.inject.Inject;
+package cool.houge.infra.system.identifier;
 
 /**
- * REST 应用程序标识接口的实现.
+ * 应用程序标识符接口.
  *
  * @author KK (kzou227@qq.com)
  */
-public class RestApplicationIdentifier extends AbstractApplicationIdentifier {
+public interface ApplicationIdentifier {
 
   /**
-   * 使用应用实例数据访问对象构造 REST 应用标识对象.
+   * 返回应用名称.
    *
-   * @param serverInstanceRepository 应用实例数据访问对象
+   * @return 应用名称
    */
-  @Inject
-  public RestApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
-    super(serverInstanceRepository);
-  }
+  String applicationName();
 
-  @Override
-  public String applicationName() {
-    return "houge-rest";
-  }
+  /**
+   * 返回应用标识 ID.
+   *
+   * <p>FID 应用实例在<b>集群</b>中的唯一标识符.
+   *
+   * @return 应用标识 ID
+   */
+  int fid();
+
+  /**
+   * 返回应用版本.
+   *
+   * @return 应用版本
+   */
+  String version();
+
+  /** 清理应用数据. */
+  void clean();
 }

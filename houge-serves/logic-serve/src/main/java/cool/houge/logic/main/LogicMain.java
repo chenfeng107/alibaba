@@ -33,7 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import cool.houge.service.module.ServiceModule;
 import cool.houge.storage.module.StorageModule;
-import cool.houge.system.identifier.ApplicationIdentifier;
+import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.util.AppShutdownHelper;
 
 /**

@@ -1,4 +1,5 @@
 dependencies {
   api("io.projectreactor:reactor-core")
   api(project(":houge-core"))
+  implementation("com.fasterxml.jackson.core:jackson-databind")
 }

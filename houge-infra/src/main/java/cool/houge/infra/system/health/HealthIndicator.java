@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.rest;
+package cool.houge.infra.system.health;
 
-import cool.houge.infra.system.identifier.AbstractApplicationIdentifier;
-import cool.houge.infra.system.identifier.ServerInstanceRepository;
-import javax.inject.Inject;
+import reactor.core.publisher.Mono;
 
 /**
- * REST 应用程序标识接口的实现.
+ * 策略接口, 用于提供服务运行状况.
  *
  * @author KK (kzou227@qq.com)
  */
-public class RestApplicationIdentifier extends AbstractApplicationIdentifier {
+@FunctionalInterface
+public interface HealthIndicator {
 
   /**
-   * 使用应用实例数据访问对象构造 REST 应用标识对象.
+   * 返回运行健康状况.
    *
-   * @param serverInstanceRepository 应用实例数据访问对象
+   * @param includeDetails 是否应包括或删除详细信息
+   * @return 运行健康状况
    */
-  @Inject
-  public RestApplicationIdentifier(ServerInstanceRepository serverInstanceRepository) {
-    super(serverInstanceRepository);
+  default Mono<Health> getHealth(boolean includeDetails) {
+    return health().map(h -> includeDetails ? h : h.withoutDetails());
   }
 
-  @Override
-  public String applicationName() {
-    return "houge-rest";
-  }
+  /**
+   * 返回运行健康状况.
+   *
+   * @return 运行健康状况
+   */
+  Mono<Health> health();
 }

@@ -6,6 +6,9 @@ sourceSets {
       srcDir "${buildDir}/generated/source/proto/main/grpc"
       srcDir "${buildDir}/generated/source/proto/main/java"
     }
+    proto {
+      include "**/auth.proto"
+    }
   }
 }
 
@@ -18,7 +21,8 @@ protobuf {
       artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
     }
     reactor {
-      artifact = "com.salesforce.servicelibs:reactor-grpc:1.1.0"
+//      artifact = "com.salesforce.servicelibs:reactor-grpc:1.1.0"
+      path = "https://repo1.maven.org/maven2/com/salesforce/servicelibs/reactor-grpc/1.1.0/reactor-grpc-1.1.0-windows-x86_64.exe"
     }
   }
 
@@ -40,6 +44,7 @@ dependencies {
   api("org.roaringbitmap:RoaringBitmap")
   api("io.grpc:grpc-netty")
   api("com.auth0:java-jwt")
+  protobuf(project(":houge-proto"))
 
   testImplementation(project(":houge-core"))
   testImplementation("com.typesafe:config")

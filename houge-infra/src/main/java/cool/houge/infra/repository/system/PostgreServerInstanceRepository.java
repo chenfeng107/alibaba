@@ -15,9 +15,9 @@
  */
 package cool.houge.infra.repository.system;
 
-import cool.houge.model.ServerInstance;
+import cool.houge.domain.model.ServerInstance;
+import cool.houge.infra.system.identifier.ServerInstanceRepository;
 import cool.houge.r2dbc.R2dbcClient;
-import cool.houge.system.identifier.ServerInstanceRepository;
 import io.r2dbc.spi.Row;
 import java.time.LocalDateTime;
 import javax.inject.Inject;

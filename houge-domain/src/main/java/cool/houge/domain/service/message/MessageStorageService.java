@@ -15,7 +15,7 @@
  */
 package cool.houge.domain.service.message;
 
-import cool.houge.model.Message;
+import cool.houge.domain.model.Message;
 import java.util.List;
 import reactor.core.publisher.Mono;
 

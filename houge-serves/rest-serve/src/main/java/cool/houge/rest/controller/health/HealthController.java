@@ -23,7 +23,7 @@ import reactor.netty.http.server.HttpServerRoutes;
 import cool.houge.rest.http.AbstractRestSupport;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
-import cool.houge.system.health.HealthService;
+import cool.houge.infra.system.health.HealthService;
 
 /**
  * 系统健康状况 REST 接口.
