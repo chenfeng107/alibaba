@@ -63,7 +63,7 @@ jooq {
             """
           }
           generate {
-            // fluentSetters = true
+            fluentSetters = true
             generatedAnnotation = true
             generatedAnnotationType = "DETECT_FROM_JDK"
             generatedAnnotationDate = true
