@@ -147,7 +147,7 @@ allprojects {
     compileOnly("com.google.code.findbugs:jsr305")
     implementation("org.mapstruct:mapstruct")
     implementation("org.apache.logging.log4j:log4j-core")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl")
+    implementation("org.apache.logging.log4j:log4j-slf4j18-impl")
 
     // Test
     testCompileOnly("org.projectlombok:lombok")
