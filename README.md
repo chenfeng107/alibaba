@@ -57,27 +57,9 @@ Houge 是一款开源免费的**实时消息推送服务**，采用 [Spring Reac
 
 ### 私人消息
 
-![私人聊天](docs/dev/images/328994a573dc.gif)
+<video src="https://www.bilibili.com/video/BV1Cq4y1c7bN?share_source=copy_web" controls="controls"></video>
 
-### 群组聊天
-
-![群组消息](docs/dev/images/ce88baa135ab.gif)
-
-### HTTP 发送消息
-
-![HTTP 接口发送消息](docs/dev/images/a21fa82f2da7.gif)
-
-### gRPC 发送消息
-
-![gRPC 接口发送消息](docs/dev/images/4c04babfe553.gif)
-
-## 感谢
-
-Houge 的实现离不开源社区的支持，感恩为开源做出贡献的人。
-
-## 捐赠
-
-如果您觉得 Houge 做得不错，对您有实际的帮助，请支持我们更好的维护项目。
+<iframe src="//player.bilibili.com/player.html?aid=550842070&bvid=BV1Cq4y1c7bN&cid=489274054&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 ![Alipay](docs/images/alipay_qrcode.png)
 ![Wechat](docs/images/wechat_qrcode.png)
