@@ -14,7 +14,3 @@ include ":houge-infra"
 include ":houge-serves:logic-serve"
 include ":houge-serves:rest-serve"
 include ":houge-serves:ws-serve"
-
-include ":houge-server-logic"
-include ":houge-server-rest"
-include ":houge-server-ws"
