@@ -20,14 +20,14 @@ import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cool.houge.ConfigKeys;
+import cool.houge.infra.guice.BasisModule;
+import cool.houge.infra.guice.JooqModule;
+import cool.houge.infra.guice.ServiceModule;
+import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.module.RestModule;
 import cool.houge.rest.server.RestServer;
-import cool.houge.service.module.GrpcServiceModule;
-import cool.houge.service.module.ServiceModule;
-import cool.houge.storage.module.StorageModule;
-import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.util.AppShutdownHelper;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
@@ -60,10 +60,7 @@ public class RestMain implements Runnable {
     // 初始化 Guice
     final var injector =
         Guice.createInjector(
-            new StorageModule(config),
-            new ServiceModule(config),
-            new GrpcServiceModule(config),
-            new RestModule(config));
+            new BasisModule(config), new JooqModule(), new ServiceModule(), new RestModule(config));
 
     // 启动 IM 服务
     var applicationIdentifier = injector.getInstance(ApplicationIdentifier.class);

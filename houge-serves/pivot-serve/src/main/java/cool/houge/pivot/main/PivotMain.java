@@ -23,6 +23,9 @@ import com.google.inject.TypeLiteral;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
+import cool.houge.infra.guice.BasisModule;
+import cool.houge.infra.guice.JooqModule;
+import cool.houge.infra.guice.ServiceModule;
 import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.pivot.module.PivotModule;
 import cool.houge.pivot.server.PivotServer;
@@ -52,7 +55,9 @@ public class PivotMain implements Runnable {
   @Override
   public void run() {
     var config = loadConfig();
-    var injector = Guice.createInjector(new PivotModule());
+    var injector =
+        Guice.createInjector(
+            new BasisModule(config), new JooqModule(), new ServiceModule(), new PivotModule());
     var applicationIdentifier = injector.getInstance(ApplicationIdentifier.class);
 
     // 启动服务
