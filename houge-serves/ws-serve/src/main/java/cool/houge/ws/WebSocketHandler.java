@@ -188,9 +188,10 @@ public class WebSocketHandler {
         .auth(token)
         .<Session>map(
             uid -> {
-              log.info("认证成功 uid={}");
+              log.info("认证成功 uid={}", uid);
               return new DefaultSession(in, out, objectWriter, uid, token);
-            });
+            })
+        .delayUntil(libService::profile);
   }
 
   @VisibleForTesting

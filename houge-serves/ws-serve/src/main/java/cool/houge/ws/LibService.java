@@ -11,6 +11,7 @@ import cool.houge.ws.packet.ErrorPacket;
 import cool.houge.ws.packet.GroupSubPacket;
 import cool.houge.ws.packet.MsgPacket;
 import cool.houge.ws.packet.PrivateMsgPacket;
+import cool.houge.ws.packet.ProfilePacket;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
 import javax.inject.Inject;
@@ -44,6 +45,16 @@ public class LibService {
   public Mono<Integer> auth(String token) {
     var req = VerifyTokenRequest.newBuilder().setToken(token).build();
     return tokenStub.verify(req).map(resp -> resp.getUid());
+  }
+
+  /**
+   * @param session
+   * @return
+   */
+  public Mono<Void> profile(Session session) {
+    var p = new ProfilePacket();
+    p.setUid(session.uid()).setGreeting("欢迎连接-Houge");
+    return session.send(p);
   }
 
   /**

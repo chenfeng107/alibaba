@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
     property = Packet.NS_JSON_PROPERTY_NAME,
     include = As.EXISTING_PROPERTY)
 @JsonSubTypes({
+  @JsonSubTypes.Type(name = Packet.NS_PROFILE, value = ProfilePacket.class),
   @JsonSubTypes.Type(name = Packet.NS_PRIVATE_MSG, value = PrivateMsgPacket.class),
   @JsonSubTypes.Type(name = Packet.NS_GROUP_MSG, value = GroupMsgPacket.class),
   @JsonSubTypes.Type(name = Packet.NS_GROUP_SUB, value = GroupSubPacket.class),
@@ -45,6 +46,8 @@ public interface Packet {
 
   /** 错误命名空间. */
   String NS_ERROR = "error";
+  /** 个人信息. */
+  String NS_PROFILE = "profile";
   /** 私人聊天消息命名空间. */
   String NS_PRIVATE_MSG = "p.msg";
   /** 群组聊天消息命名空间. */
