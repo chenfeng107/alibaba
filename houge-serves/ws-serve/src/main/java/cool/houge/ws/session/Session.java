@@ -15,6 +15,7 @@
  */
 package cool.houge.ws.session;
 
+import cool.houge.ws.packet.Packet;
 import io.netty.buffer.ByteBuf;
 import java.util.Set;
 import reactor.core.publisher.Mono;
@@ -60,6 +61,12 @@ public interface Session {
    * @return true 会话已关闭
    */
   boolean isClosed();
+
+  /**
+   * @param packet
+   * @return
+   */
+  Mono<Void> send(Packet packet);
 
   /**
    * 向客户端发送数据.

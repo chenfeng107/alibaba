@@ -15,25 +15,32 @@
  */
 package cool.houge.ws.server;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.UnsafeByteOperations;
-import cool.houge.grpc.AuthPb;
+import cool.houge.grpc.AuthRequest;
 import cool.houge.grpc.HybridPb;
 import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
-import cool.houge.util.SocketExceptionUtils;
+import cool.houge.grpc.SendMsgRequest;
+import cool.houge.grpc.SendMsgResponse;
+import cool.houge.protos.MsgContentType;
+import cool.houge.ws.packet.ErrorPacket;
+import cool.houge.ws.packet.MsgPacket;
+import cool.houge.ws.packet.Packet;
+import cool.houge.ws.packet.PrivateMsgPacket;
 import cool.houge.ws.session.DefaultSession;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import java.util.Base64;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,6 +66,7 @@ public class WebSocketHandler {
   private final SessionManager sessionManager;
   private final SessionGroupManager sessionGroupManager;
   private final ReactorHybridStub hybridStub;
+  private final ObjectReader objectReader;
 
   /**
    * @param hybridStub
@@ -73,6 +81,9 @@ public class WebSocketHandler {
     this.sessionManager = sessionManager;
     this.sessionGroupManager = sessionGroupManager;
     this.hybridStub = hybridStub;
+
+    var objectMapper = initObjectMapper();
+    this.objectReader = objectMapper.readerFor(Packet.class);
   }
 
   /**
@@ -116,54 +127,59 @@ public class WebSocketHandler {
         .subscribe(
             frame -> {
               // 处理WebSocket消息
-              processPacket(frame, session);
+              processFrame(frame, session)
+                  .doOnError(
+                      t -> {
+                        // 记录错误日志
+                        log.error("处理WS消息出现未处理的异常 session={}", session, t);
+                      })
+                  .subscribe();
             });
   }
 
   @VisibleForTesting
-  void processPacket(WebSocketFrame frame, Session session) {
-    var request =
-        HybridPb.newBuilder()
-            .setRequestUid(session.uid())
-            .setDataBytes(UnsafeByteOperations.unsafeWrap(frame.content().nioBuffer()))
-            .build();
-    hybridStub
-        .processPacket(request)
-        .filter(response -> response.getDataBytes() != ByteString.EMPTY)
-        .flatMap(
-            response -> {
-              Supplier<ByteBuf> s =
-                  () -> Unpooled.wrappedBuffer(response.getDataBytes().asReadOnlyByteBuffer());
-              return session
-                  .send(Mono.fromSupplier(s))
-                  .onErrorResume(
-                      ex -> {
-                        if (!session.isClosed()) {
-                          return session.close();
-                        }
-                        if (SocketExceptionUtils.ignoreLogException(ex)) {
-                          log.debug("已忽略的网络异常", ex);
-                          return Mono.empty();
-                        }
-                        log.error(
-                            "向用户发送消息异常 session={} data(base64)={}",
-                            session,
-                            Base64.getEncoder()
-                                .encodeToString(response.getDataBytes().toByteArray()),
-                            ex);
-                        return Mono.empty();
-                      });
-            })
-        .doOnError(
-            t -> {
-              //
-              log.error(
-                  "远程接口处理 Packet 异常 session={} data(base64)={}",
-                  session,
-                  Base64.getEncoder().encodeToString(request.getDataBytes().toByteArray()),
-                  t);
-            })
-        .subscribe();
+  Mono<Void> processFrame(WebSocketFrame frame, Session session) {
+    InputStream in = new ByteBufInputStream(frame.content());
+    Packet packet;
+    try {
+      packet = objectReader.readValue(in);
+    } catch (IOException e) {
+      log.warn("非法的JSON请求数据", e);
+      var ep = ErrorPacket.builder().build();
+      return session.send(ep);
+    }
+
+    log.debug("处理消息包 session={} packet={}", session, packet);
+    if (packet instanceof MsgPacket) {
+      return sendMsgPacket(session, (MsgPacket) packet);
+    }
+
+    log.warn("未实现的Packet session={} packet={}", session, packet);
+    return Mono.empty();
+  }
+
+  Mono<Void> sendMsgPacket(Session session, MsgPacket p) {
+    var contentType = MsgContentType.forNumber(p.getContentType());
+    // FIXME 校验 content-type
+
+    var builder = SendMsgRequest.newBuilder();
+    builder
+        .setFrom(p.getFrom() == null ? session.uid() : p.getFrom())
+        .setTo(p.getTo())
+        .setContent(p.getContent())
+        .setContentType(contentType);
+    if (p.getExtra() != null) {
+      builder.setExtra(p.getExtra());
+    }
+
+    Mono<SendMsgResponse> m;
+    if (p instanceof PrivateMsgPacket) {
+      m = hybridStub.sendToUser(builder.build());
+    } else {
+      m = hybridStub.sendToGroup(builder.build());
+    }
+    // FIXME
+    return m.then();
   }
 
   @VisibleForTesting
@@ -183,7 +199,7 @@ public class WebSocketHandler {
       return Mono.empty();
     }
 
-    var request = AuthPb.AuthRequest.newBuilder().setToken(token).build();
+    var request = AuthRequest.newBuilder().setToken(token).build();
     return hybridStub
         .auth(request)
         .map(
@@ -210,5 +226,12 @@ public class WebSocketHandler {
       throw new IllegalArgumentException("QUERY中缺少\"access_token\"认证参数");
     }
     return params.get(0);
+  }
+
+  static ObjectMapper initObjectMapper() {
+    var objectMapper = new ObjectMapper();
+    objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
+    objectMapper.setDefaultPropertyInclusion(Include.NON_DEFAULT);
+    return objectMapper;
   }
 }

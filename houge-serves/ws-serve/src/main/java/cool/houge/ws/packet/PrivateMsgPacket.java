@@ -20,7 +20,7 @@ package cool.houge.ws.packet;
  *
  * @author KK (kzou227@qq.com)
  */
-public class PrivateMsgPacket extends MsgPacketBase {
+public class PrivateMsgPacket extends BaseMsgPacket {
 
   @Override
   public String getNs() {
