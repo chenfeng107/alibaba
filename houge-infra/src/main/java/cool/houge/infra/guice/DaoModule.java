@@ -10,7 +10,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.typesafe.config.Config;
 import cool.houge.domain.group.GroupDao;
-import cool.houge.domain.msg.MsgDao;
+import cool.houge.domain.msg.UserMsgDao;
 import cool.houge.domain.shared.JwtSecretDao;
 import cool.houge.domain.system.AppInstDao;
 import cool.houge.domain.user.UserDao;
@@ -18,7 +18,7 @@ import cool.houge.domain.user.UserQueryDao;
 import cool.houge.infra.dao.AppInstDaoImpl;
 import cool.houge.infra.dao.GroupDaoImpl;
 import cool.houge.infra.dao.JwtSecretDaoImpl;
-import cool.houge.infra.dao.MsgDaoImpl;
+import cool.houge.infra.dao.UserMsgDaoImpl;
 import cool.houge.infra.dao.UserDaoImpl;
 import cool.houge.infra.r2dbc.DefaultR2dbcClient;
 import cool.houge.infra.r2dbc.R2dbcClient;
@@ -46,7 +46,7 @@ public class DaoModule extends AbstractModule {
     bind(UserQueryDao.class).to(UserDaoImpl.class);
 
     bind(GroupDao.class).to(GroupDaoImpl.class).asEagerSingleton();
-    bind(MsgDao.class).to(MsgDaoImpl.class).asEagerSingleton();
+    bind(UserMsgDao.class).to(UserMsgDaoImpl.class).asEagerSingleton();
   }
 
   @Provides

@@ -1,8 +1,8 @@
 package cool.houge.infra.service;
 
 import cool.houge.domain.Paging;
-import cool.houge.domain.model.Msg;
-import cool.houge.domain.msg.MsgDao;
+import cool.houge.domain.model.UserMsg;
+import cool.houge.domain.msg.UserMsgDao;
 import cool.houge.domain.msg.MsgQuery;
 import cool.houge.domain.msg.MsgService;
 import java.util.HashSet;
@@ -13,20 +13,21 @@ import reactor.core.publisher.Mono;
 /** @author KK (kzou227@qq.com) */
 public class MsgServiceImpl implements MsgService {
 
-  private final MsgDao msgDao;
+  private final UserMsgDao userMsgDao;
 
-  public MsgServiceImpl(MsgDao msgDao) {
-    this.msgDao = msgDao;
+  public MsgServiceImpl(UserMsgDao userMsgDao) {
+    this.userMsgDao = userMsgDao;
   }
 
   @Override
-  public Mono<Void> insert(Msg msg) {
+  public Mono<Void> insert(UserMsg msg) {
     var uids = new HashSet<Integer>();
-    uids.add(msg.getSender().getId());
-    if (msg.getReceiver() != null) {
-      uids.add(msg.getReceiver().getId());
+    uids.add(msg.getSend().getId());
+    if (msg.getRec() != null) {
+      uids.add(msg.getRec().getId());
     }
-    return msgDao.insert(msg, uids);
+    //    return msgDao.insert(msg, uids);
+    return null;
   }
 
   @Override
@@ -35,7 +36,7 @@ public class MsgServiceImpl implements MsgService {
   }
 
   @Override
-  public Flux<Msg> queryByUser(MsgQuery q, Paging paging) {
+  public Flux<UserMsg> queryByUser(MsgQuery q, Paging paging) {
     return null;
   }
 }

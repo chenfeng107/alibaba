@@ -1,7 +1,7 @@
 package cool.houge.domain.msg;
 
 import cool.houge.domain.Paging;
-import cool.houge.domain.model.Msg;
+import cool.houge.domain.model.UserMsg;
 import java.util.Set;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,7 +14,7 @@ public interface MsgService {
    * @param msg
    * @return
    */
-  Mono<Void> insert(Msg msg);
+  Mono<Void> insert(UserMsg msg);
 
   /**
    * 将指定用户的消息批量设置为已读状态.
@@ -32,5 +32,5 @@ public interface MsgService {
    * @param paging 分页
    * @return
    */
-  Flux<Msg> queryByUser(MsgQuery q, Paging paging);
+  Flux<UserMsg> queryByUser(MsgQuery q, Paging paging);
 }

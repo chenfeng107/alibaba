@@ -187,10 +187,15 @@ ext {
 
   // 数据库配置参数
   hougeDbName = "houge"
-  hougeDbHost = requireProperty("houge.mysql.host")
-  hougeDbPort = properties["houge.mysql.port"] ?: 3306
-  hougeDbUser = requireProperty("houge.mysql.user")
-  hougeDbPassword = requireProperty("houge.mysql.password")
+//  hougeDbHost = requireProperty("houge.mysql.host")
+//  hougeDbPort = properties["houge.mysql.port"] ?: 3306
+//  hougeDbUser = requireProperty("houge.mysql.user")
+//  hougeDbPassword = requireProperty("houge.mysql.password")
+
+  hougeDbHost = requireProperty("houge.postgresql.host")
+  hougeDbPort = properties["houge.postgresql.port"] ?: 5432
+  hougeDbUser = requireProperty("houge.postgresql.user")
+  hougeDbPassword = requireProperty("houge.postgresql.password")
 }
 
 def requireProperty(name) {

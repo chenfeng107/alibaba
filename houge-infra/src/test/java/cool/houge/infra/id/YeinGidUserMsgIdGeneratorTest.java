@@ -28,7 +28,7 @@ import cool.houge.infra.system.identifier.AppIdentifier;
  *
  * @author KK (kzou227@qq.com)
  */
-class YeinGidMsgIdGeneratorTest {
+class YeinGidUserMsgIdGeneratorTest {
 
   @Test
   void nextId() {

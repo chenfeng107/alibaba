@@ -16,6 +16,7 @@
 package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -30,12 +31,14 @@ public class Group {
 
   /** 群组 ID. */
   private Integer id;
+  /** 源群组ID. */
+  private String originGid;
   /** 创建群的用户 ID. */
   private User creator;
-  /** 群持有者用户 ID. */
-  private User owner;
-  /** 群成员数量. */
-  private Integer memberSize;
+  /** 群组的用户ID. */
+  private List<Integer> memberUids;
+  /** 数据版本. */
+  private Integer ver;
   /** 创建时间. */
   private LocalDateTime createTime;
   /** 更新时间. */

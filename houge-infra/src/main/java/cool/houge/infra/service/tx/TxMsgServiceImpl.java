@@ -1,7 +1,7 @@
 package cool.houge.infra.service.tx;
 
-import cool.houge.domain.model.Msg;
-import cool.houge.domain.msg.MsgDao;
+import cool.houge.domain.model.UserMsg;
+import cool.houge.domain.msg.UserMsgDao;
 import cool.houge.infra.service.MsgServiceImpl;
 import cool.houge.infra.tx.TxOps;
 import javax.inject.Inject;
@@ -12,13 +12,13 @@ public class TxMsgServiceImpl extends MsgServiceImpl {
 
   private final TxOps txOps;
 
-  public @Inject TxMsgServiceImpl(TxOps txOps, MsgDao msgDao) {
-    super(msgDao);
+  public @Inject TxMsgServiceImpl(TxOps txOps, UserMsgDao userMsgDao) {
+    super(userMsgDao);
     this.txOps = txOps;
   }
 
   @Override
-  public Mono<Void> insert(Msg msg) {
+  public Mono<Void> insert(UserMsg msg) {
     return txOps.tx(Mono.defer(() -> super.insert(msg)));
   }
 }

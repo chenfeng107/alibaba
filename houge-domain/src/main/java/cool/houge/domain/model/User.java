@@ -16,6 +16,7 @@
 package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -32,6 +33,12 @@ public class User {
   private Integer id;
   /** 原用户 ID. */
   private String originUid;
+  /** 用户的群组ID. */
+  private List<Integer> groupIds;
+  /** 数据版本. */
+  private Integer ver;
   /** 创建时间. */
   private LocalDateTime createTime;
+  /** 更新时间. */
+  private LocalDateTime updateTime;
 }
