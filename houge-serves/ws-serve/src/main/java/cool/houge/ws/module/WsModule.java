@@ -22,8 +22,8 @@ import com.google.inject.Singleton;
 import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
-import cool.houge.grpc.broker.ReactorPolygonGrpc;
-import cool.houge.grpc.broker.ReactorPolygonGrpc.ReactorPolygonStub;
+import cool.houge.grpc.ReactorHybridGrpc;
+import cool.houge.grpc.ReactorHybridGrpc.ReactorHybridStub;
 import cool.houge.ws.PivotServiceConfig;
 import cool.houge.ws.PivotStreamServiceConfig;
 import cool.houge.ws.pivot.CommandProcessor;
@@ -105,7 +105,7 @@ public class WsModule extends AbstractModule {
     bind(ManagedChannel.class).toInstance(managedChannel);
 
     // gRPC 存根对象注册
-    bind(ReactorPolygonStub.class).toInstance(ReactorPolygonGrpc.newReactorStub(managedChannel));
+    bind(ReactorHybridStub.class).toInstance(ReactorHybridGrpc.newReactorStub(managedChannel));
   }
 
   private void bindCommandHandlers() {

@@ -15,25 +15,37 @@
 //
 
 syntax = "proto3";
-option java_package = "cool.houge.grpc.communal";
-option java_outer_classname = "PacketPb";
+option java_package = "cool.houge.grpc";
+option java_outer_classname = "MsgPb";
 
-message PacketRequest {
-  // 发起请求的用户ID
-  int64 request_uid = 1;
-  // Packet数据
-  bytes data_bytes = 2;
-  // 过滤终端的标识
-  string filter = 9;
+message SendMsgRequest {
+  // 消息发送者
+  fixed32 from = 2;
+  // 消息接收者
+  fixed32 to = 3;
+  // 消息内容
+  string content = 4;
+  // 消息内容类型
+  ContentType content_type = 5;
+  // 扩展参数会原样转发给客户端
+  string extra = 9;
+
+  // 消息内容
+  enum ContentType {
+    // 文本消息类型
+    TEXT = 0;
+  }
 }
 
-message PacketResponse {
-  // 响应结果数据
-  bytes data_bytes = 1;
+message SendMsgResponse {
+  // 消息 ID
+  string msg_id = 1;
 }
 
-service Packet {
+// 消息服务
+service Msg {
 
-  // 处理Packet请求
-  rpc Process(PacketRequest) returns(PacketResponse) {}
+  rpc SendToUser(SendMsgRequest) returns(SendMsgResponse) {}
+
+  rpc SendToGroup(SendMsgRequest) returns(SendMsgResponse) {}
 }

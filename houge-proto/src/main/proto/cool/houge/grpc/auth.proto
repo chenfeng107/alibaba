@@ -15,7 +15,7 @@
 //
 
 syntax = "proto3";
-option java_package = "cool.houge.grpc.communal";
+option java_package = "cool.houge.grpc";
 option java_outer_classname = "AuthPb";
 
 message AuthRequest {
@@ -25,7 +25,7 @@ message AuthRequest {
 
 message AuthResponse {
   // 用户ID
-  int64 uid = 1;
+  int32 uid = 1;
 }
 
 service Auth {

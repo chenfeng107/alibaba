@@ -15,22 +15,25 @@
 //
 
 syntax = "proto3";
-option java_package = "cool.houge.grpc.communal";
-option java_outer_classname = "UserPb";
+option java_package = "cool.houge.grpc";
+option java_outer_classname = "PacketPb";
 
-message CreateUserRequest {
-  // 用户ID.
-  int64 uid = 1;
-  // 原系统用户ID.
-  string origin_uid = 2;
+message PacketRequest {
+  // 发起请求的用户ID
+  int64 request_uid = 1;
+  // Packet数据
+  bytes data_bytes = 2;
+  // 过滤终端的标识
+  string filter = 9;
 }
 
-message CreateUserResponse {
-  // Houge系统中的用户ID.
-  int64 uid = 1;
+message PacketResponse {
+  // 响应结果数据
+  bytes data_bytes = 1;
 }
 
-service User {
+service Packet {
 
-  rpc Create(CreateUserRequest) returns(CreateUserResponse) {}
+  // 处理Packet请求
+  rpc Process(PacketRequest) returns(PacketResponse) {}
 }

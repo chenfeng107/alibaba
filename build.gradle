@@ -29,6 +29,12 @@ allprojects {
   sourceCompatibility = "11"
   targetCompatibility = "11"
 
+  ext {
+    protobufVersion = "3.19.3"
+    grpcVersion = "1.43.2"
+    reactorGrpcVersion = "1.2.3"
+  }
+
   [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
 
   test {
@@ -95,11 +101,12 @@ allprojects {
       mavenBom("com.fasterxml.jackson:jackson-bom:2.13.1")
       mavenBom("com.google.inject:guice-bom:5.0.1")
       mavenBom("io.r2dbc:r2dbc-bom:Borca-M2")
-      mavenBom("org.jooq:jooq-parent:3.15.2")
-      mavenBom("io.grpc:grpc-bom:1.43.2")
+
       mavenBom("com.salesforce.servicelibs:reactive-grpc:1.2.3")
+      mavenBom("io.grpc:grpc-bom:1.43.2")
+      mavenBom("com.google.protobuf:protobuf-bom:3.19.3")
       mavenBom("io.micrometer:micrometer-bom:1.7.3")
-      mavenBom("io.projectreactor:reactor-bom:2020.0.14")
+      mavenBom("io.projectreactor:reactor-bom:2020.0.15")
 
       // 测试工具
       mavenBom("org.testcontainers:testcontainers-bom:1.16.2")
@@ -107,13 +114,8 @@ allprojects {
     }
     dependencies {
       dependency("org.projectlombok:lombok:1.18.20")
-      dependencySet(group: "org.mapstruct", version: "1.5.0.Beta1") {
-        entry "mapstruct-processor"
-        entry "mapstruct"
-      }
       dependency("com.typesafe:config:1.4.1")
       dependency("com.github.ben-manes.caffeine:caffeine:3.0.3")
-      dependency("org.postgresql:postgresql:42.2.14")
       dependency("io.lettuce:lettuce-core:6.1.4.RELEASE")
       dependency("com.auth0:java-jwt:3.18.1")
       dependency("org.roaringbitmap:RoaringBitmap:0.9.16")
@@ -136,7 +138,6 @@ allprojects {
 
     compileOnly("org.projectlombok:lombok")
     compileOnly("com.google.code.findbugs:jsr305")
-    implementation("org.mapstruct:mapstruct")
     implementation("org.apache.logging.log4j:log4j-core")
     implementation("org.apache.logging.log4j:log4j-slf4j18-impl")
 
@@ -163,10 +164,10 @@ allprojects {
 
   repositories {
     mavenLocal()
-    def aliyunEnabled = System.getenv("GITHUB_ACTIONS") == null
-    if (aliyunEnabled) {
-      maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
-    }
+//    def aliyunEnabled = System.getenv("GITHUB_ACTIONS") == null
+//    if (aliyunEnabled) {
+//      maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
+//    }
     mavenCentral()
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots" }
   }

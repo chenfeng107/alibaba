@@ -16,36 +16,21 @@
 
 syntax = "proto3";
 option java_package = "cool.houge.grpc";
-option java_outer_classname = "MsgPb";
+option java_outer_classname = "UserPb";
 
-message SendMsgRequest {
-  // 消息发送者
-  fixed64 from = 2;
-  // 消息接收者
-  fixed64 to = 3;
-  // 消息内容
-  string content = 4;
-  // 消息内容类型
-  ContentType content_type = 5;
-  // 扩展参数会原样转发给客户端
-  string extra_args = 9;
-
-  // 消息内容
-  enum ContentType {
-    // 文本消息类型
-    TEXT = 0;
-  }
+message CreateUserRequest {
+  // 用户ID.
+  int32 uid = 1;
+  // 原系统用户ID.
+  string origin_uid = 2;
 }
 
-message SendMsgResponse {
-  // 消息 ID
-  string msg_id = 1;
+message CreateUserResponse {
+  // Houge系统中的用户ID.
+  int32 uid = 1;
 }
 
-// 消息服务
-service Msg {
+service User {
 
-  rpc SendToUser(SendMsgRequest) returns(SendMsgResponse) {}
-
-  rpc SendToGroup(SendMsgRequest) returns(SendMsgResponse) {}
+  rpc Create(CreateUserRequest) returns(CreateUserResponse) {}
 }
