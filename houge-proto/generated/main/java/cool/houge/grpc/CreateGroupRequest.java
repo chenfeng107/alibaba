@@ -16,7 +16,8 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private CreateGroupRequest() {
-    name_ = "";
+    originGid_ = "";
+    memberUids_ = emptyIntList();
   }
 
   @java.lang.Override
@@ -39,6 +40,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -49,20 +51,31 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
+          case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-            gid_ = input.readInt32();
+            originGid_ = s;
             break;
           }
           case 16: {
-
-            creatorId_ = input.readInt32();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              memberUids_ = newIntList();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            memberUids_.addInt(input.readInt32());
             break;
           }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            name_ = s;
+          case 18: {
+            int length = input.readRawVarint32();
+            int limit = input.pushLimit(length);
+            if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
+              memberUids_ = newIntList();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            while (input.getBytesUntilLimit() > 0) {
+              memberUids_.addInt(input.readInt32());
+            }
+            input.popLimit(limit);
             break;
           }
           default: {
@@ -80,6 +93,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        memberUids_.makeImmutable(); // C
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -97,81 +113,91 @@ private static final long serialVersionUID = 0L;
             cool.houge.grpc.CreateGroupRequest.class, cool.houge.grpc.CreateGroupRequest.Builder.class);
   }
 
-  public static final int GID_FIELD_NUMBER = 1;
-  private int gid_;
+  public static final int ORIGIN_GID_FIELD_NUMBER = 1;
+  private volatile java.lang.Object originGid_;
   /**
    * <pre>
-   * 群组ID.
+   * 源群组ID
    * </pre>
    *
-   * <code>int32 gid = 1;</code>
-   * @return The gid.
+   * <code>string origin_gid = 1;</code>
+   * @return The originGid.
    */
   @java.lang.Override
-  public int getGid() {
-    return gid_;
-  }
-
-  public static final int CREATOR_ID_FIELD_NUMBER = 2;
-  private int creatorId_;
-  /**
-   * <pre>
-   * 创建者用户ID.
-   * </pre>
-   *
-   * <code>int32 creator_id = 2;</code>
-   * @return The creatorId.
-   */
-  @java.lang.Override
-  public int getCreatorId() {
-    return creatorId_;
-  }
-
-  public static final int NAME_FIELD_NUMBER = 3;
-  private volatile java.lang.Object name_;
-  /**
-   * <pre>
-   * 群组名称.
-   * </pre>
-   *
-   * <code>string name = 3;</code>
-   * @return The name.
-   */
-  @java.lang.Override
-  public java.lang.String getName() {
-    java.lang.Object ref = name_;
+  public java.lang.String getOriginGid() {
+    java.lang.Object ref = originGid_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      name_ = s;
+      originGid_ = s;
       return s;
     }
   }
   /**
    * <pre>
-   * 群组名称.
+   * 源群组ID
    * </pre>
    *
-   * <code>string name = 3;</code>
-   * @return The bytes for name.
+   * <code>string origin_gid = 1;</code>
+   * @return The bytes for originGid.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getNameBytes() {
-    java.lang.Object ref = name_;
+      getOriginGidBytes() {
+    java.lang.Object ref = originGid_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      name_ = b;
+      originGid_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
+
+  public static final int MEMBER_UIDS_FIELD_NUMBER = 2;
+  private com.google.protobuf.Internal.IntList memberUids_;
+  /**
+   * <pre>
+   * 成员用户IDs
+   * </pre>
+   *
+   * <code>repeated int32 member_uids = 2;</code>
+   * @return A list containing the memberUids.
+   */
+  @java.lang.Override
+  public java.util.List<java.lang.Integer>
+      getMemberUidsList() {
+    return memberUids_;
+  }
+  /**
+   * <pre>
+   * 成员用户IDs
+   * </pre>
+   *
+   * <code>repeated int32 member_uids = 2;</code>
+   * @return The count of memberUids.
+   */
+  public int getMemberUidsCount() {
+    return memberUids_.size();
+  }
+  /**
+   * <pre>
+   * 成员用户IDs
+   * </pre>
+   *
+   * <code>repeated int32 member_uids = 2;</code>
+   * @param index The index of the element to return.
+   * @return The memberUids at the given index.
+   */
+  public int getMemberUids(int index) {
+    return memberUids_.getInt(index);
+  }
+  private int memberUidsMemoizedSerializedSize = -1;
 
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
@@ -187,14 +213,16 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (gid_ != 0) {
-      output.writeInt32(1, gid_);
+    getSerializedSize();
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(originGid_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, originGid_);
     }
-    if (creatorId_ != 0) {
-      output.writeInt32(2, creatorId_);
+    if (getMemberUidsList().size() > 0) {
+      output.writeUInt32NoTag(18);
+      output.writeUInt32NoTag(memberUidsMemoizedSerializedSize);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
+    for (int i = 0; i < memberUids_.size(); i++) {
+      output.writeInt32NoTag(memberUids_.getInt(i));
     }
     unknownFields.writeTo(output);
   }
@@ -205,16 +233,22 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (gid_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, gid_);
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(originGid_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, originGid_);
     }
-    if (creatorId_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, creatorId_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
+    {
+      int dataSize = 0;
+      for (int i = 0; i < memberUids_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt32SizeNoTag(memberUids_.getInt(i));
+      }
+      size += dataSize;
+      if (!getMemberUidsList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      memberUidsMemoizedSerializedSize = dataSize;
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -231,12 +265,10 @@ private static final long serialVersionUID = 0L;
     }
     cool.houge.grpc.CreateGroupRequest other = (cool.houge.grpc.CreateGroupRequest) obj;
 
-    if (getGid()
-        != other.getGid()) return false;
-    if (getCreatorId()
-        != other.getCreatorId()) return false;
-    if (!getName()
-        .equals(other.getName())) return false;
+    if (!getOriginGid()
+        .equals(other.getOriginGid())) return false;
+    if (!getMemberUidsList()
+        .equals(other.getMemberUidsList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -248,12 +280,12 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + GID_FIELD_NUMBER;
-    hash = (53 * hash) + getGid();
-    hash = (37 * hash) + CREATOR_ID_FIELD_NUMBER;
-    hash = (53 * hash) + getCreatorId();
-    hash = (37 * hash) + NAME_FIELD_NUMBER;
-    hash = (53 * hash) + getName().hashCode();
+    hash = (37 * hash) + ORIGIN_GID_FIELD_NUMBER;
+    hash = (53 * hash) + getOriginGid().hashCode();
+    if (getMemberUidsCount() > 0) {
+      hash = (37 * hash) + MEMBER_UIDS_FIELD_NUMBER;
+      hash = (53 * hash) + getMemberUidsList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -387,12 +419,10 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      gid_ = 0;
+      originGid_ = "";
 
-      creatorId_ = 0;
-
-      name_ = "";
-
+      memberUids_ = emptyIntList();
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -419,9 +449,13 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public cool.houge.grpc.CreateGroupRequest buildPartial() {
       cool.houge.grpc.CreateGroupRequest result = new cool.houge.grpc.CreateGroupRequest(this);
-      result.gid_ = gid_;
-      result.creatorId_ = creatorId_;
-      result.name_ = name_;
+      int from_bitField0_ = bitField0_;
+      result.originGid_ = originGid_;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        memberUids_.makeImmutable();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      }
+      result.memberUids_ = memberUids_;
       onBuilt();
       return result;
     }
@@ -470,14 +504,18 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(cool.houge.grpc.CreateGroupRequest other) {
       if (other == cool.houge.grpc.CreateGroupRequest.getDefaultInstance()) return this;
-      if (other.getGid() != 0) {
-        setGid(other.getGid());
+      if (!other.getOriginGid().isEmpty()) {
+        originGid_ = other.originGid_;
+        onChanged();
       }
-      if (other.getCreatorId() != 0) {
-        setCreatorId(other.getCreatorId());
-      }
-      if (!other.getName().isEmpty()) {
-        name_ = other.name_;
+      if (!other.memberUids_.isEmpty()) {
+        if (memberUids_.isEmpty()) {
+          memberUids_ = other.memberUids_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureMemberUidsIsMutable();
+          memberUids_.addAll(other.memberUids_);
+        }
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -508,109 +546,24 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
-    private int gid_ ;
+    private java.lang.Object originGid_ = "";
     /**
      * <pre>
-     * 群组ID.
+     * 源群组ID
      * </pre>
      *
-     * <code>int32 gid = 1;</code>
-     * @return The gid.
+     * <code>string origin_gid = 1;</code>
+     * @return The originGid.
      */
-    @java.lang.Override
-    public int getGid() {
-      return gid_;
-    }
-    /**
-     * <pre>
-     * 群组ID.
-     * </pre>
-     *
-     * <code>int32 gid = 1;</code>
-     * @param value The gid to set.
-     * @return This builder for chaining.
-     */
-    public Builder setGid(int value) {
-      
-      gid_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * 群组ID.
-     * </pre>
-     *
-     * <code>int32 gid = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearGid() {
-      
-      gid_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int creatorId_ ;
-    /**
-     * <pre>
-     * 创建者用户ID.
-     * </pre>
-     *
-     * <code>int32 creator_id = 2;</code>
-     * @return The creatorId.
-     */
-    @java.lang.Override
-    public int getCreatorId() {
-      return creatorId_;
-    }
-    /**
-     * <pre>
-     * 创建者用户ID.
-     * </pre>
-     *
-     * <code>int32 creator_id = 2;</code>
-     * @param value The creatorId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCreatorId(int value) {
-      
-      creatorId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * 创建者用户ID.
-     * </pre>
-     *
-     * <code>int32 creator_id = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearCreatorId() {
-      
-      creatorId_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object name_ = "";
-    /**
-     * <pre>
-     * 群组名称.
-     * </pre>
-     *
-     * <code>string name = 3;</code>
-     * @return The name.
-     */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
+    public java.lang.String getOriginGid() {
+      java.lang.Object ref = originGid_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        name_ = s;
+        originGid_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
@@ -618,20 +571,20 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * 群组名称.
+     * 源群组ID
      * </pre>
      *
-     * <code>string name = 3;</code>
-     * @return The bytes for name.
+     * <code>string origin_gid = 1;</code>
+     * @return The bytes for originGid.
      */
     public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
+        getOriginGidBytes() {
+      java.lang.Object ref = originGid_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        name_ = b;
+        originGid_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -639,54 +592,161 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * 群组名称.
+     * 源群组ID
      * </pre>
      *
-     * <code>string name = 3;</code>
-     * @param value The name to set.
+     * <code>string origin_gid = 1;</code>
+     * @param value The originGid to set.
      * @return This builder for chaining.
      */
-    public Builder setName(
+    public Builder setOriginGid(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      name_ = value;
+      originGid_ = value;
       onChanged();
       return this;
     }
     /**
      * <pre>
-     * 群组名称.
+     * 源群组ID
      * </pre>
      *
-     * <code>string name = 3;</code>
+     * <code>string origin_gid = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearName() {
+    public Builder clearOriginGid() {
       
-      name_ = getDefaultInstance().getName();
+      originGid_ = getDefaultInstance().getOriginGid();
       onChanged();
       return this;
     }
     /**
      * <pre>
-     * 群组名称.
+     * 源群组ID
      * </pre>
      *
-     * <code>string name = 3;</code>
-     * @param value The bytes for name to set.
+     * <code>string origin_gid = 1;</code>
+     * @param value The bytes for originGid to set.
      * @return This builder for chaining.
      */
-    public Builder setNameBytes(
+    public Builder setOriginGidBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      name_ = value;
+      originGid_ = value;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.Internal.IntList memberUids_ = emptyIntList();
+    private void ensureMemberUidsIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        memberUids_ = mutableCopy(memberUids_);
+        bitField0_ |= 0x00000001;
+       }
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @return A list containing the memberUids.
+     */
+    public java.util.List<java.lang.Integer>
+        getMemberUidsList() {
+      return ((bitField0_ & 0x00000001) != 0) ?
+               java.util.Collections.unmodifiableList(memberUids_) : memberUids_;
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @return The count of memberUids.
+     */
+    public int getMemberUidsCount() {
+      return memberUids_.size();
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @param index The index of the element to return.
+     * @return The memberUids at the given index.
+     */
+    public int getMemberUids(int index) {
+      return memberUids_.getInt(index);
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @param index The index to set the value at.
+     * @param value The memberUids to set.
+     * @return This builder for chaining.
+     */
+    public Builder setMemberUids(
+        int index, int value) {
+      ensureMemberUidsIsMutable();
+      memberUids_.setInt(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @param value The memberUids to add.
+     * @return This builder for chaining.
+     */
+    public Builder addMemberUids(int value) {
+      ensureMemberUidsIsMutable();
+      memberUids_.addInt(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @param values The memberUids to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllMemberUids(
+        java.lang.Iterable<? extends java.lang.Integer> values) {
+      ensureMemberUidsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, memberUids_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 成员用户IDs
+     * </pre>
+     *
+     * <code>repeated int32 member_uids = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearMemberUids() {
+      memberUids_ = emptyIntList();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }

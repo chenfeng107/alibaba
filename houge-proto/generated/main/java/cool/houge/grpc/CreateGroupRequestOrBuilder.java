@@ -9,41 +9,50 @@ public interface CreateGroupRequestOrBuilder extends
 
   /**
    * <pre>
-   * 群组ID.
+   * 源群组ID
    * </pre>
    *
-   * <code>int32 gid = 1;</code>
-   * @return The gid.
+   * <code>string origin_gid = 1;</code>
+   * @return The originGid.
    */
-  int getGid();
-
+  java.lang.String getOriginGid();
   /**
    * <pre>
-   * 创建者用户ID.
+   * 源群组ID
    * </pre>
    *
-   * <code>int32 creator_id = 2;</code>
-   * @return The creatorId.
-   */
-  int getCreatorId();
-
-  /**
-   * <pre>
-   * 群组名称.
-   * </pre>
-   *
-   * <code>string name = 3;</code>
-   * @return The name.
-   */
-  java.lang.String getName();
-  /**
-   * <pre>
-   * 群组名称.
-   * </pre>
-   *
-   * <code>string name = 3;</code>
-   * @return The bytes for name.
+   * <code>string origin_gid = 1;</code>
+   * @return The bytes for originGid.
    */
   com.google.protobuf.ByteString
-      getNameBytes();
+      getOriginGidBytes();
+
+  /**
+   * <pre>
+   * 成员用户IDs
+   * </pre>
+   *
+   * <code>repeated int32 member_uids = 2;</code>
+   * @return A list containing the memberUids.
+   */
+  java.util.List<java.lang.Integer> getMemberUidsList();
+  /**
+   * <pre>
+   * 成员用户IDs
+   * </pre>
+   *
+   * <code>repeated int32 member_uids = 2;</code>
+   * @return The count of memberUids.
+   */
+  int getMemberUidsCount();
+  /**
+   * <pre>
+   * 成员用户IDs
+   * </pre>
+   *
+   * <code>repeated int32 member_uids = 2;</code>
+   * @param index The index of the element to return.
+   * @return The memberUids at the given index.
+   */
+  int getMemberUids(int index);
 }

@@ -37,7 +37,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  群组ID.
+         *  源群组ID
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.CreateGroupResponse> create(reactor.core.publisher.Mono<cool.houge.grpc.CreateGroupRequest> reactorRequest) {
@@ -46,7 +46,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  创建者用户ID.
+         *  成员用户IDs
          * </pre>
          */
         public reactor.core.publisher.Mono<com.google.protobuf.Empty> delete(reactor.core.publisher.Mono<cool.houge.grpc.DeleteGroupRequest> reactorRequest) {
@@ -55,7 +55,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  群组名称.
+         *  将用户加入到指定的群组
          * </pre>
          */
         public reactor.core.publisher.Mono<com.google.protobuf.Empty> joinMember(reactor.core.publisher.Mono<cool.houge.grpc.JoinMemberGroupRequest> reactorRequest) {
@@ -73,7 +73,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  群组ID.
+         *  源群组ID
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.CreateGroupResponse> create(cool.houge.grpc.CreateGroupRequest reactorRequest) {
@@ -82,7 +82,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  创建者用户ID.
+         *  成员用户IDs
          * </pre>
          */
         public reactor.core.publisher.Mono<com.google.protobuf.Empty> delete(cool.houge.grpc.DeleteGroupRequest reactorRequest) {
@@ -91,7 +91,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  群组名称.
+         *  将用户加入到指定的群组
          * </pre>
          */
         public reactor.core.publisher.Mono<com.google.protobuf.Empty> joinMember(cool.houge.grpc.JoinMemberGroupRequest reactorRequest) {
@@ -113,7 +113,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  群组ID.
+         *  源群组ID
          * </pre>
          */
         public reactor.core.publisher.Mono<cool.houge.grpc.CreateGroupResponse> create(reactor.core.publisher.Mono<cool.houge.grpc.CreateGroupRequest> request) {
@@ -122,7 +122,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  创建者用户ID.
+         *  成员用户IDs
          * </pre>
          */
         public reactor.core.publisher.Mono<com.google.protobuf.Empty> delete(reactor.core.publisher.Mono<cool.houge.grpc.DeleteGroupRequest> request) {
@@ -131,7 +131,7 @@ public final class ReactorGroupGrpc {
 
         /**
          * <pre>
-         *  群组名称.
+         *  将用户加入到指定的群组
          * </pre>
          */
         public reactor.core.publisher.Mono<com.google.protobuf.Empty> joinMember(reactor.core.publisher.Mono<cool.houge.grpc.JoinMemberGroupRequest> request) {

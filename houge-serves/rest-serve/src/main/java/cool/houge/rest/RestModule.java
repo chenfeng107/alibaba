@@ -23,15 +23,19 @@ import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import cool.houge.ConfigKeys;
+import cool.houge.grpc.ReactorGroupGrpc;
+import cool.houge.grpc.ReactorGroupGrpc.ReactorGroupStub;
 import cool.houge.grpc.ReactorMsgGrpc;
 import cool.houge.grpc.ReactorMsgGrpc.ReactorMsgStub;
 import cool.houge.grpc.ReactorTokenGrpc;
 import cool.houge.grpc.ReactorTokenGrpc.ReactorTokenStub;
 import cool.houge.grpc.ReactorUserGrpc;
 import cool.houge.grpc.ReactorUserGrpc.ReactorUserStub;
+import cool.houge.rest.controller.GroupController;
 import cool.houge.rest.controller.MsgController;
 import cool.houge.rest.controller.TokenController;
 import cool.houge.rest.controller.UserController;
+import cool.houge.rest.facade.group.GroupFacade;
 import cool.houge.rest.facade.msg.MsgFacade;
 import cool.houge.rest.facade.token.TokenFacade;
 import cool.houge.rest.facade.user.UserFacade;
@@ -69,17 +73,20 @@ public class RestModule extends AbstractModule {
     bind(RestServer.class).in(Scopes.SINGLETON);
 
     // Facade
-    bind(TokenFacade.class).in(Scopes.SINGLETON);
     bind(UserFacade.class).in(Scopes.SINGLETON);
+    bind(GroupFacade.class).in(Scopes.SINGLETON);
+    bind(TokenFacade.class).in(Scopes.SINGLETON);
     bind(MsgFacade.class).in(Scopes.SINGLETON);
 
     // 绑定 Web 访问资源对象
     bind(TokenInterceptor.class).in(Scopes.SINGLETON);
-    // 控制器注册
+
+    // REST
     var multibinder = Multibinder.newSetBinder(binder(), RoutingService.class);
     multibinder.addBinding().to(TokenController.class).in(Scopes.SINGLETON);
     multibinder.addBinding().to(MsgController.class).in(Scopes.SINGLETON);
     multibinder.addBinding().to(UserController.class).in(Scopes.SINGLETON);
+    multibinder.addBinding().to(GroupController.class).in(Scopes.SINGLETON);
   }
 
   @Provides
@@ -125,6 +132,12 @@ public class RestModule extends AbstractModule {
   @Provides
   public ReactorUserStub userStub(ManagedChannel managedChannel) {
     return ReactorUserGrpc.newReactorStub(managedChannel);
+  }
+
+  @Singleton
+  @Provides
+  public ReactorGroupStub groupStub(ManagedChannel managedChannel) {
+    return ReactorGroupGrpc.newReactorStub(managedChannel);
   }
 
   @Singleton

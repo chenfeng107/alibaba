@@ -28,6 +28,7 @@ import cool.houge.poplar.broker.BrokerManager;
 import cool.houge.poplar.broker.MsgRouter;
 import cool.houge.poplar.broker.SimpleMsgRouter;
 import cool.houge.poplar.grpc.BrokerGrpcImpl;
+import cool.houge.poplar.grpc.GroupGrpcImpl;
 import cool.houge.poplar.grpc.MsgGrpcImpl;
 import cool.houge.poplar.grpc.TokenGrpcImpl;
 import cool.houge.poplar.grpc.UserGrpcImpl;
@@ -66,5 +67,6 @@ public class PoplarModule extends AbstractModule {
     grpcBinder.addBinding().to(TokenGrpcImpl.class).in(Scopes.SINGLETON);
     grpcBinder.addBinding().to(MsgGrpcImpl.class).in(Scopes.SINGLETON);
     grpcBinder.addBinding().to(UserGrpcImpl.class).in(Scopes.SINGLETON);
+    grpcBinder.addBinding().to(GroupGrpcImpl.class).in(Scopes.SINGLETON);
   }
 }

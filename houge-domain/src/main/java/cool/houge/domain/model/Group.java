@@ -33,8 +33,6 @@ public class Group {
   private Integer id;
   /** 源群组ID. */
   private String originGid;
-  /** 创建群的用户 ID. */
-  private User creator;
   /** 群组的用户ID. */
   private List<Integer> memberUids;
   /** 数据版本. */

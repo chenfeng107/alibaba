@@ -348,7 +348,7 @@ public abstract class AbstractRestSupport {
         conn -> {
           var attr = conn.channel().attr(AUTH_CONTEXT_ATTR);
           if (attr.get() == null) {
-            throw new BizCodeException(BizCode.C401, "未找到认证上下文对象");
+            throw new BizCodeException(BizCode.C0, "未找到认证上下文");
           }
           value[0] = attr.get();
         });

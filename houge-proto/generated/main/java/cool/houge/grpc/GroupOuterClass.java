@@ -49,20 +49,20 @@ public final class GroupOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\033cool/houge/grpc/group.proto\032\033google/pr" +
-      "otobuf/empty.proto\"C\n\022CreateGroupRequest" +
-      "\022\013\n\003gid\030\001 \001(\005\022\022\n\ncreator_id\030\002 \001(\005\022\014\n\004nam" +
-      "e\030\003 \001(\t\"\"\n\023CreateGroupResponse\022\013\n\003gid\030\001 " +
-      "\001(\005\"!\n\022DeleteGroupRequest\022\013\n\003gid\030\001 \001(\005\"2" +
-      "\n\026JoinMemberGroupRequest\022\013\n\003gid\030\001 \001(\005\022\013\n" +
-      "\003uid\030\002 \001(\005\"4\n\030DeleteMemberGroupRequest\022\013" +
-      "\n\003gid\030\001 \001(\005\022\013\n\003uid\030\002 \001(\0052\375\001\n\005Group\0225\n\006Cr" +
-      "eate\022\023.CreateGroupRequest\032\024.CreateGroupR" +
-      "esponse\"\000\0227\n\006Delete\022\023.DeleteGroupRequest" +
-      "\032\026.google.protobuf.Empty\"\000\022?\n\nJoinMember" +
-      "\022\027.JoinMemberGroupRequest\032\026.google.proto" +
-      "buf.Empty\"\000\022C\n\014DeleteMember\022\031.DeleteMemb" +
-      "erGroupRequest\032\026.google.protobuf.Empty\"\000" +
-      "B\023\n\017cool.houge.grpcP\001b\006proto3"
+      "otobuf/empty.proto\"=\n\022CreateGroupRequest" +
+      "\022\022\n\norigin_gid\030\001 \001(\t\022\023\n\013member_uids\030\002 \003(" +
+      "\005\"\"\n\023CreateGroupResponse\022\013\n\003gid\030\001 \001(\005\"!\n" +
+      "\022DeleteGroupRequest\022\013\n\003gid\030\001 \001(\005\"2\n\026Join" +
+      "MemberGroupRequest\022\013\n\003gid\030\001 \001(\005\022\013\n\003uid\030\002" +
+      " \001(\005\"4\n\030DeleteMemberGroupRequest\022\013\n\003gid\030" +
+      "\001 \001(\005\022\013\n\003uid\030\002 \001(\0052\375\001\n\005Group\0225\n\006Create\022\023" +
+      ".CreateGroupRequest\032\024.CreateGroupRespons" +
+      "e\"\000\0227\n\006Delete\022\023.DeleteGroupRequest\032\026.goo" +
+      "gle.protobuf.Empty\"\000\022?\n\nJoinMember\022\027.Joi" +
+      "nMemberGroupRequest\032\026.google.protobuf.Em" +
+      "pty\"\000\022C\n\014DeleteMember\022\031.DeleteMemberGrou" +
+      "pRequest\032\026.google.protobuf.Empty\"\000B\023\n\017co" +
+      "ol.houge.grpcP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -74,7 +74,7 @@ public final class GroupOuterClass {
     internal_static_CreateGroupRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CreateGroupRequest_descriptor,
-        new java.lang.String[] { "Gid", "CreatorId", "Name", });
+        new java.lang.String[] { "OriginGid", "MemberUids", });
     internal_static_CreateGroupResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_CreateGroupResponse_fieldAccessorTable = new
