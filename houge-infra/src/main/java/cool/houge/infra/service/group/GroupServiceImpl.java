@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.service.group;
+package cool.houge.infra.service.group;
 
 import cool.houge.Nil;
-import cool.houge.model.Group;
-import cool.houge.storage.GroupDao;
-import cool.houge.storage.query.GroupQueryDao;
+import cool.houge.domain.model.Group;
+import cool.houge.domain.repository.group.GroupQueryRepository;
+import cool.houge.domain.repository.group.GroupRepository;
+import cool.houge.domain.service.group.CreateGroupInput;
+import cool.houge.domain.service.group.CreateGroupResult;
+import cool.houge.domain.service.group.GroupService;
+import cool.houge.domain.service.group.JoinMemberInput;
 import javax.inject.Inject;
 import org.roaringbitmap.longlong.Roaring64NavigableMap;
 import reactor.core.publisher.Mono;
@@ -33,8 +37,8 @@ import top.yein.chaos.biz.StacklessBizCodeException;
  */
 public class GroupServiceImpl implements GroupService {
 
-  private final GroupDao groupDao;
-  private final GroupQueryDao groupQueryDao;
+  private final GroupRepository groupRepository;
+  private final GroupQueryRepository groupQueryRepository;
 
   /** 已存在的群组 ID 位图. */
   private Roaring64NavigableMap existingGidBits = Roaring64NavigableMap.bitmapOf();
@@ -42,13 +46,14 @@ public class GroupServiceImpl implements GroupService {
   /**
    * 使用群组数据接口、群组数据查询接口构造对象.
    *
-   * @param groupDao 群组数据接口
-   * @param groupQueryDao 群组数据查询接口
+   * @param groupRepository 群组数据接口
+   * @param groupQueryRepository 群组数据查询接口
    */
   @Inject
-  public GroupServiceImpl(GroupDao groupDao, GroupQueryDao groupQueryDao) {
-    this.groupDao = groupDao;
-    this.groupQueryDao = groupQueryDao;
+  public GroupServiceImpl(
+      GroupRepository groupRepository, GroupQueryRepository groupQueryRepository) {
+    this.groupRepository = groupRepository;
+    this.groupQueryRepository = groupQueryRepository;
   }
 
   @Override
@@ -56,11 +61,12 @@ public class GroupServiceImpl implements GroupService {
     var entity =
         Group.builder()
             .id(in.getGid())
-            .creatorId(in.getCreatorId())
-            .ownerId(in.getCreatorId())
+            // FIXME
+            //            .creatorId(in.getCreatorId())
+            //            .ownerId(in.getCreatorId())
             .memberSize(1)
             .build();
-    return groupDao
+    return groupRepository
         .insert(entity)
         .doOnSuccess(id -> this.updateGidBits(id, true))
         .map(id -> CreateGroupResult.builder().gid(id).build());
@@ -68,7 +74,7 @@ public class GroupServiceImpl implements GroupService {
 
   @Override
   public Mono<Void> delete(long gid) {
-    return groupDao.delete(gid).doOnSuccess(unused -> updateGidBits(gid, false));
+    return groupRepository.delete(gid).doOnSuccess(unused -> updateGidBits(gid, false));
   }
 
   @Override
@@ -77,7 +83,7 @@ public class GroupServiceImpl implements GroupService {
       return Nil.mono();
     }
 
-    return groupQueryDao.existsById(gid).doOnNext(unused -> updateGidBits(gid, true));
+    return groupQueryRepository.existsById(gid).doOnNext(unused -> updateGidBits(gid, true));
   }
 
   @Override
@@ -86,7 +92,7 @@ public class GroupServiceImpl implements GroupService {
         .switchIfEmpty(
             Mono.error(
                 () -> new StacklessBizCodeException(BizCode.C404, "不存在的群组[" + p.getGid() + "]")))
-        .flatMap(unused -> groupDao.joinMember(p.getGid(), p.getUid()));
+        .flatMap(unused -> groupRepository.joinMember(p.getGid(), p.getUid()));
   }
 
   @Override
@@ -95,7 +101,7 @@ public class GroupServiceImpl implements GroupService {
         .switchIfEmpty(
             Mono.error(
                 () -> new StacklessBizCodeException(BizCode.C404, "不存在的群组[" + p.getGid() + "]")))
-        .flatMap(unused -> groupDao.removeMember(p.getGid(), p.getUid()));
+        .flatMap(unused -> groupRepository.removeMember(p.getGid(), p.getUid()));
   }
 
   private void updateGidBits(long gid, boolean v) {
