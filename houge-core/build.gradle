@@ -10,6 +10,6 @@ dependencies {
   compileOnly("com.fasterxml.jackson.core:jackson-databind")
 
   testImplementation("org.apache.commons:commons-lang3")
-  testImplementation("io.r2dbc:r2dbc-postgresql")
+//  testImplementation("io.r2dbc:r2dbc-postgresql")
   testImplementation("com.fasterxml.jackson.core:jackson-databind")
 }
