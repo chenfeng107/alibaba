@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.broker.internal;
+package cool.houge.ws.pivot.internal;
 
 import cool.houge.grpc.broker.BrokerPb;
-import cool.houge.ws.broker.PacketProcessor;
+import cool.houge.ws.pivot.PacketProcessor;
 import cool.houge.ws.session.Session;
 import cool.houge.ws.session.SessionGroupManager;
 import cool.houge.ws.session.SessionManager;

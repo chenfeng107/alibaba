@@ -26,13 +26,13 @@ import cool.houge.grpc.broker.ReactorPolygonGrpc;
 import cool.houge.grpc.broker.ReactorPolygonGrpc.ReactorPolygonStub;
 import cool.houge.ws.AgentServiceConfig;
 import cool.houge.ws.LogicServiceConfig;
-import cool.houge.ws.broker.BrokerServiceManager;
-import cool.houge.ws.broker.CommandProcessor;
-import cool.houge.ws.broker.PacketProcessor;
-import cool.houge.ws.broker.command.CommandHandler;
-import cool.houge.ws.broker.command.SubGroupCommandHandler;
-import cool.houge.ws.broker.internal.CommandProcessorImpl;
-import cool.houge.ws.broker.internal.PacketProcessorImpl;
+import cool.houge.ws.pivot.PivotConnectionManager;
+import cool.houge.ws.pivot.CommandProcessor;
+import cool.houge.ws.pivot.PacketProcessor;
+import cool.houge.ws.pivot.command.CommandHandler;
+import cool.houge.ws.pivot.command.SubGroupCommandHandler;
+import cool.houge.ws.pivot.internal.CommandProcessorImpl;
+import cool.houge.ws.pivot.internal.PacketProcessorImpl;
 import cool.houge.ws.server.WebSocketHandler;
 import cool.houge.ws.server.WsServer;
 import cool.houge.ws.server.WsServerConfig;
@@ -84,11 +84,11 @@ public class WsModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public BrokerServiceManager clientAgentManager(
+  public PivotConnectionManager clientAgentManager(
       PacketProcessor packetProcessor, CommandProcessor commandProcessor) {
     var agentConfig =
         ConfigBeanFactory.create(config.getConfig("agent-service"), AgentServiceConfig.class);
-    return new BrokerServiceManager(agentConfig, packetProcessor, commandProcessor);
+    return new PivotConnectionManager(agentConfig, packetProcessor, commandProcessor);
   }
 
   private void bindGrpcStub() {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.broker.command;
+package cool.houge.ws.pivot.command;
 
 import cool.houge.grpc.broker.BrokerPb;
 import cool.houge.ws.session.SessionGroupManager;

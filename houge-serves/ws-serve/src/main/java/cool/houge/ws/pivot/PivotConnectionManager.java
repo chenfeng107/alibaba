@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.broker;
+package cool.houge.ws.pivot;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.ConfigException;
@@ -48,7 +48,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author KK (kzou227@qq.com)
  */
-public class BrokerServiceManager {
+public class PivotConnectionManager {
 
   private static final Logger log = LogManager.getLogger();
   /** 跳过重复错误日志的限制. */
@@ -70,7 +70,7 @@ public class BrokerServiceManager {
    * @param commandProcessor Command处理器
    */
   @Inject
-  public BrokerServiceManager(
+  public PivotConnectionManager(
       AgentServiceConfig agentServiceConfig,
       PacketProcessor packetProcessor,
       CommandProcessor commandProcessor) {

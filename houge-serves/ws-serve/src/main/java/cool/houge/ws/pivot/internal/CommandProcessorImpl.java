@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.ws.broker.internal;
+package cool.houge.ws.pivot.internal;
 
 import cool.houge.grpc.broker.BrokerPb;
-import cool.houge.ws.broker.CommandProcessor;
-import cool.houge.ws.broker.command.CommandHandler;
+import cool.houge.ws.pivot.CommandProcessor;
+import cool.houge.ws.pivot.command.CommandHandler;
 import java.util.Objects;
 import java.util.Set;
 import javax.inject.Inject;
