@@ -1,6 +1,6 @@
 package cool.houge.poplar.grpc;
 
-import cool.houge.domain.auth.TokenService;
+import cool.houge.domain.system.TokenService;
 import cool.houge.grpc.ReactorTokenGrpc;
 import cool.houge.grpc.VerifyTokenRequest;
 import cool.houge.grpc.VerifyTokenResponse;

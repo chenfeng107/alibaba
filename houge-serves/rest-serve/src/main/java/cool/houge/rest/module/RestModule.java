@@ -23,7 +23,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
 import cool.houge.ConfigKeys;
-import cool.houge.domain.auth.TokenService;
+import cool.houge.domain.system.TokenService;
 import cool.houge.infra.id.MessageIdGenerator;
 import cool.houge.infra.id.YeinGidMessageIdGenerator;
 import cool.houge.infra.service.TokenServiceImpl;

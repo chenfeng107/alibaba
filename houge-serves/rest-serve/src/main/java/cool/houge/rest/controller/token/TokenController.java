@@ -15,7 +15,7 @@
  */
 package cool.houge.rest.controller.token;
 
-import cool.houge.domain.auth.TokenService;
+import cool.houge.domain.system.TokenService;
 import cool.houge.rest.controller.Interceptors;
 import cool.houge.rest.controller.RoutingService;
 import cool.houge.rest.http.AbstractRestSupport;

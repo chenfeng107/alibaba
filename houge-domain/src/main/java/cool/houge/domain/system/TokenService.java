@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.auth;
+package cool.houge.domain.system;
 
 import reactor.core.publisher.Mono;
 

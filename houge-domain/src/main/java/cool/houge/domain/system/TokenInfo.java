@@ -1,4 +1,4 @@
-package cool.houge.domain.auth;
+package cool.houge.domain.system;
 
 import lombok.Builder;
 import lombok.Value;

@@ -2,7 +2,7 @@ package cool.houge.infra.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import cool.houge.domain.auth.TokenService;
+import cool.houge.domain.system.TokenService;
 import cool.houge.infra.service.TokenServiceImpl;
 
 /** @author KK (kzou227@qq.com) */
