@@ -44,11 +44,21 @@ public class WsMain implements Runnable {
     var wsServer = injector.getInstance(WsServer.class);
     wsServer.start();
 
+    // 启动 PSM 服务
+    var psm = injector.getInstance(PoplarServiceManager.class);
+    psm.start();
+
     // 停止服务的勾子
     Runtime.getRuntime()
         .addShutdownHook(
             new Thread(
                 () -> {
+                  try {
+                    psm.stop();
+                  } catch (Exception e) {
+                    log.error("停止PSM错误", e);
+                  }
+
                   try {
                     wsServer.stop();
                   } catch (Exception e) {

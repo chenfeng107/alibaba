@@ -55,6 +55,7 @@ public class WsModule extends AbstractModule {
     bind(Config.class).toInstance(config);
     bind(WsServer.class).in(Scopes.SINGLETON);
     bind(LibService.class).in(Scopes.SINGLETON);
+    bind(PoplarServiceManager.class).in(Scopes.SINGLETON);
 
     bind(WebSocketHandler.class).in(Scopes.SINGLETON);
     bind(SessionManager.class).to(DefaultSessionManager.class).in(Scopes.SINGLETON);
@@ -64,7 +65,7 @@ public class WsModule extends AbstractModule {
   @Singleton
   @Provides
   public ManagedChannel grpcManagedChannel() {
-    var target = config.getString("ws.polar.grpc-target");
+    var target = config.getString("ws.poplar.grpc-target");
     var managedChannel =
         ManagedChannelBuilder.forTarget(target)
             .enableRetry()

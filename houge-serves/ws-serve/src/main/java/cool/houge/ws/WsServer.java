@@ -17,6 +17,7 @@ package cool.houge.ws;
 
 import com.google.common.net.HostAndPort;
 import com.typesafe.config.Config;
+import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.netty.DisposableServer;
@@ -45,7 +46,7 @@ public class WsServer {
    * @param config 应用配置
    * @param webSocketHandler WebSocket消息处理器
    */
-  public WsServer(Config config, WebSocketHandler webSocketHandler) {
+  public @Inject WsServer(Config config, WebSocketHandler webSocketHandler) {
     this.webSocketHandler = webSocketHandler;
     this.addr = config.getString("ws.server.addr");
   }

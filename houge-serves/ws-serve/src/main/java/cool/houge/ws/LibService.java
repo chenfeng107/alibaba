@@ -9,6 +9,7 @@ import cool.houge.protos.MsgContentType;
 import cool.houge.ws.packet.MsgPacket;
 import cool.houge.ws.packet.PrivateMsgPacket;
 import cool.houge.ws.session.Session;
+import javax.inject.Inject;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
@@ -17,7 +18,7 @@ public class LibService {
   private final ReactorTokenStub tokenStub;
   private final ReactorMsgStub msgStub;
 
-  public LibService(ReactorTokenStub tokenStub, ReactorMsgStub msgStub) {
+  public @Inject LibService(ReactorTokenStub tokenStub, ReactorMsgStub msgStub) {
     this.tokenStub = tokenStub;
     this.msgStub = msgStub;
   }
