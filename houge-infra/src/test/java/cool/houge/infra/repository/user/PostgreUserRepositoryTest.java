@@ -1,5 +1,6 @@
 package cool.houge.infra.repository.user;
 
+import static cool.houge.infra.db.Tables.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cool.houge.domain.model.User;
@@ -7,6 +8,7 @@ import io.r2dbc.spi.ConnectionFactories;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 /**
@@ -32,5 +34,12 @@ class PostgreUserRepositoryTest {
             )
         .expectComplete()
         .verify();
+
+    // 清理数据
+    Flux.from(
+            dsl.delete(USER).where(USER.ID.eq(model.getId()))
+            //
+            )
+        .blockLast();
   }
 }
