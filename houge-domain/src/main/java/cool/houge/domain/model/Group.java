@@ -16,10 +16,10 @@
 package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 群组信息.
@@ -28,15 +28,16 @@ import lombok.Data;
  */
 @Data
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Group {
 
   /** 群组 ID. */
   private Long id;
   /** 创建群的用户 ID. */
-  private Long creatorId;
+  private User creator;
   /** 群持有者用户 ID. */
-  private Long ownerId;
+  private User owner;
   /** 群成员数量. */
   private Integer memberSize;
   /** 创建时间. */

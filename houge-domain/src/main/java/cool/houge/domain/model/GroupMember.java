@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GroupMember {
 
-  /** 群组 ID. */
-  private Long gid;
-  /** 用户 ID. */
-  private Long uid;
+  /** 群组. */
+  private Group group;
+  /** 用户. */
+  private User user;
   /** 创建时间. */
   private LocalDateTime createTime;
 }

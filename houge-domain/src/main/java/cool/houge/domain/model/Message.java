@@ -42,12 +42,12 @@ public class Message {
 
   /** 消息 ID. */
   private String id;
-  /** 发送人 ID. */
-  private Long senderId;
+  /** 发送人. */
+  private User sender;
   /** 接收人 ID. */
-  private Long receiverId;
+  private User receiver;
   /** 群主 ID. */
-  private Long groupId;
+  private Group group;
   /**
    * 消息类型.
    *
