@@ -38,48 +38,65 @@ protobuf {
 }
 
 jooq {
-  version = "3.15.1"  // the default (can be omitted)
-  edition = nu.studer.gradle.jooq.JooqEdition.OSS  // the default (can be omitted)
-
   configurations {
-    main {  // name of the jOOQ configuration
-      generateSchemaSourceOnCompilation = true  // default (can be omitted)
-
+    main {
       generationTool {
         jdbc {
           driver = "org.postgresql.Driver"
-          url = "jdbc:postgresql://localhost:5432/houge"
-          user = "postgres"
-          password = "123456"
+          // 通过 gradle.properties 或 gradle-${environmentName}.properties 文件配置数据库连接参数
+          url = rootProject.properties["jooq.generator.jdbc.url"]
+          user = rootProject.properties["jooq.generator.jdbc.user"]
+          password = rootProject.properties["jooq.generator.jdbc.password"]
         }
         generator {
           name = "org.jooq.codegen.DefaultGenerator"
           database {
             name = "org.jooq.meta.postgres.PostgresDatabase"
             inputSchema = "public"
-            forcedTypes {
-              forcedType {
-                name = "varchar"
-                includeExpression = ".*"
-                includeTypes = "JSONB?"
-              }
-              forcedType {
-                name = "varchar"
-                includeExpression = ".*"
-                includeTypes = "INET"
-              }
-            }
+            includeSystemTables = false
+            includeSequences = false
+            includePrimaryKeys = false
+            includeUniqueKeys = false
+            includeIndexes = false
+            includeSystemIndexes = false
             excludes = """
               public.flyway_schema_history
             """
           }
           generate {
-            records = true
             fluentSetters = true
+            generatedAnnotation = true
+            generatedAnnotationType = "DETECT_FROM_JDK"
+            generatedAnnotationDate = true
+            nullableAnnotation = true
+            nullableAnnotationType = "javax.annotation.Nullable"
+            nonnullAnnotation = true
+            nonnullAnnotationType = "javax.annotation.Nonnull"
+            // 禁止JDK内置的序列化与反序列化
+            generatedSerialVersionUID = "OFF"
+          }
+          strategy {
+            matchers {
+              tables {
+                table {
+                  expression = "[tT]_(.*)"
+                  tableIdentifier {
+                    transform = "UPPER"
+                    expression = '$1'
+                  }
+                  tableClass {
+                    transform = "PASCAL"
+                    expression = '$1'
+                  }
+                }
+              }
+            }
           }
           target {
             packageName = "cool.houge.infra.db"
             directory = "build/generated-src/jooq/main"  // default (can be omitted)
+            encoding = "UTF-8"
+            clean = true
           }
           strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
         }
