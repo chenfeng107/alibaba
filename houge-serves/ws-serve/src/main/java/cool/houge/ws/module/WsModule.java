@@ -24,11 +24,11 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import cool.houge.grpc.broker.ReactorPolygonGrpc;
 import cool.houge.grpc.broker.ReactorPolygonGrpc.ReactorPolygonStub;
-import cool.houge.ws.PivotStreamServiceConfig;
 import cool.houge.ws.PivotServiceConfig;
-import cool.houge.ws.pivot.PivotStreamServiceManager;
+import cool.houge.ws.PivotStreamServiceConfig;
 import cool.houge.ws.pivot.CommandProcessor;
 import cool.houge.ws.pivot.PacketProcessor;
+import cool.houge.ws.pivot.PivotStreamServiceManager;
 import cool.houge.ws.pivot.command.CommandHandler;
 import cool.houge.ws.pivot.command.SubGroupCommandHandler;
 import cool.houge.ws.pivot.internal.CommandProcessorImpl;
@@ -87,13 +87,14 @@ public class WsModule extends AbstractModule {
   public PivotStreamServiceManager clientAgentManager(
       PacketProcessor packetProcessor, CommandProcessor commandProcessor) {
     var agentConfig =
-        ConfigBeanFactory.create(config.getConfig("agent-service"), PivotStreamServiceConfig.class);
+        ConfigBeanFactory.create(
+            config.getConfig("pivot-stream-service"), PivotStreamServiceConfig.class);
     return new PivotStreamServiceManager(agentConfig, packetProcessor, commandProcessor);
   }
 
   private void bindGrpcStub() {
     var logicServiceConfig =
-        ConfigBeanFactory.create(config.getConfig("logic-service"), PivotServiceConfig.class);
+        ConfigBeanFactory.create(config.getConfig("pivot-service"), PivotServiceConfig.class);
     bind(PivotServiceConfig.class).toInstance(logicServiceConfig);
 
     var managedChannel =
