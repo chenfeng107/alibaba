@@ -11,8 +11,8 @@ import reactor.core.publisher.Mono;
 public interface UserRepository {
 
   /**
-   * @param entity
+   * @param model
    * @return
    */
-  Mono<Long> insert(User entity);
+  Mono<Long> insert(User model);
 }

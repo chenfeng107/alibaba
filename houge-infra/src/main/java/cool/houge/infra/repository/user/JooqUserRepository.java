@@ -13,22 +13,22 @@ import org.jooq.Record1;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
-public class PostgreUserRepository implements UserRepository, UserQueryRepository {
+public class JooqUserRepository implements UserRepository, UserQueryRepository {
 
   private final DSLContext dsl;
 
   @Inject
-  public PostgreUserRepository(DSLContext dsl) {
+  public JooqUserRepository(DSLContext dsl) {
     this.dsl = dsl;
   }
 
   @Override
-  public Mono<Long> insert(User entity) {
-    return Mono.just(entity.getId())
+  public Mono<Long> insert(User model) {
+    return Mono.just(model.getId())
         .switchIfEmpty(nextId())
         .flatMap(
             id -> {
-              var record = UserRecordMapper.INSTANCE.toRecord(id, entity);
+              var record = UserRecordMapper.INSTANCE.toRecord(id, model);
               return Mono.from(dsl.insertInto(USER).set(record)).thenReturn(id);
             });
   }
