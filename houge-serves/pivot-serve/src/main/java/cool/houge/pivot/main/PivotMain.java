@@ -20,12 +20,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
-import com.google.inject.util.Types;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
 import cool.houge.infra.guice.BasisModule;
-import cool.houge.infra.guice.JooqModule;
+import cool.houge.infra.guice.DaoModule;
 import cool.houge.infra.guice.ServiceModule;
 import cool.houge.infra.system.identifier.ApplicationIdentifier;
 import cool.houge.pivot.module.PivotModule;
@@ -58,7 +57,7 @@ public class PivotMain implements Runnable {
     var config = loadConfig();
     var injector =
         Guice.createInjector(
-            new BasisModule(config), new JooqModule(), new ServiceModule(), new PivotModule());
+            new BasisModule(config), new DaoModule(), new ServiceModule(), new PivotModule());
     var applicationIdentifier = injector.getInstance(ApplicationIdentifier.class);
 
     // 启动服务
