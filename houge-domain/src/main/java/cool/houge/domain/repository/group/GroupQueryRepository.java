@@ -33,7 +33,7 @@ public interface GroupQueryRepository {
    * @param id 群 ID
    * @return 群信息
    */
-  Mono<Group> queryById(long id);
+  Mono<Group> findById(long id);
 
   /**
    * 查询指定群成员的用户 ID 列表.
@@ -41,7 +41,7 @@ public interface GroupQueryRepository {
    * @param id 群 ID
    * @return 成员用户 ID
    */
-  Flux<Long> queryUidByGid(long id);
+  Flux<Long> findUidByGid(long id);
 
   /**
    * 查询指定用户已经关联的群组 IDs.
@@ -49,7 +49,7 @@ public interface GroupQueryRepository {
    * @param uid 用户 ID
    * @return 群组 IDs
    */
-  Flux<Long> queryGidByUid(long uid);
+  Flux<Long> findGidByUid(long uid);
 
   /**
    * 使用群组 ID 查询用户是否存在.

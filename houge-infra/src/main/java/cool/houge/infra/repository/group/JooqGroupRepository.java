@@ -10,17 +10,17 @@ import reactor.core.publisher.Mono;
 public class JooqGroupRepository implements GroupRepository, GroupQueryRepository {
 
   @Override
-  public Mono<Group> queryById(long id) {
+  public Mono<Group> findById(long id) {
     return null;
   }
 
   @Override
-  public Flux<Long> queryUidByGid(long id) {
+  public Flux<Long> findUidByGid(long id) {
     return null;
   }
 
   @Override
-  public Flux<Long> queryGidByUid(long uid) {
+  public Flux<Long> findGidByUid(long uid) {
     return null;
   }
 
