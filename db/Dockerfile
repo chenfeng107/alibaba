@@ -25,7 +25,7 @@ RUN wget https://github.com/eficode/wait-for/archive/v${WAIT_FOR_VERSION}.tar.gz
   && rm v${WAIT_FOR_VERSION}.tar.gz
 
 # 将所有的 SQL 文件拷贝至 flyway/sql 目录中
-COPY migrations/* sql/
+COPY mysql/* sql/
 
 ENV PATH="/flyway:${PATH}"
 
