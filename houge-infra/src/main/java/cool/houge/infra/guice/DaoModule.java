@@ -1,7 +1,9 @@
 package cool.houge.infra.guice;
 
 import static io.r2dbc.spi.ConnectionFactoryOptions.CONNECT_TIMEOUT;
+import static io.r2dbc.spi.ConnectionFactoryOptions.PASSWORD;
 import static io.r2dbc.spi.ConnectionFactoryOptions.STATEMENT_TIMEOUT;
+import static io.r2dbc.spi.ConnectionFactoryOptions.USER;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -50,11 +52,16 @@ public class DaoModule extends AbstractModule {
   @Provides
   public ConnectionFactory connectionFactory(Config config) {
     var url = config.getString("poplar.r2dbc.url");
+    var user = config.getString("poplar.r2dbc.user");
+    var password = config.getString("poplar.r2dbc.password");
+
     var options =
         ConnectionFactoryOptions.parse(url)
             .mutate()
             .option(CONNECT_TIMEOUT, Duration.ofSeconds(3))
             .option(STATEMENT_TIMEOUT, Duration.ofSeconds(10))
+            .option(USER, user)
+            .option(PASSWORD, password)
             .option(Option.valueOf("useServerPrepareStatement"), true)
             .option(Option.valueOf("tcpKeepAlive"), true)
             .option(Option.valueOf("tcpNoDelay"), true)
