@@ -1,5 +1,5 @@
 dependencies {
-  api("top.yein.chaos:chaos-core")
+  api("top.yein.chaos:chaos-core:1.0-SNAPSHOT")
   api("com.google.inject:guice")
   api("com.typesafe:config")
   api("io.lettuce:lettuce-core")

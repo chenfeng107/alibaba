@@ -107,26 +107,24 @@ jooq {
 dependencies {
   protobuf(project(":houge-proto"))
   api(project(":houge-domain"))
-  api("top.yein.chaos:chaos-core")
   api("io.r2dbc:r2dbc-postgresql")
   api("io.r2dbc:r2dbc-pool")
   api("com.github.ben-manes.caffeine:caffeine")
   api("org.roaringbitmap:RoaringBitmap")
   api("com.auth0:java-jwt")
-
-  api("org.jooq:jooq:3.15.1")
-
-  implementation("io.grpc:grpc-protobuf:1.39.0")
-  implementation("io.grpc:grpc-netty:1.39.0")
-  implementation("io.grpc:grpc-stub:1.39.0")
-  implementation("com.salesforce.servicelibs:reactor-grpc-stub:1.1.0")
-
   implementation("com.fasterxml.jackson.core:jackson-databind")
+
+  api("org.jooq:jooq") {
+    exclude module: "jaxb-api"
+  }
+
+  implementation("io.grpc:grpc-protobuf")
+  implementation("io.grpc:grpc-netty")
+  implementation("io.grpc:grpc-stub")
+  implementation("com.salesforce.servicelibs:reactor-grpc-stub")
 
   testImplementation(project(":houge-core"))
   testImplementation("com.typesafe:config")
-  testImplementation("org.apache.logging.log4j:log4j-core")
-  testImplementation("org.apache.logging.log4j:log4j-slf4j-impl")
 
-  jooqGenerator("org.postgresql:postgresql:42.2.14")
+  jooqGenerator("org.postgresql:postgresql")
 }

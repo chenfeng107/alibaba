@@ -99,42 +99,68 @@ allprojects {
 
   dependencyManagement {
     imports {
-      mavenBom("top.yein.chaos:chaos-bom:1.0-SNAPSHOT")
+      mavenBom("io.projectreactor:reactor-bom:2020.0.10")
+      mavenBom("io.netty:netty-bom:4.1.67.Final")
+      mavenBom("org.apache.logging.log4j:log4j-bom:2.14.1")
+      mavenBom("com.fasterxml.jackson:jackson-bom:2.12.5")
+      mavenBom("com.google.inject:guice-bom:5.0.1")
+      mavenBom("io.r2dbc:r2dbc-bom:Arabba-SR10")
+      mavenBom("org.jooq:jooq-parent:3.15.2")
+      mavenBom("io.grpc:grpc-bom:1.40.1")
+      mavenBom("com.salesforce.servicelibs:reactive-grpc:1.2.0")
+      mavenBom("io.micrometer:micrometer-bom:1.7.3")
+
+      // 测试工具
+      mavenBom("org.testcontainers:testcontainers-bom:1.16.0")
+      mavenBom("org.junit:junit-bom:5.7.2")
+    }
+    dependencies {
+      dependency("org.projectlombok:lombok:1.18.20")
+      dependencySet(group: "org.mapstruct", version: "1.5.0.Beta1") {
+        entry "mapstruct-processor"
+        entry "mapstruct"
+      }
+      dependency("org.yaml:snakeyaml:1.27")
+      dependency("com.typesafe:config:1.4.1")
+      dependency("com.github.ben-manes.caffeine:caffeine:3.0.3")
+      dependency("org.postgresql:postgresql:42.2.14")
+      dependency("io.lettuce:lettuce-core:6.1.4.RELEASE")
+      dependency("com.auth0:java-jwt:3.18.1")
+      dependency("org.roaringbitmap:RoaringBitmap:0.9.16")
+
+      // 测试工具
+      dependency("com.github.javafaker:javafaker:1.0.2")
+      dependency("com.github.stefanbirkner:system-lambda:1.2.0")
+      dependency("org.openjdk.jmh:jmh-core:1.33")
+      dependency("org.openjdk.jmh:jmh-generator-annprocess:1.33")
+      dependency("org.assertj:assertj-core:3.20.2")
+      dependency("org.mockito:mockito-core:3.12.4")
+      dependency("org.mockito:mockito-inline:3.12.4")
     }
   }
 
   dependencies {
-    compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-    // mapstruct
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.0.Beta1")
-    implementation("org.mapstruct:mapstruct:1.5.0.Beta1")
+    annotationProcessor("org.mapstruct:mapstruct-processor")
 
+    compileOnly("org.projectlombok:lombok")
     compileOnly("com.google.code.findbugs:jsr305")
-    compileOnly("org.apache.logging.log4j:log4j-api")
+    implementation("org.mapstruct:mapstruct")
+    implementation("org.apache.logging.log4j:log4j-core")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl")
 
     // Test
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.apache.logging.log4j:log4j-core")
-    testImplementation("org.apache.logging.log4j:log4j-slf4j-impl")
-    testImplementation("org.openjdk.jol:jol-core")
     testImplementation("org.junit.platform:junit-platform-launcher")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("com.github.stefanbirkner:system-lambda")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.projectreactor:reactor-tools")
-    testImplementation("io.micrometer:micrometer-test")
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-inline")
-    testImplementation("org.powermock:powermock-reflect")
-    testImplementation("org.testcontainers:testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("com.github.javafaker:javafaker") {
-      exclude module: "snakeyaml"
-    }
-    testImplementation("org.yaml:snakeyaml:1.27")
+    testImplementation("com.github.javafaker:javafaker")
 
     jmh("org.openjdk.jmh:jmh-core")
     jmh("org.openjdk.jmh:jmh-generator-annprocess")
