@@ -13,25 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cool.houge.domain.entity;
+package cool.houge.domain.model;
 
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-/** 群组成员关系. */
+/**
+ * 群组信息.
+ *
+ * @author KK (kzou227@qq.com)
+ */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GroupMember {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Group {
 
   /** 群组 ID. */
-  private Long gid;
-  /** 用户 ID. */
-  private Long uid;
+  private Long id;
+  /** 创建群的用户 ID. */
+  private Long creatorId;
+  /** 群持有者用户 ID. */
+  private Long ownerId;
+  /** 群成员数量. */
+  private Integer memberSize;
   /** 创建时间. */
   private LocalDateTime createTime;
+  /** 更新时间. */
+  private LocalDateTime updateTime;
 }

@@ -1,6 +1,6 @@
-package cool.houge.domain.user;
+package cool.houge.domain.repository.user;
 
-import cool.houge.domain.entity.User;
+import cool.houge.domain.model.User;
 import reactor.core.publisher.Mono;
 
 /**

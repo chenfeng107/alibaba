@@ -1,6 +1,6 @@
-package cool.houge.domain.group;
+package cool.houge.domain.repository.group;
 
-import cool.houge.domain.entity.Group;
+import cool.houge.domain.model.Group;
 import reactor.core.publisher.Mono;
 
 /** @author KK (kzou227@qq.com) */
