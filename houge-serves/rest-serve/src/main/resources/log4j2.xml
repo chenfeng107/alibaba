@@ -29,6 +29,7 @@
     <Logger name="reactor.netty" level="info"/>
     <Logger name="reactor.pool" level="info"/>
     <Logger name="io.r2dbc" level="info"/>
+    <Logger name="io.grpc" level="info"/>
     <Root level="debug">
       <AppenderRef ref="Console"/>
     </Root>
