@@ -110,7 +110,6 @@ jooq {
 dependencies {
   protobuf(project(":houge-proto"))
   api(project(":houge-domain"))
-  api(project(":houge-r2dbc"))
   api("top.yein.chaos:chaos-core")
   api("io.r2dbc:r2dbc-postgresql")
   api("io.r2dbc:r2dbc-pool")
