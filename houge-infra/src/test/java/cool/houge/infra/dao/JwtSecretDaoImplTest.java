@@ -1,7 +1,10 @@
 package cool.houge.infra.dao;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import cool.houge.domain.model.JwtSecret;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +49,35 @@ class JwtSecretDaoImplTest extends AbstractTestDao {
         .tx(dao.delete(UUID.randomUUID().toString()))
         .as(StepVerifier::create)
         .expectNext(0)
+        .expectComplete()
+        .verify();
+  }
+
+  @Test
+  void findById() {
+    var m = newModel();
+    txOps
+        .tx(dao.insert(m).then(dao.findById(m.getId())))
+        .as(StepVerifier::create)
+        .assertNext(
+            o ->
+                assertSoftly(
+                    s -> {
+                      s.assertThat(o.getId()).as("id").isEqualTo(m.getId());
+                      s.assertThat(o.getSecret()).as("secret").isEqualTo(m.getSecret());
+                      s.assertThat(o.getDeleted()).as("deleted").isEqualTo(0);
+                      s.assertThat(o.getCreateTime()).as("createTime").isAfter(LocalDateTime.MIN);
+                      s.assertThat(o.getUpdateTime()).as("updateTime").isAfter(LocalDateTime.MIN);
+                    }))
+        .expectComplete()
+        .verify();
+  }
+
+  @Test
+  void findByIdNonexistentData() {
+    txOps
+        .tx(dao.findById(UUID.randomUUID().toString()))
+        .as(StepVerifier::create)
         .expectComplete()
         .verify();
   }

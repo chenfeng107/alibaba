@@ -23,7 +23,7 @@ public interface JwtSecretDao {
    * @param id
    * @return
    */
-  Mono<JwtSecret> getById(String id);
+  Mono<JwtSecret> findById(String id);
 
   /** @return */
   Flux<JwtSecret> findAll();

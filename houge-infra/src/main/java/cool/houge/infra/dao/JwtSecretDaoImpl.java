@@ -41,7 +41,7 @@ public class JwtSecretDaoImpl implements JwtSecretDao {
   }
 
   @Override
-  public Mono<JwtSecret> getById(String id) {
+  public Mono<JwtSecret> findById(String id) {
     return rc.sql("SELECT * FROM jwt_secrets WHERE id=?id")
         .flatMap(
             spec ->
